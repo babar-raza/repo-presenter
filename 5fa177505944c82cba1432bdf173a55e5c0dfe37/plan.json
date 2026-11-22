@@ -1,0 +1,711 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.writeto",
+        "public_symbol:document.openfile",
+        "public_symbol:document.pages",
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.optimize",
+        "public_symbol:document.sign",
+        "public_symbol:document.certify"
+      ],
+      "symbol_fact_id": "public_symbol:document"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx",
+        "public_symbol:page.addhtml",
+        "public_symbol:page.addmarkdown",
+        "public_symbol:page.adddocx",
+        "public_symbol:flow.addhtmlasync",
+        "public_symbol:flow.addmarkdownasync"
+      ],
+      "symbol_fact_id": "public_symbol:document.addhtml"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.pages",
+        "public_symbol:page.constructor",
+        "public_symbol:page.document",
+        "public_symbol:page.rect",
+        "public_symbol:page.rotate",
+        "public_symbol:page.resources",
+        "public_symbol:page.contents",
+        "public_symbol:page.annotations",
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addimage"
+      ],
+      "symbol_fact_id": "public_symbol:document.pages"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.constructor",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addimage",
+        "public_symbol:flow.addfloatbox",
+        "public_symbol:flow.addfloatingbox",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx"
+      ],
+      "symbol_fact_id": "public_symbol:flow"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.annotations",
+        "public_symbol:annotation.constructor",
+        "public_symbol:annotation.rect",
+        "public_symbol:annotation.color",
+        "public_symbol:annotation.contents",
+        "public_symbol:annotation.flags",
+        "public_symbol:annotation.print",
+        "public_symbol:annotation.hidden",
+        "public_symbol:annotation.opacity",
+        "public_symbol:annotation.subtype",
+        "public_symbol:annotation.name"
+      ],
+      "symbol_fact_id": "public_symbol:annotation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.redact",
+        "public_symbol:page.redacttext",
+        "public_symbol:page.markredacttext",
+        "public_symbol:page.applyredactions",
+        "public_symbol:document.redact",
+        "public_symbol:document.redacttext",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.optimize",
+        "public_symbol:document.optimizeasync"
+      ],
+      "symbol_fact_id": "public_symbol:document.redact"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.sign",
+        "public_symbol:document.certify",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.verifydocumenttimestamps",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:document.signatures",
+        "public_symbol:encryptoptions",
+        "public_symbol:signoptions"
+      ],
+      "symbol_fact_id": "public_symbol:document.sign"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:page.tomarkdown",
+        "public_symbol:page.todocx",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.totiff",
+        "public_symbol:page.toimageasync",
+        "public_symbol:page.tomarkdownasync"
+      ],
+      "symbol_fact_id": "public_symbol:document.todocx"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtable",
+        "public_symbol:flow.addtable",
+        "public_symbol:createtable",
+        "public_symbol:table",
+        "public_symbol:borderinfo",
+        "public_symbol:cellbuilder",
+        "public_symbol:celloptions",
+        "public_symbol:celltextoptions",
+        "public_symbol:table",
+        "public_symbol:table",
+        "public_symbol:table"
+      ],
+      "symbol_fact_id": "public_symbol:createtable"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx",
+        "public_symbol:page.addhtml",
+        "public_symbol:page.addmarkdown",
+        "public_symbol:page.adddocx",
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:flow.addhtmlasync",
+        "public_symbol:flow.addmarkdownasync"
+      ],
+      "symbol_fact_id": "public_symbol:flow.addhtml"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addimage",
+        "public_symbol:flow.addfloatbox",
+        "public_symbol:flow.addfloatingbox",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx"
+      ],
+      "symbol_fact_id": "public_symbol:flow.addparagraph"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx",
+        "public_symbol:page.addhtml",
+        "public_symbol:page.addmarkdown",
+        "public_symbol:page.adddocx",
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:flow.addhtmlasync",
+        "public_symbol:flow.addmarkdownasync"
+      ],
+      "symbol_fact_id": "public_symbol:flow.addhtmlasync"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "PDF Parsing and Serialization",
+      "Page Manipulation and Content Editing",
+      "Text, Tables, and Flow Layout",
+      "HTML, Markdown, and DOCX Import",
+      "Annotations, Forms, and Optional Content",
+      "Redaction, Sanitization, and Optimization",
+      "Digital Signatures and Encryption",
+      "Rendering and Export"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:document.save",
+        "public_symbol:document.saveasync",
+        "public_symbol:document.writeto",
+        "public_symbol:document.openfile",
+        "public_symbol:document.decodebudget",
+        "public_symbol:document.loadlimits",
+        "public_symbol:loadlimits"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save"
+      ],
+      "title": "PDF Parsing and Serialization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.pages",
+        "public_symbol:page.constructor",
+        "public_symbol:page.document",
+        "public_symbol:page.rect",
+        "public_symbol:page.rotate",
+        "public_symbol:page.resources",
+        "public_symbol:page.contents",
+        "public_symbol:page.annotations",
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addimage"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.annotations"
+      ],
+      "title": "Page Manipulation and Content Editing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addtable",
+        "public_symbol:flow.constructor",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addimage",
+        "public_symbol:flow.addfloatbox",
+        "public_symbol:flow.addfloatingbox",
+        "public_symbol:flow.addtable"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock"
+      ],
+      "title": "Text, Tables, and Flow Layout"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx",
+        "public_symbol:page.addhtml",
+        "public_symbol:page.addmarkdown",
+        "public_symbol:page.adddocx",
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:flow.addhtmlasync",
+        "public_symbol:flow.addmarkdownasync"
+      ],
+      "shared_fact_ids": [],
+      "title": "HTML, Markdown, and DOCX Import"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.annotations",
+        "public_symbol:annotation.constructor",
+        "public_symbol:annotation.rect",
+        "public_symbol:annotation.color",
+        "public_symbol:annotation.contents",
+        "public_symbol:annotation.flags",
+        "public_symbol:annotation.print",
+        "public_symbol:annotation.hidden",
+        "public_symbol:annotation.opacity",
+        "public_symbol:annotation.subtype",
+        "public_symbol:annotation.name"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:page.annotations"
+      ],
+      "title": "Annotations, Forms, and Optional Content"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.redact",
+        "public_symbol:page.redacttext",
+        "public_symbol:page.markredacttext",
+        "public_symbol:page.applyredactions",
+        "public_symbol:document.redact",
+        "public_symbol:document.redacttext",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.optimize",
+        "public_symbol:document.optimizeasync"
+      ],
+      "shared_fact_ids": [],
+      "title": "Redaction, Sanitization, and Optimization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.sign",
+        "public_symbol:document.certify",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.verifydocumenttimestamps",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:document.signatures",
+        "public_symbol:encryptoptions",
+        "public_symbol:signoptions"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save"
+      ],
+      "title": "Digital Signatures and Encryption"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:page.tomarkdown",
+        "public_symbol:page.todocx",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.totiff",
+        "public_symbol:page.toimageasync",
+        "public_symbol:page.tomarkdownasync"
+      ],
+      "shared_fact_ids": [],
+      "title": "Rendering and Export"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "package:name",
+        "package:node_engine",
+        "package:version"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered from facts in the identity section."
+    },
+    {
+      "fact_ids": [
+        "license:spdx",
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered from facts in the badges section."
+    },
+    {
+      "fact_ids": [
+        "link_target:007",
+        "link_target:008",
+        "link_target:product.homepage",
+        "link_target:product.enterprise"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The banner image links to the Aspose product page and is moved to the enterprise relationship section."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:node_engine",
+        "package:version"
+      ],
+      "section_id": "opening",
+      "text": "The opening paragraph matches the product summary fact and is preserved as written."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.saveasync",
+        "public_symbol:document.writeto",
+        "public_symbol:document.openfile",
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair"
+      ],
+      "section_id": "opening",
+      "text": "The paragraph describes the in-memory object model and save behavior, supported by multiple public symbols."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation.color",
+        "public_symbol:annotation.constructor",
+        "public_symbol:annotation.contents",
+        "public_symbol:annotation.flags",
+        "public_symbol:annotation.hidden",
+        "public_symbol:annotation.name",
+        "public_symbol:annotation.opacity",
+        "public_symbol:annotation.print"
+      ],
+      "section_id": "at_a_glance",
+      "text": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.decodebudget",
+        "public_symbol:document.loadlimits",
+        "public_symbol:document.merge",
+        "public_symbol:document.open",
+        "public_symbol:document.openfile",
+        "public_symbol:document.recovery",
+        "public_symbol:document.repair",
+        "public_symbol:document.save"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The first list under Key Capabilities is superseded by the deterministic key_capabilities section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addtable",
+        "public_symbol:flow.constructor",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addimage"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The second list under Key Capabilities is superseded by the deterministic key_capabilities section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:attachment.setfield",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.optimize",
+        "public_symbol:document.optimizeasync",
+        "public_symbol:document.redact",
+        "public_symbol:document.redacttext",
+        "public_symbol:document.sanitize"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The third list under Key Capabilities is superseded by the deterministic key_capabilities section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.decodebudget",
+        "public_symbol:document.loadlimits",
+        "public_symbol:document.merge",
+        "public_symbol:document.open",
+        "public_symbol:document.openfile",
+        "public_symbol:document.recovery",
+        "public_symbol:document.repair",
+        "public_symbol:document.save"
+      ],
+      "section_id": "api_reference",
+      "text": "Kept in api_reference: key_capabilities holds no api material. The first detailed list under Key Capabilities is superseded by the deterministic key_capabili..."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "installation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "dependencies"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "scope_limitations"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:021",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:026",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:027",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:030",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:035",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:036",
+      "section_id": "third_party_notices"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "dependencies"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "at_a_glance"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "key_capabilities"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

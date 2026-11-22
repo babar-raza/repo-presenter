@@ -1,0 +1,469 @@
+{
+  "audience": {
+    "fact_ids": [
+      "install_command:npm",
+      "identity:ecosystem",
+      "identity:platform",
+      "package:node_engine"
+    ],
+    "text": "Developers building Node.js applications that need to parse, edit, and generate PDF documents without external native dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:document.save",
+        "public_symbol:document.saveasync",
+        "public_symbol:document.writeto",
+        "public_symbol:document.openfile",
+        "public_symbol:document.decodebudget",
+        "public_symbol:document.loadlimits",
+        "public_symbol:loadlimits"
+      ],
+      "text": "Parses classic cross-reference tables and streams, object streams, and all stream filters (FlateDecode, LZWDecode, ASCII85Decode, ASCIIHexDecode, RunLengthDecode) with matching encoders; recovers damaged files and reports what was repaired.",
+      "title": "PDF Parsing and Serialization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.pages",
+        "public_symbol:page.constructor",
+        "public_symbol:page.document",
+        "public_symbol:page.rect",
+        "public_symbol:page.rotate",
+        "public_symbol:page.resources",
+        "public_symbol:page.contents",
+        "public_symbol:page.annotations",
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addimage"
+      ],
+      "text": "Access and edit every page through doc.Pages with all five boundary boxes, rotation, resources, and decoded content; manipulate the page set with AddPage, InsertPage, RemovePage, Reorder, Split, ExtractPages, Append, and Document.Merge.",
+      "title": "Page Manipulation and Content Editing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:page.addtable",
+        "public_symbol:flow.constructor",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addimage",
+        "public_symbol:flow.addfloatbox",
+        "public_symbol:flow.addfloatingbox",
+        "public_symbol:flow.addtable"
+      ],
+      "text": "Stamp text with the 12 Standard-14 fonts or embedded TrueType/OpenType/WOFF/WOFF2 fonts; build tables with spans, pagination, and auto-fit columns; create multi-column flow documents with headings, lists, images, floats, and a table of contents.",
+      "title": "Text, Tables, and Flow Layout"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.addhtml",
+        "public_symbol:flow.addmarkdown",
+        "public_symbol:flow.adddocx",
+        "public_symbol:page.addhtml",
+        "public_symbol:page.addmarkdown",
+        "public_symbol:page.adddocx",
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:flow.addhtmlasync",
+        "public_symbol:flow.addmarkdownasync"
+      ],
+      "text": "Import HTML (parsed by a real HTML5 tokenizer and styled through a CSS cascade), CommonMark/GFM Markdown, or DOCX into a flow, a page rectangle, or a whole document with AddHtml, AddMarkdown, or AddDocx.",
+      "title": "HTML, Markdown, and DOCX Import"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.annotations",
+        "public_symbol:annotation.constructor",
+        "public_symbol:annotation.rect",
+        "public_symbol:annotation.color",
+        "public_symbol:annotation.contents",
+        "public_symbol:annotation.flags",
+        "public_symbol:annotation.print",
+        "public_symbol:annotation.hidden",
+        "public_symbol:annotation.opacity",
+        "public_symbol:annotation.subtype",
+        "public_symbol:annotation.name"
+      ],
+      "text": "Create, edit, and enumerate 16 annotation subtypes, outlines, page labels, named destinations, JavaScript, attachments, portfolios, and optional-content layers; fill and style AcroForm fields and regenerate appearances.",
+      "title": "Annotations, Forms, and Optional Content"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.redact",
+        "public_symbol:page.redacttext",
+        "public_symbol:page.markredacttext",
+        "public_symbol:page.applyredactions",
+        "public_symbol:document.redact",
+        "public_symbol:document.redacttext",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.optimize",
+        "public_symbol:document.optimizeasync"
+      ],
+      "text": "Redact content by rectangle or text search, truly removing glyphs and images from the saved file; sanitize hidden data in one call; optimize fonts, images, and structure losslessly.",
+      "title": "Redaction, Sanitization, and Optimization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.sign",
+        "public_symbol:document.certify",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.verifydocumenttimestamps",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:document.signatures",
+        "public_symbol:encryptoptions",
+        "public_symbol:signoptions"
+      ],
+      "text": "Open PDFs protected with the standard security handler (RC4, AES-128, AES-256); write encrypted output with the same handler or certificate-based /Adobe.PubSec; support adbe.pkcs7.detached and ETSI.CAdES.detached signatures with timestamps, LTV data, and full verification.",
+      "title": "Digital Signatures and Encryption"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:page.tomarkdown",
+        "public_symbol:page.todocx",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.totiff",
+        "public_symbol:page.toimageasync",
+        "public_symbol:page.tomarkdownasync"
+      ],
+      "text": "Render a page to SVG or a raster image (PNG/JPEG/TIFF/BMP/GIF) with a pure-TypeScript software rasterizer; export a whole document to reflowable or fixed-layout HTML, Markdown, DOCX, or EPUB.",
+      "title": "Rendering and Export"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:imageinfo.filter",
+        "public_symbol:inlineimageinfo.filter",
+        "public_symbol:saveimageoptions.format",
+        "public_symbol:saveimagesoptions.format",
+        "public_symbol:imageoptions.format",
+        "public_symbol:imageoptions.compression",
+        "public_symbol:imageoptions.quality",
+        "public_symbol:imageoptions.threshold",
+        "public_symbol:imageoptions.scale",
+        "public_symbol:imageoptions.height",
+        "public_symbol:imageoptions.width"
+      ],
+      "text": "The library does not decode or encode image codecs beyond those listed; JPXDecode (JPEG 2000) decoding is supported but encoding is not."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textfont.canencode",
+        "public_symbol:textfont.encode",
+        "public_symbol:textfont.encodechar",
+        "public_symbol:textfont.decode",
+        "public_symbol:textfont.decoderun",
+        "public_symbol:textfont.dict",
+        "public_symbol:textfont.dictwidth",
+        "public_symbol:textfont.drawcode",
+        "public_symbol:textfont.italic",
+        "public_symbol:textfont.bold",
+        "public_symbol:textfont.name"
+      ],
+      "text": "Complex-text shaping requires an embedded font with shape: true; Standard-14 fonts do not shape and an embedded font with shaping off stays byte-identical."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:documentjavascript.script",
+        "public_symbol:documentjavascript.name",
+        "public_symbol:javascriptaction.script",
+        "public_symbol:javascriptaction.type",
+        "public_symbol:fieldactions.calculate",
+        "public_symbol:fieldactions.format",
+        "public_symbol:fieldactions.keystroke",
+        "public_symbol:fieldactions.validate",
+        "public_symbol:submitaction.type",
+        "public_symbol:submitaction.url",
+        "public_symbol:submitaction.fields"
+      ],
+      "text": "The library does not run JavaScript; it only recognizes and implements Acrobat's 17 standard AForm functions natively when scripts are exactly one such call with literal arguments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:convertoptions.flattentransparency",
+        "public_symbol:convertoptions.iccprofile",
+        "public_symbol:convertoptions.preserve",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfaasync",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfaasync",
+        "public_symbol:document.convertcolors",
+        "public_symbol:document.convertcolorsasync",
+        "public_symbol:document.converttograyscale",
+        "public_symbol:document.converttograyscaleasync"
+      ],
+      "text": "PDF/A-1 transparency is not flattened by default; opt-in with flattenTransparency: true, which rasterizes affected pages and is not reversible."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box",
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box",
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box",
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box",
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box",
+        "public_symbol:svgoptions.annotations"
+      ],
+      "text": "SVG embedding does not support external hrefs for fonts or images unless opts.resolveImage or opts.resolveImage are provided; a font-family outside the 12 Latin Standard-14 faces is silently substituted."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:saveoptions.compressed",
+        "public_symbol:saveoptions.encrypt",
+        "public_symbol:saveoptions.incremental",
+        "public_symbol:saveoptions.linearized",
+        "public_symbol:saveoptions.streamfilter",
+        "public_symbol:document.save",
+        "public_symbol:document.saveasync",
+        "public_symbol:document.writeto",
+        "public_symbol:document.open",
+        "public_symbol:document.openfile",
+        "public_symbol:document.recovery"
+      ],
+      "text": "Incremental save is not combinable with compressed, encrypt, linearized, or streamFilter options, and refuses encrypted and recovery-opened documents."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "text": "Enables server-side PDF processing in Node.js with no third-party runtime dependencies, using only built-in Node.js modules."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "text": "Provides a complete in-memory object model for PDF documents, allowing mutations to be applied directly and serialized to a fresh document on save."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "text": "Supports incremental save and digital signing, preserving earlier bytes and enabling long-term validation with embedded timestamps and revocation data."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "text": "Offers bounded resource limits during document parsing to prevent memory exhaustion from untrusted inputs."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "install_command:npm",
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "package:node_engine",
+      "package:version"
+    ],
+    "text": "Aspose.PDF FOSS for TypeScript is a free, open-source, zero-dependency TypeScript library for reading, manipulating, and writing PDF files in Node.js."
+  },
+  "uncertainties": [
+    "The exact behavior of the library when handling malformed or non-standard PDF constructs beyond documented recovery is not fully specified.",
+    "The library's handling of certain advanced PDF features like blend modes, soft masks, and transparency groups may not match all viewers exactly.",
+    "The library's support for PDF 2.0 features beyond what is documented may be incomplete or untested.",
+    "The library's behavior when processing extremely large documents or deeply nested structures under LoadLimits is not fully characterized.",
+    "The library's handling of custom or non-standard font encodings beyond the 195 bundled Adobe CMaps is not fully documented.",
+    "The library's behavior when processing documents with mixed content streams (e.g., text, images, and annotations) is not fully specified.",
+    "The library's handling of certain annotation subtypes or appearance streams may not match all viewers exactly.",
+    "The library's behavior when processing documents with complex optional-content configurations is not fully documented."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Open and Edit PDF",
+      "text": "Open an existing PDF with Document.Open, edit pages and metadata through the live object model, and save with Document.Save."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Generate PDF from Scratch",
+      "text": "Create a new document with Document.New, add pages and content using APIs like AddText, AddImage, AddTable, and Flow, then save the result."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Import and Convert Content",
+      "text": "Import HTML, Markdown, plain text, or DOCX into a document or flow using AddHtml, AddMarkdown, AddPlainText, or AddDocx, and export to other formats."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Validate and Remediate Conformance",
+      "text": "Validate a document against PDF/A, PDF/UA, or PDF/X standards using ValidatePdfA, ValidatePdfUa, or ValidatePdfX, and remediate with ConvertToPdfA, ConvertToPdfUa, or ConvertToPdfX."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Sign and Secure Documents",
+      "text": "Open encrypted PDFs with a password, sign documents with PKCS#12 or PEM credentials, embed timestamps, and apply certificate-based encryption for recipients."
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm",
+        "install_command:npm"
+      ],
+      "name": "Extract and Redact Content",
+      "text": "Extract text, tables, and vector paths from pages, search and replace text, redact content by rectangle or text search, and sanitize hidden data."
+    }
+  ]
+}
