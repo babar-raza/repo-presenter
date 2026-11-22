@@ -4,7 +4,66 @@
 
 [![Aspose.Slides FOSS for .NET](https://products.aspose.org/media/slides/net/banner-readme.png)](https://products.aspose.org/slides/net/)
 
-Aspose.Slides FOSS for .NET reads and writes presentations in the PPTX format. It creates new presentations, opens existing ones from a path or a stream, and saves presentations to a path or a stream. It supports adding and manipulating slides, sections, shapes including autoShapes, tables, and text with full formatting, as well as fill, line, effect, 3-D, notes, comments, and document properties.
+It creates, reads, and edits PowerPoint .pptx presentations by building the Office Open XML package itself. It adds slides, shapes, text frames, tables, notes slides, and comment authors, and saves presentations to the .pptx format using the `SaveFormat.Pptx` option.
+
+An MIT-licensed .NET library that creates, reads and edits PowerPoint `.pptx` presentations by
+building the Office Open XML package itself — no PowerPoint installation, no COM interop, no native
+dependency and no NuGet dependencies at all.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Additional Examples](#additional-examples)
+- [API Reference](#api-reference)
+- [Documentation & Resources](#documentation--resources)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
+
+## At a Glance
+
+```mermaid
+flowchart TB
+  PRODUCT["Aspose.Slides FOSS for .NET"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Create and edit<br/>presentations"]
+    c2["Slide management"]
+    c3["Shape rendering"]
+    c4["Text formatting"]
+    c5["Fill and line styles"]
+    c6["Visual effects"]
+    c7["Tables and notes"]
+    c8["Comments and document<br/>properties"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
+  end
+  PRODUCT --> Capabilities
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
+```
+
+## Key Capabilities
+
+- **Create and edit presentations.** It creates new presentations, opens existing ones from a path or a stream, saves to a path or a stream, and disposes resources throughout.
+- **Slide management.** It adds empty slides, inserts slides, removes slides, clones slides, hides slides, enumerates slides, masters, and layouts, and manages sections with add, append, remove, and reorder operations.
+- **Shape rendering.** It adds AutoShapes, picture frames, and connectors bound to shapes by connection site, supports z-order reordering, and adjusts geometry shape values.
+- **Text formatting.** It formats text with character properties such as bold, italic, underline, strikethrough, size, spacing, caps, and font selection, and paragraph properties including alignment, indent, margins, spacing, and bullets.
+- **Fill and line styles.** It applies solid, gradient, pattern, picture, and no-fill types to shapes, lines, text portions, and table cells, and configures line width, dash style, caps, joins, miter limit, compound style, alignment, and arrowheads.
+- **Visual effects.** It applies outer shadow, inner shadow, glow, soft edge, reflection, blur, preset shadow, and fill overlay effects to shapes.
+- **Tables and notes.** It creates tables with rows, columns, cells, cell merging, cell fill, borders, cell margins and anchoring, and table style presets.
+- **Comments and document properties.** It manages notes slides with notes text, footer text, footer visibility, and slide-number visibility, and handles comments with authors, positions, timestamps, and document properties in core, extended, and custom XML parts.
+
+Everything in this list was exercised through the public API and then confirmed by reading the XML
+inside the file that came out.
 
 - **Presentations** — create, open a path or a stream, save to a path or a stream, save a subset of
   slides, `IDisposable` throughout.
@@ -42,65 +101,6 @@ Aspose.Slides FOSS for .NET reads and writes presentations in the PPTX format. I
   `docProps/custom.xml` are all written.
 - **Unknown parts** — parts the library does not model are carried through a load and a save
   unchanged.
-
-MIT — see [LICENSE](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/LICENSE).
-Copyright (c) 2026 Aspose Pty Ltd.
-
-## Navigation
-
-- [At a Glance](#at-a-glance)
-- [Key Capabilities](#key-capabilities)
-- [Installation](#installation)
-- [Dependencies](#dependencies)
-- [Quick Start](#quick-start)
-- [Additional Examples](#additional-examples)
-- [API Reference](#api-reference)
-- [Documentation & Resources](#documentation--resources)
-- [Scope and Limitations](#scope-and-limitations)
-- [Development and Testing](#development-and-testing)
-- [License](#license)
-
-## At a Glance
-
-```mermaid
-flowchart TB
-  PRODUCT["Aspose.Slides FOSS for .NET"]
-  subgraph Capabilities["Core Capabilities"]
-    direction TB
-    c1["Create and edit<br/>presentations"]
-    c2["Add and format shapes"]
-    c3["Format text and<br/>paragraphs"]
-    c4["Create and style<br/>tables"]
-    c5["Manage slides and<br/>sections"]
-    c6["Add notes and comments"]
-    c7["Stream-based I/O"]
-    c8["Preserve unknown parts"]
-    c1 ~~~ c4
-    c2 ~~~ c5
-    c3 ~~~ c6
-    c4 ~~~ c7
-    c5 ~~~ c8
-    c6 ~~~ c8
-  end
-  PRODUCT --> Capabilities
-  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
-  class PRODUCT product
-```
-
-## Key Capabilities
-
-- **Create and edit presentations.** It creates new presentations from scratch, adds slides, inserts shapes with text, and saves the result as a .pptx file, or opens an existing presentation to read and modify its content.
-- **Add and format shapes.** It adds auto shapes such as rectangles, sets their fill color and effects like outer shadow, blur radius, and distance, then saves the formatted shapes to a presentation file.
-- **Format text and paragraphs.** It formats text by setting font height, bold style, Latin font, and fill color on portions, and aligns paragraphs within text frames attached to shapes.
-- **Create and style tables.** It creates tables with specified column widths and row heights, populates cells with text, and merges cells horizontally to build structured layouts.
-- **Manage slides and sections.** It adds empty slides based on layout slides and organizes slides into named sections such as Introduction and Detail.
-- **Add notes and comments.** It adds notes slides with text content and attaches comments to slides with a specified author, position, and timestamp.
-- **Stream-based I/O.** It saves presentations to a memory stream and reloads them from the same stream without writing to disk.
-- **Preserve unknown parts.** It preserves unknown or unmodified parts of a presentation when reading and writing files, ensuring round-trip fidelity.
-
-An MIT-licensed .NET library that creates, reads and edits PowerPoint `.pptx` presentations by
-building the Office Open XML package itself — no PowerPoint installation, no COM interop, no native
-dependency and no NuGet dependencies at all.
 
 ## Installation
 
@@ -145,6 +145,9 @@ Console.WriteLine($"shapes: {reopened.Slides[0].Shapes!.Count}");
 Console.WriteLine($"text:   {reread.TextFrame?.Text}");
 ```
 
+Use whatever version the artefact you downloaded is called; a CI build carries the version in
+`Directory.Build.props` at that commit, which may be ahead of the last release.
+
 Output:
 
 ```
@@ -155,9 +158,9 @@ text:   Hello from Aspose.Slides FOSS
 
 ## Additional Examples
 
-The following examples show how to create and modify presentations using Aspose.Slides FOSS for .NET.
+The following workflows demonstrate core tasks with Aspose.Slides FOSS for .NET: adding formatted text, inserting tables, applying effects, managing notes and comments, organizing slides into sections, and saving to or loading from streams.
 
-### Add a Rectangle Shape with Formatted Text
+### Text and Formatting
 
 ```csharp
 using Aspose.Slides.Foss.Drawing;
@@ -184,7 +187,7 @@ presentation.Save("text.pptx", SaveFormat.Pptx);
 <details>
 <summary>View Additional Examples</summary>
 
-### Insert a Table and Merge Its Header Cells
+### Tables
 
 ```csharp
 using Aspose.Slides.Foss.Export;
@@ -203,7 +206,7 @@ table.MergeCells(table.Rows[0][0], table.Rows[0][1], allowSplitting: false);
 presentation.Save("table.pptx", SaveFormat.Pptx);
 ```
 
-### Apply an Outer Shadow Effect to a Shape
+### Apply an Outer Shadow Effect to a Colored Rectangle
 
 ```csharp
 using Aspose.Slides.Foss.Drawing;
@@ -224,7 +227,7 @@ effects.OuterShadowEffect.Distance = 5;
 presentation.Save("effects.pptx", SaveFormat.Pptx);
 ```
 
-### Notes and Comments
+### Add a Notes Slide and a Comment to the First Slide
 
 ```csharp
 using Aspose.Slides.Foss.Drawing;
@@ -242,7 +245,7 @@ author.Comments.AddComment("Check these numbers.", slide, new PointF(2.0f, 2.0f)
 presentation.Save("notes-comments.pptx", SaveFormat.Pptx);
 ```
 
-### Sections
+### Create Two Slides and Assign Them to Named Sections
 
 ```csharp
 using Aspose.Slides.Foss.Export;
@@ -257,7 +260,7 @@ presentation.Sections.AddSection("Detail", presentation.Slides[1]);
 presentation.Save("sections.pptx", SaveFormat.Pptx);
 ```
 
-### Streams
+### Save a Presentation to a Stream and Reopen It
 
 ```csharp
 using Aspose.Slides.Foss.Export;
@@ -272,7 +275,7 @@ buffer.Position = 0;
 using var reopened = new Presentation(buffer);
 ```
 
-Four `<a:tc>` cells, two of them carrying a merge attribute.
+### Pictures
 
 ```csharp
 using var presentation = new Presentation();
@@ -293,34 +296,30 @@ The diagram is an overview, not a contract. Each box is expanded, with the XML i
 What it can do; the boundaries are under
 What it cannot do.
 
-Use whatever version the artefact you downloaded is called; a CI build carries the version in
-`Directory.Build.props` at that commit, which may be ahead of the last release.
-
 `IBaseSlide.Shapes` is declared `IShapeCollection?` and returns `null` for a slide that is not backed
 by a package part; a few other members are annotated the same way. The samples here use the
 null-forgiving operator so that they compile without warnings in a project with
 `<Nullable>enable</Nullable>`, which is the default for new .NET projects. Every sample on this page
 was compiled with nullable enabled and produced zero warnings.
 
+Those three are this library's own namespaces. The samples also use `Console`, `DateTime`, `File`,
+`FileStream` and `MemoryStream`, which come from `System` and `System.IO`: `<ImplicitUsings>` brings
+both into scope and is on by default in a project from `dotnet new console` — the same default this
+page relies on for `Nullable` above. Turn implicit usings off and you add those two `using` lines
+yourself.
+
 In `ppt/slides/slide1.xml`: `<a:rPr b="1" sz="2400">`, `<a:latin typeface="Verdana"/>`,
 `<a:pPr algn="ctr">`.
-
-All eight effects were enabled one at a time, each into its own file, and each produced its element
-inside `<a:effectLst>`: `a:outerShdw`, `a:innerShdw`, `a:glow`, `a:softEdge`, `a:reflection`,
-`a:blur`, `a:prstShdw`, `a:fillOverlay`.
 
 A `Section` has no public constructor: it is
 created through `Sections.AddSection` or `Sections.AppendEmptySection`, which bind it to the
 presentation whose slides it divides.
 
-Everything in this list was exercised through the public API and then confirmed by reading the XML
-inside the file that came out.
-
 </details>
 
 ## API Reference
 
-Aspose.Slides FOSS for .NET exposes the Aspose.Slides FOSS for .NET class as its primary entry point for working with presentations, and `Aspose.Slides.Foss.Export.SaveFormat` as the enumeration that defines supported output formats.
+Aspose.Slides FOSS for .NET exposes the `Aspose.Slides.Foss` namespace as its primary entry point, with the `Aspose.Slides.Foss.Presentation` class serving as the main class for working with presentations. It supports reading and writing Pptx, Ppsx, and Potx formats.
 
 The public API has 264 types.
 
@@ -605,7 +604,7 @@ The public API has 264 types.
 
 ### Foss
 
-The Aspose.Slides FOSS for .NET class provides core presentation functionality, including loading and saving presentations in PPTX, PPT, PPSX, and other formats supported by the `SaveFormat` enumeration, while mirroring the naming of the commercial Aspose.Slides for .NET product so its documentation serves as a reference for shared type meanings.
+The Aspose.Slides FOSS for .NET class is the root namespace for the library and mirrors the naming of the commercial Aspose.Slides for .NET product, so that product's documentation is usually the fastest way to understand what a shared type name means, though this library supports a much smaller subset of the API as documented in the tables above.
 
 | | |
 |---|---|
@@ -640,20 +639,17 @@ It describes a much larger API: check the tables above before relying on anythin
 - **[Aspose.Slides FOSS for Java](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java)** — On github.com.
 - **[Aspose.Slides FOSS for C++](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp)** — On github.com.
 - **[Aspose.Slides FOSS for Python](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python)** — On github.com.
-- **[Aspose.Slides for .NET — product page](https://products.aspose.com/slides/net/)** — The product page.
 - **[Documentation](https://docs.aspose.com/slides/net/)** — Installation, walkthroughs, and feature guides for this library.
 - **[API reference](https://reference.aspose.com/slides/net/)** — The complete, browsable reference for the public API. It covers all 264 public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[Knowledge base](https://kb.aspose.com/slides/net/)** — Task-focused how-to articles and answers to common questions.
 - **[Free support forum](https://forum.aspose.com/c/slides/11)** — On forum.aspose.com.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/issues).
 
+- [Aspose.Slides for .NET — product page](https://products.aspose.com/slides/net/)
+
 ## Scope and Limitations
 
 This section is the point of this file. Nothing below is a "coming soon"; it is what the API does not contain today.
-
-`SaveFormat` declares **21** values. `Save` writes **three** of them and raises `NotSupportedException` for the other **eighteen** — it never writes a package under a name that claims to be a format it did not produce.
-
-The three that are written are three genuinely different packages, each with its own main-part content type:
 
 ```
 Pptx  -> application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml
@@ -671,8 +667,6 @@ Save format 'Pptm' is not supported: a macro-enabled package requires a VBA proj
 this library does not write. Supported formats: Pptx, Ppsx, Potx.
 ```
 
-Give the file the extension that matches the format you asked for — `.pptx`, `.ppsx`, `.potx`. Office keys off the name as well as the content type, and a file whose two disagree may be refused.
-
 Opening a deck and saving it again preserves every part, and preserves the great majority of them byte for byte. It does not rewrite nothing at all. Measured on this repository's own 46-part PowerPoint-authored fixture (`tests/test_data/PowerPointDeck.pptx`, `<Application>Microsoft Office PowerPoint</Application>`):
 
 | | |
@@ -685,10 +679,6 @@ Opening a deck and saving it again preserves every part, and preserves the great
 | Slide text runs | identical, in order |
 
 `docProps/core.xml` is rewritten because saving stamps a modification time; `docProps/app.xml` is regenerated from the presentation; the other two are rebuilt from the package model. Parts this library has no model for — `presProps`, `viewProps`, `tableStyles`, thumbnails, extra themes, unused layouts — are among the 42 that come back unchanged. That is a specific, measured claim about one real deck, and it is deliberately narrower than "full fidelity".
-
-A deck written by this library contains no `lang=` attribute anywhere and no `<a:rPr>` on a portion that was never formatted. PowerPoint will apply the authoring machine's default language rather than a language the file states.
-
-There are four editions of this library and they are **not** interchangeable. Three of them — .NET, Java and C++ — are the same design in three languages; Python is a larger and different one. The table below was measured on 2026-08-16 by running each edition and reading the XML in the file it produced.
 
 | | .NET | Java | C++ | Python |
 |---|---|---|---|---|
@@ -713,13 +703,7 @@ There are four editions of this library and they are **not** interchangeable. Th
 
 The short version: **if you need charts, animations, transitions, themes, backgrounds, group shapes or hyperlinks, none of them exist in this edition — use the Python one.** If you need sections, this is the only edition that has them. Code written against the Python examples does not port to the other three, and a new deck is not even the same shape.
 
-**When you want the commercial product instead of this one:** if you need to render or convert — PDF, images, HTML, thumbnails — or need charts, SmartArt, animations, OLE objects or macro-enabled files, or need a supported product with a licence, none of that is here and none of it is planned in this repository. This library is the right choice when you are reading and writing `.pptx` and want an MIT-licensed dependency with no other dependencies at all.
-
-Bugs and feature requests for **this** library belong in [this repository's issue tracker](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/issues), not in the commercial product's forum.
-
-Do not report a vulnerability in a public issue. See [SECURITY.md](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/SECURITY.md) for the reporting route.
-
-See [Aspose.Slides for .NET — Enterprise Edition](https://products.aspose.com/slides/net/). The commercial product adds features not implemented in this package, such as advanced animation editing, slide master customization, and support for additional output formats.
+See [Aspose.Slides for .NET — Enterprise Edition](https://products.aspose.com/slides/net/). That product adds rendering and conversion to PDF, images, HTML, and thumbnails, as well as support for charts, SmartArt, animations, OLE objects, and macro-enabled files, none of which this library implements.
 
 ## Development and Testing
 
@@ -776,6 +760,26 @@ dotnet add package Aspose.Slides.FOSS --version 26.9.0
 Pull requests are welcome. Read [CONTRIBUTING.md](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/CONTRIBUTING.md) first — it explains the build, the three test suites, and the one rule that is specific to this project: **a writer fix ships with a test that asserts on the produced `.pptx` package, not on what the library reads back.**
 
 By participating you agree to the [Code of Conduct](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/CODE_OF_CONDUCT.md). Changes are recorded in [CHANGELOG.md](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/CHANGELOG.md).
+
+There are four editions of this library and they are **not** interchangeable. Three of them —
+.NET, Java and C++ — are the same design in three languages; Python is a larger and different one.
+
+**When you want the commercial product instead of this one:** if you need to render or convert —
+PDF, images, HTML, thumbnails — or need charts, SmartArt, animations, OLE objects or macro-enabled
+files, or need a supported product with a licence, none of that is here and none of it is planned in
+this repository. This library is the right choice when you are reading and writing `.pptx` and want
+an MIT-licensed dependency with no other dependencies at all.
+
+Bugs and feature requests for **this** library belong in
+[this repository's issue tracker](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/issues),
+not in the commercial product's forum.
+
+Do not report a vulnerability in a public issue. See
+[SECURITY.md](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/SECURITY.md)
+for the reporting route.
+
+MIT — see [LICENSE](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob/main/LICENSE).
+Copyright (c) 2026 Aspose Pty Ltd.
 
 ## License
 

@@ -14,70 +14,74 @@
         "example:009",
         "public_symbol:aspose.slides.foss"
       ],
-      "text": "Create new presentations, open existing ones from paths or streams, save to paths or streams, and save subsets of slides.",
+      "text": "Create new presentations, open from file or stream, save to file or stream, and save subsets of slides.",
       "title": "Create and edit presentations"
-    },
-    {
-      "fact_ids": [
-        "example:001",
-        "example:006",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "text": "Add 187 types of auto shapes, configure fill (solid, gradient, pattern, picture), line properties, and visual effects like outer shadow.",
-      "title": "Add and format shapes"
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "text": "Add text frames, paragraphs, and portions with character formatting (bold, size, font) and paragraph formatting (alignment, bullets).",
-      "title": "Format text and paragraphs"
-    },
-    {
-      "fact_ids": [
-        "example:004",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "text": "Add tables with rows and columns, merge cells, configure cell borders, margins, and apply table style presets.",
-      "title": "Create and style tables"
     },
     {
       "fact_ids": [
         "example:008",
         "public_symbol:aspose.slides.foss"
       ],
-      "text": "Add, insert, remove, clone, and hide slides; organize slides into sections using Sections.AddSection.",
-      "title": "Manage slides and sections"
+      "text": "Add, insert, remove, clone, and hide slides; enumerate masters and layouts; clone masters.",
+      "title": "Slide management"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Add 187 auto shape types, picture frames, tables, and connectors; reorder z-order; adjust geometry values.",
+      "title": "Shape rendering"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Format text at portion level including bold, italic, underline, size, spacing, caps, and font selection.",
+      "title": "Text formatting"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Apply solid, gradient, pattern, picture, or no-fill to shapes, lines, text portions, and table cells.",
+      "title": "Fill and line styles"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Enable and configure eight effect types: outer shadow, inner shadow, glow, soft edge, reflection, blur, preset shadow, fill overlay.",
+      "title": "Visual effects"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:007",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Create tables with cell merging, borders, margins, and styles; add notes slides with footer and slide number visibility.",
+      "title": "Tables and notes"
     },
     {
       "fact_ids": [
         "example:007",
         "public_symbol:aspose.slides.foss"
       ],
-      "text": "Create notes slides with notes text, add comment authors, and insert comments with position and timestamp on slides.",
-      "title": "Add notes and comments"
-    },
-    {
-      "fact_ids": [
-        "example:009",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "text": "Load and save presentations using file paths or Stream objects, including saving to memory streams for in-memory workflows.",
-      "title": "Stream-based I/O"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.slides.foss"
-      ],
-      "text": "Carry through parts the library does not model unchanged during load and save operations.",
-      "title": "Preserve unknown parts"
+      "text": "Add comment authors and comments with position and timestamp; write core, extended, and custom document properties.",
+      "title": "Comments and document properties"
     }
   ],
   "limitations": [
     {
       "fact_ids": [
-        "public_symbol:aspose.slides.foss"
+        "install_command:dotnet",
+        "package:name"
       ],
       "text": "Only three SaveFormat values are supported (.pptx, .ppsx, .potx); eighteen others raise NotSupportedException."
     },
@@ -104,14 +108,14 @@
       "fact_ids": [
         "public_symbol:aspose.slides.foss"
       ],
-      "text": "Slide size cannot be changed; new presentations default to 4:3 screen size (9144000 × 6858000 EMU)."
+      "text": "Slide size cannot be changed; new presentations default to 4:3 screen size."
     },
     {
       "fact_ids": [
-        "example:004",
+        "example:009",
         "public_symbol:aspose.slides.foss"
       ],
-      "text": "Picture embedding requires reading bytes into memory first; no overload accepts a file path directly."
+      "text": "No overload for picture embedding accepts a file path; bytes must be read manually into a stream."
     }
   ],
   "problems_solved": [
@@ -126,18 +130,22 @@
     {
       "fact_ids": [
         "dependency:none",
-        "identity:ecosystem",
-        "license:spdx",
-        "package:name"
+        "package:name",
+        "package:target_framework"
       ],
-      "text": "Provides a pure .NET implementation that builds the Office Open XML package directly, avoiding native dependencies."
+      "text": "Provides a pure .NET implementation that builds the PowerPoint Open XML package directly, with zero NuGet dependencies."
     },
     {
       "fact_ids": [
-        "package:target_framework",
-        "dependency:none"
+        "example:001",
+        "example:003",
+        "example:004",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009"
       ],
-      "text": "Supports .NET 8 and .NET 10 long-term support releases with no NuGet package dependencies."
+      "text": "Supports precise control over presentation structure including slides, sections, shapes, text formatting, tables, effects, notes, and comments."
     }
   ],
   "product_summary": {
@@ -151,17 +159,17 @@
       "package:target_framework",
       "public_symbol:aspose.slides.foss"
     ],
-    "text": "Aspose.Slides FOSS for .NET is an MIT-licensed .NET library that creates, reads, and edits PowerPoint .pptx presentations by building the Office Open XML package directly, with no external dependencies."
+    "text": "Aspose.Slides.FOSS for .NET is an MIT-licensed .NET library that creates, reads, and edits PowerPoint .pptx presentations by building the Office Open XML package directly, with no external dependencies."
   },
   "uncertainties": [
-    "Whether the library supports the two ShapeType values NotDefined and Custom beyond defaulting to rectangle geometry.",
-    "Whether the library supports modern threaded comments in any capacity.",
-    "Whether document properties beyond core, extended, and custom are supported.",
-    "Whether the library supports embedded OLE objects or SmartArt.",
-    "Whether the library supports macro-enabled presentation formats.",
+    "Whether the library supports embedded OLE objects or macros.",
+    "Whether the library supports SmartArt objects.",
     "Whether the library supports rendering to PDF, images, or HTML.",
-    "Whether the library supports transitions or animations.",
-    "Whether the library supports background formatting beyond fill types on shapes."
+    "Whether the library supports animation or transition definitions.",
+    "Whether the library supports background master or theme customization.",
+    "Whether the library supports grouped shapes or group operations.",
+    "Whether the library supports hyperlinks within text or shapes.",
+    "Whether the library supports slide transitions or animation timing."
   ],
   "workflows": [
     {
@@ -170,15 +178,15 @@
         "public_symbol:aspose.slides.foss"
       ],
       "name": "Create and save a basic presentation",
-      "text": "Instantiate a Presentation object, add shapes and text to slides, and save the result as a .pptx file using SaveFormat.Pptx."
+      "text": "Instantiate a Presentation, add shapes with text, and save to .pptx format using SaveFormat.Pptx."
     },
     {
       "fact_ids": [
         "example:003",
         "public_symbol:aspose.slides.foss"
       ],
-      "name": "Format text with font properties",
-      "text": "Add a text frame to a shape, set paragraph alignment, and configure font height, bold, Latin font, and solid fill color for portions."
+      "name": "Format text with character and paragraph styles",
+      "text": "Set font height, bold, Latin font, fill color, and paragraph alignment on text portions within auto shapes."
     },
     {
       "fact_ids": [
@@ -186,7 +194,7 @@
         "public_symbol:aspose.slides.foss"
       ],
       "name": "Create and merge table cells",
-      "text": "Add a table to a slide, populate cells with text, and merge cells horizontally using the MergeCells method."
+      "text": "Add a table with specified row/column dimensions, populate cells, and merge cells horizontally or vertically."
     },
     {
       "fact_ids": [
@@ -194,7 +202,7 @@
         "public_symbol:aspose.slides.foss"
       ],
       "name": "Apply visual effects to shapes",
-      "text": "Enable outer shadow effects on shapes by configuring blur radius and distance through the EffectFormat interface."
+      "text": "Enable and configure effects such as outer shadow, including blur radius and distance, on auto shapes."
     },
     {
       "fact_ids": [
@@ -202,7 +210,7 @@
         "public_symbol:aspose.slides.foss"
       ],
       "name": "Add notes and comments",
-      "text": "Create notes slides with notes text, add comment authors, and insert comments with position and timestamp."
+      "text": "Create notes slides with notes text, add comment authors, and attach comments with position and timestamp."
     },
     {
       "fact_ids": [
@@ -210,7 +218,7 @@
         "public_symbol:aspose.slides.foss"
       ],
       "name": "Organize slides into sections",
-      "text": "Add empty slides, then group them into sections using Sections.AddSection with a reference slide."
+      "text": "Add empty slides, then group them into named sections using Sections.AddSection."
     }
   ]
 }

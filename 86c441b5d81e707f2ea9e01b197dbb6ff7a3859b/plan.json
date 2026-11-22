@@ -10,18 +10,7 @@
   "api_hubs": [
     {
       "fact_ids": [
-        "public_symbol:aspose.slides.foss",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat",
-        "public_symbol:aspose.slides.foss.export.saveformat"
+        "public_symbol:aspose.slides.foss"
       ],
       "symbol_fact_id": "public_symbol:aspose.slides.foss"
     }
@@ -29,13 +18,13 @@
   "at_a_glance": {
     "capability_titles": [
       "Create and edit presentations",
-      "Add and format shapes",
-      "Format text and paragraphs",
-      "Create and style tables",
-      "Manage slides and sections",
-      "Add notes and comments",
-      "Stream-based I/O",
-      "Preserve unknown parts"
+      "Slide management",
+      "Shape rendering",
+      "Text formatting",
+      "Fill and line styles",
+      "Visual effects",
+      "Tables and notes",
+      "Comments and document properties"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -49,42 +38,9 @@
       ],
       "shared_fact_ids": [
         "example:001",
-        "example:009",
         "public_symbol:aspose.slides.foss"
       ],
       "title": "Create and edit presentations"
-    },
-    {
-      "fact_ids": [
-        "example:001",
-        "example:006",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "shared_fact_ids": [
-        "example:001",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "title": "Add and format shapes"
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.slides.foss"
-      ],
-      "title": "Format text and paragraphs"
-    },
-    {
-      "fact_ids": [
-        "example:004",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.slides.foss"
-      ],
-      "title": "Create and style tables"
     },
     {
       "fact_ids": [
@@ -94,7 +50,68 @@
       "shared_fact_ids": [
         "public_symbol:aspose.slides.foss"
       ],
-      "title": "Manage slides and sections"
+      "title": "Slide management"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "shared_fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "title": "Shape rendering"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "shared_fact_ids": [
+        "example:003",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "title": "Text formatting"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "shared_fact_ids": [
+        "example:003",
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "title": "Fill and line styles"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "shared_fact_ids": [
+        "example:006",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "title": "Visual effects"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:007",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "shared_fact_ids": [
+        "example:004",
+        "example:007",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "title": "Tables and notes"
     },
     {
       "fact_ids": [
@@ -102,58 +119,91 @@
         "public_symbol:aspose.slides.foss"
       ],
       "shared_fact_ids": [
+        "example:007",
         "public_symbol:aspose.slides.foss"
       ],
-      "title": "Add notes and comments"
-    },
-    {
-      "fact_ids": [
-        "example:009",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "shared_fact_ids": [
-        "example:009",
-        "public_symbol:aspose.slides.foss"
-      ],
-      "title": "Stream-based I/O"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.slides.foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.slides.foss"
-      ],
-      "title": "Preserve unknown parts"
+      "title": "Comments and document properties"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "inherited_unit:006.code_block",
-        "inherited_unit:007.paragraph"
+        "identity:ecosystem",
+        "identity:platform",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "section_id": "identity",
+      "text": "H1 product name rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:003",
+        "link_target:005",
+        "link_target:007"
+      ],
+      "section_id": "badges",
+      "text": "Badge row rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss"
+      ],
+      "section_id": "at_a_glance",
+      "text": "Mermaid diagram rendered from verified formats and capabilities; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "section_id": "installation",
+      "text": "Install command rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "section_id": "dependencies",
+      "text": "Dependency snapshot rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section_id": "quick_start",
+      "text": "Quick start example rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:006",
+        "example:007",
+        "example:008"
       ],
       "section_id": "additional_examples",
-      "text": "The Mermaid diagram in the original README is preserved as a visual overview in Additional Examples."
+      "text": "Additional examples rendered from facts; inherited heading omitted."
     },
     {
       "fact_ids": [
-        "inherited_unit:061.heading",
-        "inherited_unit:062.paragraph"
+        "public_symbol:aspose.slides.foss"
+      ],
+      "section_id": "api_reference",
+      "text": "API reference rendered from facts; inherited heading omitted."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss"
       ],
       "section_id": "scope_limitations",
-      "text": "The 'What it cannot do' section content was moved to Scope and Limitations as supported limitations."
+      "text": "Material limitations rendered from facts; inherited heading omitted."
     },
     {
       "fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:ci",
-        "build_test_asset:ci-matrix",
-        "build_test_asset:release-workflow"
+        "link_target:product.enterprise"
       ],
-      "section_id": "development_testing",
-      "text": "Build and test assets were moved to Development and Testing as they relate to build process."
+      "section_id": "enterprise_relationship",
+      "text": "Enterprise relationship rendered from facts; inherited heading omitted."
     }
   ],
   "flagship_example_id": "example:003",
@@ -175,6 +225,10 @@
       "section_id": "badges"
     },
     {
+      "link_fact_id": "link_target:008",
+      "section_id": "dependencies"
+    },
+    {
       "link_fact_id": "link_target:011",
       "section_id": "development_testing"
     },
@@ -192,7 +246,7 @@
     },
     {
       "link_fact_id": "link_target:015",
-      "section_id": "documentation_resources"
+      "section_id": "enterprise_relationship"
     },
     {
       "link_fact_id": "link_target:016",
@@ -212,7 +266,7 @@
     },
     {
       "link_fact_id": "link_target:020",
-      "section_id": "scope_limitations"
+      "section_id": "enterprise_relationship"
     },
     {
       "link_fact_id": "link_target:021",
@@ -228,7 +282,7 @@
     },
     {
       "link_fact_id": "link_target:024",
-      "section_id": "scope_limitations"
+      "section_id": "enterprise_relationship"
     },
     {
       "link_fact_id": "link_target:006",
