@@ -3225,3 +3225,81 @@ items:
       - "PDF TypeScript 5fa17750: dispositions.json inherited_unit:515.table VERIFIED_PRESERVE citing ~400 public_symbol facts; facts.json public_symbol:metadatafield and :metadatasyncreport carry no docstring_full; the pinned source src/metasync.ts has no doc comment above either declaration"
     next_action: "supervisor decision; until then PDF TypeScript carries two round-6 flags that no deterministic derivation can clear"
     updated: "2026-11-22"
+
+  - id: BL-720
+    title: "Every component plans/idea.md and the consolidated goals call for beyond Lane R regeneration works on the GitHub runner (component inventory, gaps, parallel work plan)"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P0
+    status: active
+    implementation_path: "reuse what worked in the previous project via migration/reuse-manifest.yaml (R27's freeze does not stop it, R50); the inventory worker writes docs/investigations/2026-11-22-component-inventory.md; each gap becomes a work package taken by a separate worker at once"
+    acceptance: "(1) the inventory lists every component with its previous-project origin, its state here and its hosted evidence; (2) each gap has a backlog item with acceptance and evidence; (3) each component has a successful hosted run id"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"
+
+  - id: BL-721
+    title: "Every README candidate delivered upstream goes through the repository-presenter GitHub App identity (branch + draft PR, allowlist; timing per R15/R22 unchanged)"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P0
+    status: active
+    implementation_path: "inventory the delivery path (publish/pr job, allowlist, App credentials by name, sandbox proof R17, previous project's P3/P4 approval-gated model) and close the gaps; prove on the owner sandbox before any upstream write"
+    acceptance: "(1) the delivery path is documented with its hosted evidence; (2) a sandbox draft PR is created through the App identity from a hosted run; (3) nothing is pushed to an upstream repository before every candidate of both lanes passes (R15)"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"
+
+  - id: BL-722
+    title: "Every upstream issue is logged and managed (record, dedupe, comment, close when fixed upstream) through the same GitHub App identity (R39)"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P0
+    status: active
+    implementation_path: "inventory the issues job and its lifecycle (open, update, verify fixed, close), data files of filed/approved issues, and the gaps; reuse the previous project's issue management"
+    acceptance: "(1) lifecycle documented with hosted run ids; (2) each lifecycle step proven on the sandbox or an allowlisted repository; (3) no duplicate issues"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"
+
+  - id: BL-723
+    title: "TeX Python is the case used to assess the issue system end to end: some problems logged upstream for it have been fixed since"
+    type: gap
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P1
+    status: active
+    implementation_path: "read-only fetch of aspose-tex-foss/Aspose.TeX-FOSS-for-Python issues; for each: logged by the App identity?, still open?, fixed upstream since (pinned revision and extractor facts)?, what the system would do now (close/comment/keep); the verdict and gaps feed BL-722"
+    acceptance: "(1) per-issue table with evidence; (2) verdict on how well the issue system works end to end; (3) concrete gaps recorded as items"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"
+
+  - id: BL-724
+    title: "The Lane L portfolio is equal to, or a little below, the Lane R portfolio (about 36 to 40 handled candidates), not 34"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P0
+    status: active
+    implementation_path: "analyse which Lane L cells exist (sealed/accepted/no-action/failed/never attempted/older version set), why Lane L is 34 against Lane R's 39 or 40, and the per-repository next action; reading of R5/R16/R21 reported first where it conflicts with the owner's statement"
+    acceptance: "(1) per-repository Lane L state table; (2) a named blocker or next action per missing repository; (3) the official count shows Lane L handled within a little of Lane R"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"
+
+  - id: BL-725
+    title: "Parallel, efficient conduct: independent work packages run on separate workers at once; the supervisor never serializes work that can run together"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22): the owner's feedback quoted in docs/RULINGS.md R50; plans/idea.md; consolidated goals R3, R7, R15, R22, R39, R44, R49"
+    priority: P1
+    status: active
+    implementation_path: "every plan splits into independent packages with acceptance; workers are launched in one message; the supervisor merges in order and keeps the dashboard of packages current"
+    acceptance: "(1) each daily status lists the packages in flight and their owners; (2) no worker idles waiting on another that is not a real dependency"
+    evidence:
+      - "owner feedback 2026-11-22, recorded in docs/RULINGS.md R50; investigation workers launched the same day"
+    next_action: "investigation workers report; supervisor turns each gap into a work package and runs them in parallel"
+    updated: "2026-11-22"

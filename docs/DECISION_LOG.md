@@ -8408,3 +8408,17 @@ R10: scope and derivation changes touch only the audit and the production review
 Hosted-unproven (R41): audit round 7; refresh runs of Slides .NET and PSD Java Lane R.
 
 Backlog: BL-700, BL-701, BL-702
+
+## 2026-11-22: Owner feedback R50 recorded and put into the investigation > execution > verification cycle (R47, R40)
+
+The owner (2026-11-22): the product is more than README regeneration (every component in `plans/idea.md` works on the runner, and
+the previous project's working components are reused); README candidates and issues go through the repository-presenter GitHub
+App; TeX Python is the case for assessing the issue system; the Lane L portfolio is equal to or a little below Lane R, not 34;
+work in parallel. Recorded as R50 in `docs/RULINGS.md` (paragraph, table row, checklist item 20), `docs/CONSOLIDATED_GOALS_2026-11-06.md`
+Part B, the CLAUDE.md summary and the AGENTS.md pointer, with backlog items BL-720 to BL-725. Reading of conflicts: R27's architecture
+freeze is not a bar to reusing a component that worked before (the owner states they are in scope); R15's timing (no upstream push
+before every candidate of both lanes passes) and R22 (draft PRs, allowlist) are unchanged by R50, so delivery through the App is
+built and proven on the owner sandbox first. Three investigation workers started at once (component inventory, App delivery and
+issues including TeX Python, Lane L portfolio size).
+
+Backlog: BL-720, BL-721, BL-722, BL-723, BL-724, BL-725
