@@ -40,8 +40,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "a7e4ac68af4dd93d9992462a7dd35f30ea6a01941869460bd599209a7953ca15",
     ),
     "format_overclaim.py": (
-        ("2",),
-        "cbc9ef5e78b4e753ec6eba68a4d1164acc2de900fd441525dcd4941348fafb90",
+        ("3",),
+        "65cbf56abbcd557cc4842b9c4be184a9c9c37bb09be6f0eee52804c99a154d3d",
     ),
     "gaps.py": (
         ("1",),
@@ -72,7 +72,7 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
     ),
     "type_description.py": (
-        ("4",),
+        ("5",),
         "547d522ab9348e6a62bdc2a0aa5987947e5490060a9856f0712fcdb0bf6ff89f",
     ),
     "versioned_link_target.py": (

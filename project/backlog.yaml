@@ -3696,3 +3696,60 @@ items:
       - "built and tested locally 2026-11-22 on branch wp34: 9 new tests plus the 108 existing Lane L, present and selector tests pass"
     next_action: "supervisor proves hosted with a Lane L present run (run request job present, lane L) on a repository whose Lane L seal is older than its head, reads the 'Lane L trigger' and 'Lane L gate' lines and lane-l-trigger.json; then the counter (BL-188 evidence line 2) and the portfolio gate use the recorded decision"
     updated: "2026-11-22"
+
+  - id: BL-790
+    title: "Lane L PDF Cpp ended on a budget refusal, not on its README: the hosted reserve step gave up on the first provider-spend ledger error ('provider-spend ledger unavailable: StateBackendError'), the job ran with no reservation, and the review's one provider call was refused"
+    type: defect
+    source: "owner rulings R45, R36, R41, R50; hosted Lane L PDF Cpp run 44993719030 (reserve step warning, then BudgetExceededError 'holds no ledger reservation' in lane_l_review.review_correction); four Lane L runs were dispatched 25 s apart and reserved from the one ledger ref"
+    priority: P0
+    status: active
+    implementation_path: "core/llm/budget.py: _update_ledger_with_retry re-runs store.update (the store already retries a lost compare-and-swap) up to 4 times with jittered backoff on any backend error, re-applying the pure mutate to the newer ledger; after the last attempt it still fails closed (no reservation, zero-call work only) and the refusal now names the error (type and first line, any URL credential masked). Reservation-before-call and settle-after-call are untouched, so usage stays measured."
+    acceptance: "(1) tests/core/llm/test_budget_reserve_retry_bl790.py: two transient errors then a granted reservation; a persistent outage fails closed with the error named and no credential; a first-try success never sleeps; the tests fail on the pre-fix code. (2) hosted Lane L PDF Cpp run reaches its review (R41)."
+    evidence:
+      - "run 44993719030 log: 'no provider budget for this run (provider-spend ledger unavailable: StateBackendError); zero-call work only', then BudgetExceededError in lane_l_review.review_correction; the three sibling runs (44993635165, 44993661753, 44993692981) reserved 125 calls each from the same ledger"
+      - "tests/core/llm/test_budget_reserve_retry_bl790.py 3 passed"
+    next_action: "supervisor integrates; hosted Lane L PDF Cpp rerun (run-request JSON in the BL-793 decision-log entry)"
+    updated: "2026-11-22"
+
+  - id: BL-791
+    title: "Lane L refuses three cells for claims the product's own public surface states (TeX Python SVG and a user-supplied-file example, Email Python CFB, Slides Python .pptm/.ppsx/.ppsm/.potx/.potm): format_overclaim and BC-14 rule (g) read only file-extension format facts, and the Python example verifier calls the product's own 'cannot resolve input file' error a failure"
+    type: defect
+    source: "owner rulings R5, R14, R21, R36(b)(4), R41, R50; hosted Lane L runs 44993635165 (TeX Python), 44993661753 (Email Python) and 44414886517 (Slides Python); zero-call replays of the real stored shapes from the pinned sources (TeX 07db320, Email 10a906b, Slides 4e63447)"
+    priority: P0
+    status: active
+    implementation_path: "(1) correction/detectors/format_overclaim.py (version 3): a claimed token is backed when a SUPPORTED member of a public format enum names it (OutputFormat.SVG) or a SUPPORTED public class is named for it with a codec suffix (SvgDevice, CFBReader, CFBWriter); a CONTRADICTED fact is never overridden and a name that merely starts with the token (SvgFontCache) or a non-format enum does not back it. (2) validation/claims.py rule (g): the BL-651 load-format declaration is extended to a SUPPORTED member of a save-format enum (SaveFormat, OutputFormat, ExportFormat) for a sentence about writing, and a hard-wrapped sentence takes its verb from the previous physical line. (3) extractors/platforms/python_examples.py: a failure whose message says the product cannot resolve/find/open a file that the example itself names is NEEDS_INPUT (an input the reader supplies), the same as a FileNotFoundError, not a FAILED example. BL-133 does not apply to TeX example 9: the product behaves correctly (InputError for a missing chapter1.tex the README example leaves to the reader), so withholding it would delete a valid maintainer example; no new edit kind is built."
+    acceptance: "(1) tests/readme/correction/detectors/test_format_overclaim_codec_bl791.py, tests/readme/validation/test_save_format_enum_bl791.py and tests/extractors/platforms/test_python_input_error_bl791.py: the real shapes pass with the declarations and fail without them, with negative controls (undeclared token, lookalike name, non-format enum, CONTRADICTED fact, extension the enum lacks, a load enum for a save sentence, a missing file the example never names); fail on the pre-fix code. (2) zero-call replay of the three cells: deterministic holdouts 2 to 0 (TeX, after re-extracting facts with the verifier fix), 2 to 0 (Email), 1 to 0 (Slides). (3) lean recertify RECERTIFIED for every seal, R10 gate OK. (4) hosted Lane L reruns of the three cells seal or end on a real review finding (R41)."
+    evidence:
+      - "replay before: TeX 2 blocking (format_overclaim SVG line 46, failing_example line 220 example 9), Email 2 blocking (format_overclaim CFB lines 34 and 49), Slides 1 blocking (claim_contradiction line 72); after: 0, 0, 0"
+      - "TeX example 9 reproduced locally: aspose_tex.exceptions.InputError: cannot resolve input file 'chapter1' (the README example runs \\input chapter1 with extra_format_paths=[Path('tex-inputs')], no such file in the repository); after the verifier fix the receipt is NEEDS_INPUT and the fact UNRESOLVED"
+      - "pinned sources: aspose_tex.OutputFormat.SVG and SvgDevice (src/aspose_tex/_output/svg_writer.py); email_foss.cfb.CFBReader/CFBWriter (exported) plus a SUPPORTED executed CFB example; slides_foss.export.SaveFormat members PPTM, PPSX, PPSM, POTX, POTM and the README sentence 'Save to .pptx ... or the related .pptm ...'"
+    next_action: "supervisor integrates; hosted Lane L reruns of TeX Python, Email Python and Slides Python"
+    updated: "2026-11-22"
+
+  - id: BL-792
+    title: "Lane L PDF TypeScript rejected with 16 blocking findings: the correction wrote 'Interface that inherits from } and declares ...' into fifteen API rows because a TypeScript declaration that carries its whole body ('export interface MdCode { type: 'code'; value: string; }') had its first colon read as a C# or C++ base list"
+    type: defect
+    source: "owner rulings R5, R21, R36, R41, R50; hosted Lane L PDF TypeScript run 44993692981 ('independent review returned REJECT with 16 blocking finding(s) of 16', F01 'inherits from }'); replayed zero-call from the pinned source 5fa1775 (15 rows)"
+    priority: P0
+    status: active
+    implementation_path: "readme/validation/surface_claims._base_names reads only the head of a declaration (text before the first brace), so a TypeScript or C++ body's colons and a closing brace are never a base; the shared type describer (Lane L correction, Lane R renderer) and the member-owner rule read bases through it. type_description detector version 5. A C++ 'class PngDevice : public ImageDevice {' also read '{' as its base before; both read correctly now."
+    acceptance: "(1) tests/readme/correction/detectors/test_type_description_ts_body_bl792.py on the real MdBlockQuote/MdCode shapes with negative controls (C#, C++ and explicit bases still read); fails on the pre-fix code. (2) zero-call replay: rows with a non-name base 15 to 0, deterministic holdouts 0 blocking, 76 type_description edits. (3) lean recertify RECERTIFIED for every seal, R10 gate OK. (4) hosted Lane L PDF TypeScript rerun (R41). The earlier 'LaneStepFailure ... left no failure record' job error is gone on main: run 44993692981 wrote a validation_failed record."
+    evidence:
+      - "replay before: 'inherits from }' in CrlEntry, MdBlockQuote, MdCode, MdEmph, ... (15 rows); after: 0; the Lane R seal for the same revision holds none (its renderer prints those rows differently)"
+      - "the 30 residuals the run carries (failing examples such as 'Cannot find name doc' fragments) are pre-existing, recorded in holdouts.json under R21"
+    next_action: "supervisor integrates; hosted Lane L PDF TypeScript rerun; the Metadata, MetadataUpdate and MdItem rows (declares members including ...) were also cited by the reviewer and read fact-true here, so a rerun is the proof"
+    updated: "2026-11-22"
+
+  - id: BL-793
+    title: "R50 Lane L portfolio: the five failed cells (Email Python, PDF Cpp, PDF TypeScript, Slides Python, TeX Python) each classified to a pipeline class and fixed; hosted proof pending, with the exact run requests"
+    type: requirement
+    source: "owner ruling R50 (2026-11-22: the Lane L portfolio equal to or a little below Lane R, 'certainly not 34 but more'); docs/investigations/2026-11-22-lane-l-portfolio.md (BL-724); hosted runs 44993635165, 44993661753, 44993692981, 44993719030"
+    priority: P0
+    status: active
+    implementation_path: "BL-790 (PDF Cpp budget), BL-791 (TeX, Email, Slides), BL-792 (PDF TypeScript); PDF Cpp's earlier 65 member-owner contradictions no longer reproduce on current main (replay: 180 type_description edits, 0 introduced contradictions, 0 blocking, 12 carried residuals) because BL-320 and the shared member-list rules now cover Lane L's correction"
+    acceptance: "five hosted Lane L runs on the fixed main each seal (or end on a real, classified review finding, which becomes the next class); the portfolio count reports Lane L handled 39 of 40 (GIS .NET NOT_APPLICABLE) with the five."
+    evidence:
+      - "docs/DECISION_LOG.md 2026-11-22 entry for BL-790 to BL-793"
+    depends_on: [BL-790, BL-791, BL-792]
+    next_action: "supervisor dispatches the five run requests listed in the decision-log entry once the branch is merged"
+    updated: "2026-11-22"

@@ -992,10 +992,21 @@ def _disclaimed(sentence: str, start: int) -> bool:
 
 # BL-651: an enum the product declares for what it loads ("LoadFormat", "InputFormat", ...).
 _LOAD_FORMAT_ENUM = re.compile(r"(?i)(?:^|\.)(?:load|input|import|read)\w*format$")
+# BL-791: the same declaration for what it saves ("SaveFormat", "OutputFormat", "ExportFormat").
+_SAVE_FORMAT_ENUM = re.compile(r"(?i)(?:^|\.)(?:sav|output|export|writ)\w*format$")
 # A sentence about writing, where a load enum says nothing.
 _SAVE_WORDING = re.compile(
     r"(?i)\b(?:sav(?:e|es|ed|ing)|writ(?:e|es|ing|ten)|export(?:s|ed|ing)?|output)\b"
 )
+
+
+def _declared_extensions(facts: FactsDocument, enum_name: re.Pattern[str]) -> frozenset[str]:
+    return frozenset(
+        fact.value.rsplit(".", 1)[-1].lower()
+        for fact in facts.by_kind("enum_member")
+        if fact.polarity == "SUPPORTED"
+        and enum_name.search(str((fact.attributes or {}).get("enum") or ""))
+    )
 
 
 def _declared_load_extensions(facts: FactsDocument) -> frozenset[str]:
@@ -1007,12 +1018,16 @@ def _declared_load_extensions(facts: FactsDocument) -> frozenset[str]:
     reads nowhere else; its own public declaration of the load formats is the statement (BL-651,
     hosted Lane R Words Python, run 44947429600: aspose.org's published README says "loads a
     ``.doc``, ``.docx``, ``.rtf``, ``.txt`` or ``.md`` file" and the facts said ``.md``/``.txt`` only)."""
-    return frozenset(
-        fact.value.rsplit(".", 1)[-1].lower()
-        for fact in facts.by_kind("enum_member")
-        if fact.polarity == "SUPPORTED"
-        and _LOAD_FORMAT_ENUM.search(str((fact.attributes or {}).get("enum") or ""))
-    )
+    return _declared_extensions(facts, _LOAD_FORMAT_ENUM)
+
+
+def _declared_save_extensions(facts: FactsDocument) -> frozenset[str]:
+    """The extensions a SUPPORTED member of a save-format enum names (Slides Python
+    ``SaveFormat.PPTM`` / ``PPSX`` / ``POTX`` -> ``pptm``, ``ppsx``, ``potx``): the product's own
+    public declaration of what it writes, for a sentence about writing (BL-791, hosted Lane L
+    Slides Python: 'saves to .pptx or the related .pptm, .ppsx, .ppsm, .potx and .potm' while the
+    facts held only the executed .pptx)."""
+    return _declared_extensions(facts, _SAVE_FORMAT_ENUM)
 
 
 def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:
@@ -1027,11 +1042,20 @@ def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFind
     if not supported:
         return []
     loads = _declared_load_extensions(facts)
+    saves = _declared_save_extensions(facts)
     findings: list[ClaimFinding] = []
-    for line in lines:
+    for position, line in enumerate(lines):
         if line.in_fence:
             continue
-        for sentence in _SENTENCES.split(line.text):
+        # A hard-wrapped sentence puts its verb on an earlier physical line ("Save\n  to `.pptx`
+        # or the related `.pptm`, ..."): the part of the previous line after its last sentence end
+        # is the opening of this line's first sentence (BL-791).
+        lead = ""
+        if position and lines[position - 1].text.strip() and not lines[position - 1].in_fence:
+            previous = lines[position - 1].text
+            if not re.search(r"[.!?]\s*$", previous):
+                lead = _SENTENCES.split(previous)[-1] + " "
+        for number, sentence in enumerate(_SENTENCES.split(line.text)):
             listed = [
                 match.group(1)
                 for match in _EXTENSION_SPAN.finditer(sentence)
@@ -1039,11 +1063,12 @@ def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFind
             ]
             if len(listed) < 2 or not any(_extension(item) in supported for item in listed):
                 continue
-            reading = loads and _SAVE_WORDING.search(sentence) is None
+            wording = (lead if number == 0 else "") + sentence
+            declared = saves if _SAVE_WORDING.search(wording) else loads
             unsupported = [
                 item
                 for item in listed
-                if _extension(item) not in supported and not (reading and _extension(item) in loads)
+                if _extension(item) not in supported and _extension(item) not in declared
             ]
             if unsupported:
                 findings.append(

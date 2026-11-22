@@ -135,6 +135,48 @@ def _normalize(label: str) -> str:
     return _STRIP_MARKUP.sub("", label).strip().lower().lstrip(".")
 
 
+#: What a product calls a type that reads, writes or selects one format ("CFBReader", "SvgDevice",
+#: "PptxSaveOptions"): the claimed token plus one of these is a public codec for that format.
+_CODEC_SUFFIXES = frozenset(
+    {
+        "reader", "writer", "device", "saver", "loader", "exporter", "importer", "parser",
+        "serializer", "converter", "renderer", "document", "options", "saveoptions",
+        "loadoptions", "format",
+    }
+)
+_FORMAT_ENUM = re.compile(r"(?i)format$")
+_CLASS_KINDS = frozenset({"class", "struct", "interface"})
+
+
+def _declared_codec(token: str, ctx: Context) -> str | None:
+    """The id of a SUPPORTED fact that states the product declares ``token`` as a format (BL-791):
+    a member of a public format enum named for it (``OutputFormat.SVG``, ``SaveFormat.PPTM``) or a
+    public type named for it with a codec suffix (``SvgDevice``, ``CFBReader``). A container or
+    codec format has no file extension and no executed example may name it, so no ``format`` fact
+    states it; the declaration in the public surface does. The token must be the whole name before
+    the suffix, so ``Svg`` never backs ``SV`` or ``G``."""
+    for fact in ctx.facts.by_kind("enum_member"):
+        if fact.polarity != "SUPPORTED":
+            continue
+        attributes = fact.attributes or {}
+        enum = str(attributes.get("enum") or "").rsplit(".", 1)[-1]
+        if not _FORMAT_ENUM.search(enum):
+            continue
+        member = fact.value.rsplit(".", 1)[-1].lower()
+        literal = str(attributes.get("literal") or "").strip("'\"").lower()
+        if token in {member, literal}:
+            return fact.id
+    for fact in ctx.facts.by_kind("public_symbol"):
+        if fact.polarity != "SUPPORTED":
+            continue
+        if (fact.attributes or {}).get("symbol_kind") not in _CLASS_KINDS:
+            continue
+        name = fact.value.rsplit(".", 1)[-1].lower()
+        if name.startswith(token) and name[len(token):] in _CODEC_SUFFIXES:
+            return fact.id
+    return None
+
+
 def _matches(token: str, fact_value: str) -> bool:
     value = fact_value.strip().lower().lstrip(".")
     if not value or not token:
@@ -164,6 +206,10 @@ def format_overclaim(ctx: Context) -> DetectorResult:
         matching = [fact for fact in relevant if _matches(token, fact.value)]
         if any(fact.polarity == "SUPPORTED" for fact in matching):
             continue  # the claim is backed by a verified fact: not an over-claim
+        if not any(fact.polarity == "CONTRADICTED" for fact in matching) and _declared_codec(
+            token, ctx
+        ):
+            continue  # the public surface declares a codec or format member for it (BL-791)
         contradicted = next((fact for fact in matching if fact.polarity == "CONTRADICTED"), None)
         if contradicted is not None:
             findings.append(

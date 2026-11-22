@@ -52,6 +52,16 @@ _ERROR_LINE = re.compile(r"^(\w+(?:\.\w+)*(?:Error|Exception|Warning))(?::|$)", 
 # The path an example's own FileNotFoundError names (G4-W17 arrival item 53): `open()` reprs the
 # name it was handed, so the quotes are repr's and a Windows separator arrives doubled.
 _MISSING_PATH = re.compile(r"No such file or directory: (['\"])(.+?)\1\s*$", re.MULTILINE)
+# A product's own "that input file is not there" error (BL-791): the library names the file it was
+# asked to open in a typed error of its own (aspose-tex's ``InputError: cannot resolve input file
+# 'chapter1'``), which is the same fact as a ``FileNotFoundError`` -- an input the README example
+# leaves to the reader. It counts only when the example itself names that file.
+_MISSING_INPUT_MESSAGE = re.compile(
+    r"^\S*(?:Error|Exception):\s*(?:cannot|can't|could not|unable to|failed to)\s+"
+    r"(?:resolve|find|locate|open|read|load)\s+(?:the\s+)?(?:input\s+|source\s+)?file\s+"
+    r"(['\"])(.+?)\1",
+    re.MULTILINE | re.IGNORECASE,
+)
 # The top-level module an example's own ModuleNotFoundError names (G4-W17 arrival item 70).
 _MISSING_MODULE = re.compile(r"No module named ['\"]([\w.]+)['\"]")
 # A requirement string's own package name, the part pip resolves against (`reportlab` from
@@ -243,6 +253,9 @@ def _classify(result: ExecutionResult, code: str) -> tuple[str, str]:
         "No such file" in result.stderr
         and any(_FILE_LITERAL.match(s) for s in _string_literals(code))
     ):
+        return "NEEDS_INPUT", f"{last}: the example opens an input the repository does not provide"
+    named = _MISSING_INPUT_MESSAGE.search(result.stderr)
+    if named is not None and named.group(2) in code:
         return "NEEDS_INPUT", f"{last}: the example opens an input the repository does not provide"
     return "FAILED", last
 
