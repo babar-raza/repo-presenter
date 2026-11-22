@@ -708,3 +708,11 @@ def test_the_audit_abandon_job_holds_no_secret_and_pushes_only_the_abandoned_bra
     assert "secrets." not in text and "environment" not in job and "download-artifact" not in text
     run = "\n".join(s.get("run", "") for s in job["steps"])
     assert 'git push origin "HEAD:refs/heads/audit-abandoned/run-${SEED}"' in run
+
+
+def test_a_monitor_request_validates_and_takes_no_other_field():
+    """R50 WP-3: one read-only portfolio observation; it covers every active registry entry."""
+    assert rr.validate({"job": "monitor"}, REGISTRY, OK, True) == {
+        "job": "monitor", "repository": "", "ecosystem": "", "lane": ""}
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "monitor", "repository": "x/y"}, REGISTRY, OK, True)

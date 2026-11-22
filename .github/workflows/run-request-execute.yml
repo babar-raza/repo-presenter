@@ -18,6 +18,8 @@ name: run-request-execute
 #             its cohort job -- the same authorization-gated planner the hourly schedule and
 #             cohort-chain.yml run, under the same one-planner group -- for when the cron is late.
 #   issues    calls issues.yml (owner R39, 2026-11-13): one pilot issue-maintenance cycle, no input.
+#   monitor   calls monitor.yml (owner R50, 2026-11-22; WP-3): one read-only drift / discovery / freshness
+#             pass over the portfolio, report to refs/repository-presenter-state/monitor/report. No input.
 #   count     (BL-111, 2026-11-14) runs main's ops/checks/portfolio_delivery_count.py hosted, with
 #             attestations: read so each acceptance record's Sigstore attestation verifies, and writes the
 #             official per-lane delivered count to the job summary. Read-only: no secret, no write scope.
@@ -177,6 +179,13 @@ jobs:
       contents: write  # issues.yml's state ref in this repository only; upstream writes use the App token
     uses: ./.github/workflows/issues.yml
     secrets: inherit
+
+  monitor:
+    needs: validate
+    if: needs.validate.outputs.job == 'monitor'
+    permissions:
+      contents: write  # monitor.yml's state ref in this repository only; upstream is read, never written
+    uses: ./.github/workflows/monitor.yml
 
   audit-seed:
     needs: validate

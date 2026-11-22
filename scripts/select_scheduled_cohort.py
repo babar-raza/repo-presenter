@@ -83,14 +83,14 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from repo_presenter.core.llm.budget import (  # noqa: E402
+from repo_presenter.core.llm.budget import (
     RESERVATION_TTL_SECONDS,
     _now_utc,
     _parse_iso,
     ledger_entries,
 )
-from repo_presenter.core.portfolio_matrix import PIPELINE_GOOD_STATES  # noqa: E402
-from repo_presenter.core.registry.models import RegistryEntry  # noqa: E402
+from repo_presenter.core.portfolio_matrix import PIPELINE_GOOD_STATES
+from repo_presenter.core.registry.models import RegistryEntry
 
 LANES = ("R", "L")
 TERMINAL_CELLS = REPO_ROOT / "data" / "terminal_cells.json"
@@ -108,6 +108,10 @@ COHORT_ID_PREFIX = "cohort-"
 #: BL-110 (supervisor decision 2026-11-14): re-runs before first attempts -- measured since 02:09Z,
 #: re-runs sealed 4 of 10 and first attempts 0 of 15 -- so a NEEDS_REPAIR seal (one targeted repair
 #: away) ranks ahead of a never-attempted cell; the letters stay the summary's names.
+#: WP-3 (R50, BL-187/190): a certified cell the monitor reports as relevantly drifted (a verified
+#: upstream change to a path its README consumed, ``repo_presenter.monitor.run``) is not "recertified,
+#: skip": it ranks first, ahead of every other need in its lane.
+PRIORITY_DRIFTED = -1
 PRIORITY_FIX_LANDED = 0
 PRIORITY_NEEDS_REPAIR = 1
 PRIORITY_NEVER_ATTEMPTED = 2
@@ -117,6 +121,7 @@ PRIORITY_RETRY = 3
 LANE_TARGET = 25
 #: The summary's name for each rank (BL-086).
 PRIORITY_LABELS = {
+    PRIORITY_DRIFTED: "(0) verified upstream drift",
     PRIORITY_FIX_LANDED: "(a) fix landed",
     PRIORITY_NEVER_ATTEMPTED: "(b) never attempted",
     PRIORITY_NEEDS_REPAIR: "(c) needs repair, no failure record",
@@ -263,12 +268,15 @@ def plan_cohort(
     known: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
     scopes: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
     max_hosted_failures: int = MAX_HOSTED_FAILURES_WITHOUT_SCOPE_CHANGE,
+    drift: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """The fire's plan (pure but for ``head``, which is only asked when a decision needs it):
     ``runs`` to dispatch, every ``skipped`` cell with its category and reason, the ``diagnose``
     list, the cells ``queued`` behind a full batch, and the certified count per lane (R11).
     ``known`` is BL-084's hold (``failures.known_failures``), ``scopes`` BL-086's per-cell class
-    scope status (``failures.scope_status``); both are keyed by ``(repository, lane)``."""
+    scope status (``failures.scope_status``); both are keyed by ``(repository, lane)``. ``drift`` is
+    the monitor's report of relevantly changed cells (``monitor.run.drifted_cells``): a drifted cell
+    outranks "certified, skip" (BL-187/190) when its row still describes the cell's current seal."""
     now = now or _now_utc()
     all_entries = ledger_entries(ledger, any_epoch=True)
     attempts = attempts_by_cell(all_entries)
@@ -319,9 +327,21 @@ def plan_cohort(
                     f"{repository} Lane {lane}: terminal lapsed, upstream moved "
                     f"{pinned[:12]} -> {current[:12]}"
                 )
+            drifted = (drift or {}).get((repository, lane))
+            if drifted is not None:
+                sealed = str(getattr(cert, "revision", "") or "")
+                row_revision = str(drifted.get("bundle_revision") or "")
+                if cert is None or (sealed and row_revision and sealed != row_revision):
+                    # A row about a seal that no longer is the cell's latest says nothing new.
+                    drifted = None
             if cert is not None and getattr(cert, "certified", False):
-                skip(repository, lane, "certified", "sealed and certified under current code")
-                continue
+                if drifted is None:
+                    skip(repository, lane, "certified", "sealed and certified under current code")
+                    continue
+                notes.append(
+                    f"{repository} Lane {lane}: certified seal outranked by verified upstream drift "
+                    f"({str(drifted.get('detail') or 'consumed path changed')[:120]})"
+                )
             if (repository, lane) in flying:
                 skip(repository, lane, "in_flight", f"in flight ({flying[(repository, lane)]})")
                 continue
@@ -412,6 +432,12 @@ def plan_cohort(
                 priority, reason = PRIORITY_NEVER_ATTEMPTED, "never attempted by the hosted loop"
             else:
                 priority, reason = PRIORITY_NEVER_ATTEMPTED, "no seal, never attempted by the hosted loop"
+            if drifted is not None:
+                priority = min(priority, PRIORITY_DRIFTED)
+                reason = (
+                    f"verified upstream drift since sealed {str(drifted.get('bundle_revision') or '')[:12]}"
+                    f" ({str(drifted.get('detail') or 'consumed path changed')[:120]})"
+                )
             if needs_repair:
                 checks = ", ".join(getattr(cert, "failing_checks", ()) or ()) or "?"
                 reason = f"latest seal NEEDS_REPAIR ({checks})" + (f"; {reason}" if reason else "")
@@ -618,6 +644,7 @@ def build_plan(
     except (OSError, ValueError):
         pass
     known, pareto_rows, note, scopes = failure_classes(remote, token)
+    drift, drift_note = read_drift(remote, token)
     plan = plan_cohort(
         entries=entries,
         authorized_repos=set(entries) if authorized_repos is None else authorized_repos,
@@ -629,11 +656,23 @@ def build_plan(
         epoch=epoch,
         known=known,
         scopes=scopes,
+        drift=drift,
     )
+    if drift_note:
+        plan["notes"].append(drift_note)
     plan["failure_pareto"] = pareto_rows
     if note:
         plan["failure_pareto_note"] = note
     return plan
+
+
+def read_drift(remote: str, token: str | None) -> tuple[dict[tuple[str, str], dict[str, Any]], str]:
+    """The monitor's drifted cells from its state ref (read-only). An absent or unreadable report
+    names none and says so: the selector then behaves exactly as it did before the monitor existed."""
+    from repo_presenter.monitor.run import drifted_cells, read_report
+
+    document, note = read_report(remote=remote, token=token)
+    return drifted_cells(document), note
 
 
 def failure_classes(
@@ -646,7 +685,13 @@ def failure_classes(
     unreadable namespace holds nothing (the cheaper error is a re-run, never a cell held on
     evidence that could not be read) and says so in the summary; the cap still applies (a cell
     that failed twice in a row cannot show a scope change nobody can read)."""
-    from repo_presenter.failures import known_failures, pareto, read_cells, scope_fingerprint, scope_status
+    from repo_presenter.failures import (
+        known_failures,
+        pareto,
+        read_cells,
+        scope_fingerprint,
+        scope_status,
+    )
 
     try:
         documents = read_cells(remote=remote, token=token)

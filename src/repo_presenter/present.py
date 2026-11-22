@@ -56,11 +56,11 @@ from repo_presenter.core.errors import (
 )
 from repo_presenter.core.facts import write_facts
 from repo_presenter.core.git_safety.clone import clone_pinned, pinned_read_only_clone
+from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.state.bundle_store import publish_bundle
-from repo_presenter.core.version_set import current_fingerprint
 from repo_presenter.core.state.cas import StateBackend
 from repo_presenter.core.state.git_backend import GitStateBackend
 from repo_presenter.core.state.present_transaction import (
@@ -69,9 +69,17 @@ from repo_presenter.core.state.present_transaction import (
     classify_present_outcome,
     run_present_transaction,
 )
+from repo_presenter.core.version_set import current_fingerprint
 from repo_presenter.facts_handoff import FactsManifest, load_handoff, write_handoff
 from repo_presenter.failures import keep_blocking, write_local_record
 from repo_presenter.lane_l import build_lane_l_facts
+from repo_presenter.lane_l_gate import (
+    LaneLNoProviderCall,
+    compute_gate_trigger,
+    decide,
+    proof_rerun,
+    write_record,
+)
 from repo_presenter.lane_l_run import preflight_lane_l, run_lane_l
 from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
 from repo_presenter.readme.correction.report import (
@@ -360,16 +368,45 @@ def _lane_l_and_seal(
         candidates_root=candidates_root, prompts_path=prompts_path, registry_path=registry_path,
     ):
         return  # re-certified under current code with zero provider calls
-    result = run_lane_l(
-        repository,
-        ecosystem,
-        clone_path,
-        facts_path=facts_path,
-        out_dir=workdir / "lane-l",
-        config=config,
-        prompts_path=prompts_path,
-        registry_path=registry_path,
-    )
+    # R5(a) (WP-4, BL-188): a verified relevant upstream change since the last Lane L seal's revision
+    # is what earns a provider call. A sealed candidate that no longer certifies under current code
+    # (``decision.recertify`` and the re-certification above failed) owes a repair attempt whatever
+    # upstream did; everything unknown fails closed to "triggered".
+    trigger = None
+    head = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
+    if not decision.recertify:
+        trigger = compute_gate_trigger(repository, clone_path, candidates_root, head)
+        print(
+            f"Lane L trigger (R5(a)): triggered={trigger.triggered} baseline={trigger.baseline.source}"
+            f"@{(trigger.baseline.revision or '-')[:12]}: {trigger.reason}"
+        )
+        replay = proof_rerun(trigger, head)
+        if replay is not None:
+            write_record(replay, workdir)
+            trigger = None  # the unchanged-head proof rerun replays the call store: no call to gate
+    try:
+        result = run_lane_l(
+            repository,
+            ecosystem,
+            clone_path,
+            facts_path=facts_path,
+            out_dir=workdir / "lane-l",
+            config=config,
+            prompts_path=prompts_path,
+            registry_path=registry_path,
+            trigger=trigger,
+        )
+    except LaneLNoProviderCall as skipped:
+        gate = skipped.decision
+        write_record(gate, workdir)
+        print(f"Lane L gate: {gate.outcome}: {gate.reason}; provider calls: 0")
+        if gate.outcome == "NO_ACTION_JUSTIFIED":
+            return  # the sealed candidate stays exactly as sealed
+        raise PresentFailure(f"Lane L: {gate.outcome}: {gate.reason}") from skipped
+    if trigger is not None:
+        write_record(
+            decide(trigger, has_findings=True, probes_clean=None, head_revision=head), workdir
+        )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
         keep_blocking(result.out_dir, verdict)  # BL-084: the run's failure record reads them

@@ -10,6 +10,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "recertify"}
     {"job": "cohort"}
     {"job": "issues"}
+    {"job": "monitor"}
     {"job": "count"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
@@ -110,7 +111,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "monitor", "count", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -394,6 +395,12 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("an issues request takes no other field (its targets are data/issue_pilot.json)")
         return {"job": "issues", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "monitor":
+        # Owner ruling R50 (WP-3): one read-only portfolio observation (.github/workflows/monitor.yml).
+        # No target field: it covers every active registry entry.
+        if set(request) != {"job"}:
+            raise RequestError("a monitor request takes no other field (it observes the whole registry)")
+        return {"job": "monitor", "repository": "", "ecosystem": "", "lane": ""}
     if job == "count":
         # BL-111: the official delivered count (ops/checks/portfolio_delivery_count.py) run hosted, where
         # each acceptance record's attestation can be verified (attestations: read); read-only, no secret.
