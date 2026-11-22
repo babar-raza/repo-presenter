@@ -8388,3 +8388,23 @@ Properties improved (R46): robust (a large candidate degrades the review to its 
 Hosted-unproven (R41): Words Java Lane R refresh.
 
 Backlog: BL-690
+
+## 2026-11-22: Round 6 false flags: three classes cleared by derivation or scope, the Enterprise clause with no stating fact withheld at generation, one gap recorded (BL-700, BL-701, BL-702)
+
+Problem. Audit round 6 (seed run 44972760783) failed the batch gate on false flags: 4 of 18 clean controls flagged (0.222 > 0.10; thresholds 0.90 / 0.10 and the single-sample rule are the owner's and unchanged), seeded recall 51/52. Owner rule: a line is cleared only when deterministically derivable from a SUPPORTED fact, never by weakening the judge. Each flagged control was traced zero-call on its stored seal bundle (`refs/repository-presenter-state/bundles/<slug>`) through the audit's own derivation, and classified.
+
+| Cell, lines | Class | Root cause | Decision | Effect |
+|---|---|---|---|---|
+| 3D TypeScript 252 `Watermark` / `Not implemented.` | (a) derivable | the renderer's whole-stub row (`renderer._stub_marked`) was derivable (origin renderer) but kept by the K02 'behaviour claim' class, whose only provenance was the never-thrown constant | BL-700 (a): `stub_provenance` verifies the exact row against `StubIndex` (SUPPORTED limitation statement naming the whole type), requires that no read method body returns a value, writes the proof into the cleared row | clearable on the stored seal (derivable 256, clearable 0 -> 1); no refresh needed |
+| Slides .NET 726 (suite / CI / release / docs sentences) | (b) renderer-owned | `renderer._asset_locators` sentences ('Project documentation lives under `docs/`.') were in no scope pattern (nor in `renderer_sentences`, so the coverage test could not bind them): the line stayed authored | BL-700 (b): the three locator forms join `_RENDERER_SENTENCES` and `renderer_sentences` | clearable on the stored seal |
+| Slides .NET 722 (Enterprise clause) | (c) producer | the clause 'adds features not implemented in this package, such as advanced animation editing, slide master customization ...' cites ten identity/package facts and no fact that says it; both seal-time draws accepted it, the audit's draw faulted it; BL-480 only runs when a review faults it | BL-701: generation withholds a context clause that cites no stating fact (recorded omission, the renderer's own Enterprise sentence stays) | needs a refresh (`refresh:true`); the older seal keeps the line |
+| PDF TypeScript 3827, 3833 | (a)/(b) derivable | the rows print the type's own doc comment (SUPPORTED `docstring_full`) word for word; `authored_type_rows` treated every type without a first-sentence `docstring` as authored | BL-700 (c): a row equal to the doc comment is the source's text, not an author's row | clearable on the stored seal |
+| PDF TypeScript 3839, 3840 | (d) real, open | MetadataField / MetadataSyncReport have no doc comment in the source (pinned `src/metasync.ts`); the rows are the maintainers' own table prose, kept VERIFIED_PRESERVE because the cited symbols are SUPPORTED | BL-702 (open, needs a supervisor decision): keep blocking, name it | PDF TypeScript stays flagged |
+| PSD Java 49, 50 (capabilities 4, 5) | (c) producer, already fixed | the old seal (2026-11-20 00:22Z) predates BL-600: both capabilities cite only `identity:family` (zero-call: `naming_only_capability` is True for capabilities 1, 3, 4, 5 of the stored plan) | no code change: BL-600's `plan_checks` refuses them; BL-660/661 (merged 2026-11-22 00:03Z) removed the two causes the PSD Java refreshes failed on | needs a refresh |
+
+Why the new Slides .NET / PDF TS / 3D TS seals still carried these lines although the levers exist: 3D TS and PDF TS were not producer defects at all (derivation / scope gaps in the audit); Slides .NET 726 likewise; Slides .NET 722 is the one producer line, and BL-480's withhold is review-triggered, so a sample that does not fault the clause leaves it (the lever works, the trigger is a model draw). BL-701 removes that dependency for the clause with no stating fact.
+
+R10: scope and derivation changes touch only the audit and the production review's shown text; BL-701 is generation only (`unit_checks(withhold_unsupported=True)` is set only by the authoring job's checks; re-judgement, `fit_sealed_sections` and re-certification never pass it), so no sealed README byte moves. R9: no README wording added. Properties improved (R46): universal (a class, every cell), repeatable (a derivation, not a sample), robust (a clause with no source is released, never a halted candidate).
+Hosted-unproven (R41): audit round 7; refresh runs of Slides .NET and PSD Java Lane R.
+
+Backlog: BL-700, BL-701, BL-702

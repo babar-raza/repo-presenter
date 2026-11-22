@@ -1224,6 +1224,7 @@ def renderer_sentences(
     """Every sentence the renderer writes into a section an LLM otherwise owns."""
     context = RenderContext(entry, facts, plan, units, dispositions)
     sentences = list(_development_sentences(context))
+    sentences.extend(_asset_locators(context))
     command_lead = _development_commands(context)[0]
     if command_lead:
         sentences.append(command_lead)
