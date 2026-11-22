@@ -291,24 +291,18 @@ def test_the_kill_switch_names_agree_between_code_and_workflows():
     from repo_presenter.issues.file import (
         AUTHORIZATION_VARIABLE as issues,
     )
-    from repo_presenter.issues.file import (
-        LEGACY_AUTHORIZATION_VARIABLE as issues_alias,
-    )
     from repo_presenter.propose.effect import AUTHORIZATION_VARIABLE as proposal
 
-    # BL-742 (merged after BL-733): the issues switch has a canonical family name and the name this repository
-    # used until 2026-11-22 as a legacy alias; both are honoured and both are read by issues.yml.
-    assert (proposal, candidates, issues, issues_alias) == (
+    assert (proposal, candidates, issues) == (
         "REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED",
         "REPO_PRESENTER_CANDIDATES_WRITE_AUTHORIZED",
-        "REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED",
         "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED",
     )
     used = set()
     for path in sorted(WORKFLOWS.glob("*.yml")):
         used |= set(re.findall(r"vars\.(\w*WRITE_AUTHORIZED)", path.read_text(encoding="utf-8")))
-    assert used <= {proposal, candidates, issues, issues_alias}, used
-    assert {proposal, issues_alias} <= used  # both wired workflows read a name the code reads
+    assert used <= {proposal, candidates, issues}, used
+    assert {proposal, issues} <= used  # both wired workflows read a name the code reads
 
 
 def test_no_workflow_code_or_test_still_uses_the_old_project_variable_prefix():

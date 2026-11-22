@@ -17,7 +17,6 @@ from repo_presenter.issues import monitor
 from repo_presenter.issues.close import CloseRefusal, _remote_gates
 from repo_presenter.issues.file import (
     AUTHORIZATION_VARIABLE,
-    LEGACY_AUTHORIZATION_VARIABLE,
 )
 from repo_presenter.issues.file import file_handoff as _file_handoff
 from repo_presenter.issues.pilot import PilotEntry
@@ -63,7 +62,7 @@ def test_the_wildcard_and_an_unset_variable_clear_nothing_not_even_the_sandbox()
 def test_filing_to_an_upstream_repository_is_refused_with_every_other_gate_open_and_makes_no_call() -> None:
     handoff = _handoff(repository=UPSTREAM)
     create = Create()
-    for name in (AUTHORIZATION_VARIABLE, LEGACY_AUTHORIZATION_VARIABLE):
+    for name in (AUTHORIZATION_VARIABLE,):
         result = _file_handoff(handoff, token="ghs_w", environment={name: "1", VAR: SANDBOX}, create=create,
                                permit=make_permit(UPSTREAM, effect="issue_filing"), verify_token=lambda t: TokenDecision(True, t))
         assert result.filed is False and result.authorized is False and "sandbox only" in result.reason
@@ -72,7 +71,7 @@ def test_filing_to_an_upstream_repository_is_refused_with_every_other_gate_open_
 
 def test_filing_to_the_sandbox_passes_the_scope_gate_and_reaches_the_next_gate() -> None:
     handoff = _handoff(repository=SANDBOX)
-    result = _file_handoff(handoff, token=None, environment={LEGACY_AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX},
+    result = _file_handoff(handoff, token=None, environment={AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX},
                            permit=make_permit(SANDBOX, effect="issue_filing"), verify_token=lambda t: TokenDecision(True, t))
     assert "sandbox only" not in result.reason and result.authorized is True  # refused later: no token
 
@@ -80,23 +79,23 @@ def test_filing_to_the_sandbox_passes_the_scope_gate_and_reaches_the_next_gate()
 def test_a_remote_close_on_an_upstream_repository_is_refused_before_any_write() -> None:
     h = filed(UPSTREAM)
     with pytest.raises(CloseRefusal, match="sandbox only"):
-        _remote_gates(h, "completed", remote(h, env={LEGACY_AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX}))
+        _remote_gates(h, "completed", remote(h, env={AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX}))
 
 
 def test_a_remote_close_on_the_sandbox_passes_the_scope_gate() -> None:
     h = filed(SANDBOX)
-    assert _remote_gates(h, "completed", remote(h, env={LEGACY_AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX})) == (None, None)
+    assert _remote_gates(h, "completed", remote(h, env={AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX})) == (None, None)
 
 
 def test_the_maintenance_cycle_stays_a_dry_run_for_an_upstream_pilot_even_when_everything_else_is_open() -> None:
     doc = {"dry_run_cycles": 3}
     token = TokenDecision(True, "ghs_x")
-    open_env = {LEGACY_AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX}
+    open_env = {AUTHORIZATION_VARIABLE: "1", VAR: SANDBOX}
     blockers = monitor.live_blockers(replace(PILOT, mode="live"), doc, open_env, token)
     assert len(blockers) == 1 and "sandbox only" in blockers[0]
     sandbox_pilot = replace(PILOT, repository=SANDBOX)
     assert monitor.live_blockers(sandbox_pilot, doc, open_env, token) == []
-    assert any("sandbox only" in b for b in monitor.live_blockers(sandbox_pilot, doc, {LEGACY_AUTHORIZATION_VARIABLE: "1"}, token))
+    assert any("sandbox only" in b for b in monitor.live_blockers(sandbox_pilot, doc, {AUTHORIZATION_VARIABLE: "1"}, token))
 
 
 def test_the_issues_workflow_hands_the_variable_to_the_maintain_step() -> None:
