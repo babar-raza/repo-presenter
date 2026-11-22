@@ -1,20 +1,6 @@
 {
  "history": [
   {
-   "at": "2026-11-14T16:36:50+00:00",
-   "classes": [
-    "BC-07|unresolved|heading_q_is_not",
-    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "live_readme_loss|inherited_unit|code_block"
-   ],
-   "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
-   "findings": 11,
-   "outcome": "failure",
-   "run_id": "43613424481",
-   "source_revision": "034594822f58194a9ae937237090a60161f57055",
-   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
-  },
-  {
    "at": "2026-11-14T19:34:49+00:00",
    "classes": [
     "BC-07|unresolved|heading_q_is_not",
@@ -251,25 +237,80 @@
    "run_id": "44967388128",
    "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T11:57:45+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:source_reconciliation_id_correct_with_evidence_needs_at"
+   ],
+   "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45017805402",
+   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T01:42:45+00:00",
-  "classes": {},
-  "code": "bb9e7f2abc4e4d6c6867b6e60eef612c76a69f4752e3fbe3c7db8eb2ed0797d3",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-22T11:57:45+00:00",
+  "classes": {
+   "job_error|job_error|OutputRejectedError:source_reconciliation_id_correct_with_evidence_needs_at": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:547.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "OutputRejectedError"
+    ],
+    "rule": "job_error",
+    "scope": "e31d5cddd3446ef6dfe6509eb9930b2f622404b064e0349001ec4e0895bceac9",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:source_reconciliation_id_correct_with_evidence_needs_at",
+    "upstream": ""
+   }
+  },
+  "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:547.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
+   "kind": "OutputRejectedError",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:547.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
+    "origin": {
+     "id": "OutputRejectedError",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_id_correct_with_evidence_needs_at",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:source_reconciliation_id_correct_with_evidence_needs_at",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "77c2262d531b2154a7a33dff60ed57c77bd48b0c",
+  "main_sha": "e32adb6b07265f13112a78437ff030ad24238abf",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44967388128",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44967388128",
+  "run_id": "45017805402",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45017805402",
   "schema_version": 1,
   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
