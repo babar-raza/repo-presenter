@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-22T09:03:14.445539+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:45004811070",
     "acquired_at": "2026-11-22T08:53:25.366172+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 87,
+  "state_version": 88,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39",
     "run:41295852203:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "81a03b4a7a3e42c682358a2960d2fa81",
