@@ -5,7 +5,7 @@
   "provider_repository_id": 1168969375,
   "registry_revision": null,
   "active_transaction_id": "acf5266a1d4f435da7daa5ab8b074ddd",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T10:58:49.888808+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-22T12:34:28.084240+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 3
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 87,
+  "state_version": 88,
   "recent_trigger_dedup_keys": {
     "run:41133521004:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "d87fa8e49fcb4e54a1dced96c2933b26",
     "run:41236496887:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "f0e03721a98e4dc49dce5ae223574f3a",
@@ -66,5 +66,5 @@
     "run:44924648803:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "630a64d9de0144be9adbd46dc2c3f55f",
     "run:44943342177:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "acf5266a1d4f435da7daa5ab8b074ddd"
   },
-  "recovery_count": 2
+  "recovery_count": 3
 }
