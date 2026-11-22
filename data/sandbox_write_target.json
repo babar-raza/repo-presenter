@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "_comment": "R17 sandbox, chosen by the owner on 2026-11-22 through the interactive form: the sandbox repository is babar-raza/repo-presenter itself (this repository), not a separate repository. This file is NOT the R3/R22 upstream allowlist (data/upstream_write_allowlist.json is unchanged and still lists only the nine allowlisted upstream repositories). The entry below is honoured only when the repository variable REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY names this exact repository; the wildcard '*' never selects it. A sandbox pull request is always a draft on a throwaway branch under sandbox_branch_prefix and writes the candidate README only under sandbox_path_template, never over this repository's own README.md. Issue writes (REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED) are likewise allowed only on the repository this variable names.",
+  "sandbox": {
+    "repository": "babar-raza/repo-presenter",
+    "effects": ["pull_request", "issue", "issue_comment"],
+    "first_pr_as_draft": true,
+    "sandbox_branch_prefix": "repository-presenter/sandbox/",
+    "sandbox_path_template": "sandbox/{owner}__{name}/README.md",
+    "added": "2026-11-22",
+    "added_by": "owner (interactive form), recorded by the supervisor"
+  }
+}

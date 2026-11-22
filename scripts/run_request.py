@@ -13,6 +13,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "count"}
     {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
     {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "L", "dry_run": false}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R", "sandbox": true}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -439,8 +440,9 @@ def validate(
 def _validate_propose(request: dict[str, Any], registry: list[dict[str, Any]]) -> dict[str, str]:
     """R50 WP-1: one sealed candidate to propose (dry run by default). Exact fields; the repository and
     its ecosystem must match ``data/registry.json``; ``lane`` is ``R`` or ``L`` (never defaulted)."""
-    if set(request) - {"job", "repository", "ecosystem", "lane", "dry_run"}:
-        raise RequestError(f"unknown fields {sorted(set(request) - {'job', 'repository', 'ecosystem', 'lane', 'dry_run'})}")
+    known = {"job", "repository", "ecosystem", "lane", "dry_run", "sandbox"}
+    if set(request) - known:
+        raise RequestError(f"unknown fields {sorted(set(request) - known)}")
     repository, ecosystem, lane = request.get("repository"), request.get("ecosystem"), request.get("lane")
     entry = next((e for e in registry if e.get("repository") == repository), None)
     if entry is None:
@@ -452,8 +454,11 @@ def _validate_propose(request: dict[str, Any], registry: list[dict[str, Any]]) -
     dry_run = request.get("dry_run", True)
     if not isinstance(dry_run, bool):
         raise RequestError(f"dry_run {dry_run!r} is not a JSON boolean")
+    sandbox = request.get("sandbox", False)
+    if not isinstance(sandbox, bool):
+        raise RequestError(f"sandbox {sandbox!r} is not a JSON boolean")
     return {"job": "propose", "repository": repository, "ecosystem": ecosystem, "lane": lane,
-            "dry_run": "true" if dry_run else "false"}
+            "dry_run": "true" if dry_run else "false", "sandbox": "true" if sandbox else "false"}
 
 
 def check_trigger(event: Any) -> tuple[str, str]:

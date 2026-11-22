@@ -44,7 +44,8 @@ def test_triggers_are_workflow_call_and_dispatch_and_dry_run_is_the_default():
     assert set(triggers) == {"workflow_call", "workflow_dispatch"}
     for name in triggers:
         assert triggers[name]["inputs"]["dry_run"]["default"] is True
-        assert set(triggers[name]["inputs"]) == {"repository", "lane", "dry_run"}
+        assert set(triggers[name]["inputs"]) == {"repository", "lane", "dry_run", "sandbox"}
+        assert triggers[name]["inputs"]["sandbox"]["default"] is False  # the R17 sandbox path is opt-in
 
 
 def test_the_jobs_are_validate_gate_dry_run_write_in_that_order():
@@ -61,7 +62,8 @@ def test_permissions_are_least_privilege_and_no_job_holds_a_write_scope():
         assert set(job["permissions"].values()) == {"read"}, (name, job["permissions"])
         assert set(job["permissions"]) <= {"contents", "attestations"}, (name, job["permissions"])
     assert JOBS["validate"]["permissions"] == {"contents": "read"}
-    assert JOBS["dry-run"]["permissions"] == {"contents": "read"}
+    # attestations: read lets gate 3b verify the acceptance record's Sigstore attestation (read-only)
+    assert JOBS["dry-run"]["permissions"] == {"contents": "read", "attestations": "read"}
     for name, job in JOBS.items():
         for step in job["steps"]:
             if str(step.get("uses", "")).startswith("actions/checkout"):
@@ -125,7 +127,9 @@ def test_inputs_never_reach_a_shell_script_directly():
             assert "${{ needs." not in run, (name, step.get("name"))
     # validate: every input passes through env and is pattern-checked
     (check,) = _steps("validate")
-    assert set(check["env"]) == {"INPUT_REPOSITORY", "INPUT_LANE", "INPUT_DRY_RUN", "REF"}
+    assert set(check["env"]) == {
+        "INPUT_REPOSITORY", "INPUT_LANE", "INPUT_DRY_RUN", "INPUT_SANDBOX", "SANDBOX_REPOSITORY", "REF",
+    }
     assert '[ "$REF" = "refs/heads/main" ]' in check["run"]
 
 
@@ -229,15 +233,19 @@ def test_the_dry_run_job_writes_nothing():
     assert "propose.run payload" in text and "propose.run write" not in text
     assert "GH_PROPOSAL_WRITE_TOKEN" not in text
     assert "git push" not in text and "gh pr" not in text and "gh api -X" not in text and "--method" not in text
-    assert JOBS["dry-run"]["permissions"] == {"contents": "read"}
+    # attestations: read lets gate 3b verify the acceptance record's Sigstore attestation (read-only)
+    assert JOBS["dry-run"]["permissions"] == {"contents": "read", "attestations": "read"}
     (payload,) = [s for s in _steps("dry-run") if "propose.run payload" in s.get("run", "")]
     # the payload step holds the read token and the state-read token only
     assert set(payload["env"]) == {
         "GITHUB_TOKEN",
+        "GH_TOKEN",  # the read-only default token `gh attestation verify` uses (gate 3b)
         "REPOSITORY_PRESENTER_STATE_TOKEN",
         "READ_TOKEN",
+        "REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY",
         "REPOSITORY",
         "LANE",
+        "SANDBOX",
         "TRIGGER_SHA",
     }
     uploads = [s for s in _steps("dry-run") if str(s.get("uses", "")).startswith("actions/upload-artifact")]
@@ -267,6 +275,8 @@ def test_the_run_request_executor_calls_propose_dry_run_by_default_with_read_onl
         "lane": "${{ needs.validate.outputs.lane }}",
         # fail closed: anything other than the exact string 'false' is a dry run
         "dry_run": "${{ needs.validate.outputs.dry_run != 'false' }}",
+        # R17 sandbox mode only for the exact string 'true'
+        "sandbox": "${{ needs.validate.outputs.sandbox == 'true' }}",
     }
     assert doc["jobs"]["validate"]["outputs"]["dry_run"] == "${{ steps.check.outputs.dry_run }}"
 
@@ -278,27 +288,63 @@ def test_the_kill_switch_names_agree_between_code_and_workflows():
     from repo_presenter.candidates_publish.effect import (
         AUTHORIZATION_VARIABLE as candidates,
     )
-    from repo_presenter.issues.file import AUTHORIZATION_VARIABLE as issues
+    from repo_presenter.issues.file import (
+        AUTHORIZATION_VARIABLE as issues,
+    )
+    from repo_presenter.issues.file import (
+        LEGACY_AUTHORIZATION_VARIABLE as issues_alias,
+    )
     from repo_presenter.propose.effect import AUTHORIZATION_VARIABLE as proposal
 
-    assert (proposal, candidates, issues) == (
+    # BL-742 (merged after BL-733): the issues switch has a canonical family name and the name this repository
+    # used until 2026-11-22 as a legacy alias; both are honoured and both are read by issues.yml.
+    assert (proposal, candidates, issues, issues_alias) == (
         "REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED",
         "REPO_PRESENTER_CANDIDATES_WRITE_AUTHORIZED",
+        "REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED",
         "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED",
     )
     used = set()
     for path in sorted(WORKFLOWS.glob("*.yml")):
         used |= set(re.findall(r"vars\.(\w*WRITE_AUTHORIZED)", path.read_text(encoding="utf-8")))
-    assert used <= {proposal, candidates, issues}, used
-    assert {proposal, issues} <= used  # both wired workflows read the name the code reads
+    assert used <= {proposal, candidates, issues, issues_alias}, used
+    assert {proposal, issues_alias} <= used  # both wired workflows read a name the code reads
 
 
 def test_no_workflow_code_or_test_still_uses_the_old_project_variable_prefix():
     offenders = []
+    # BL-742: the issues switch's canonical family name legitimately lives in the issues code and issues.yml.
+    issues_files = {"src/repo_presenter/issues/file.py", "src/repo_presenter/issues/monitor.py", ".github/workflows/issues.yml"}
     for base in (ROOT / "src", ROOT / ".github", ROOT / "scripts", ROOT / "data", ROOT / "ops"):
         for path in base.rglob("*"):
             if path.is_file() and path.suffix in {".py", ".yml", ".yaml", ".json", ".sh", ".md"} and re.search(
                 r"REPOSITORY_PRESENTER_\w*WRITE_AUTHORIZED", path.read_text(encoding="utf-8", errors="ignore")
             ):
-                offenders.append(str(path.relative_to(ROOT)))
-    assert not offenders, offenders
+                offenders.append(str(path.relative_to(ROOT)).replace("\\", "/"))
+    assert not set(offenders) - issues_files, offenders
+
+
+# --- the R17 sandbox mode (owner decision 2026-11-22) -------------------------------------------------------------
+
+
+def test_sandbox_mode_scopes_both_mints_to_the_sandbox_and_never_accepts_the_wildcard():
+    (check,) = _steps("validate")
+    run = check["run"]
+    # the write target (owner/name outputs, which both mint steps use) is the sandbox in sandbox mode
+    assert 'target="$SANDBOX_REPOSITORY"' in run and 'owner="${target%%/*}"' in run
+    assert '[ "$SANDBOX_REPOSITORY" != "*" ]' in run
+    assert check["env"]["SANDBOX_REPOSITORY"] == "${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}"
+    assert check["env"]["INPUT_SANDBOX"] == "${{ inputs.sandbox }}"
+    assert JOBS["validate"]["outputs"]["sandbox"] == "${{ steps.check.outputs.sandbox }}"
+    for step in (*_mints("dry-run"), *_mints("write")):
+        assert step["with"]["owner"] == "${{ needs.validate.outputs.owner }}"
+        assert step["with"]["repositories"] == "${{ needs.validate.outputs.name }}"
+
+
+def test_the_sandbox_flag_reaches_the_gate_payload_and_write_steps_through_env_only():
+    for job, command in (("gate", "gates"), ("dry-run", "payload"), ("write", "write")):
+        (step,) = [s for s in _steps(job) if f"propose.run {command}" in s.get("run", "")]
+        assert step["env"]["SANDBOX"] == "${{ needs.validate.outputs.sandbox }}"
+        assert "--sandbox" in step["run"] and "${{ needs." not in step["run"] and "${{ inputs." not in step["run"]
+    # the write job's `if` is unchanged: every gate still has to be open, in sandbox mode too
+    assert "needs.gate.outputs.portfolio_r15 == 'true'" in JOBS["write"]["if"]

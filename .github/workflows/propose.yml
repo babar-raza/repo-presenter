@@ -30,6 +30,13 @@ name: propose
 #             GH_PROPOSAL_WRITE_TOKEN, and that step re-evaluates every gate itself before any GitHub call. The pull
 #             request is always a DRAFT, authored by repository-presenter[bot] (verified by the effect).
 #
+# SANDBOX MODE (owner decision 2026-11-22, R17: the sandbox is babar-raza/repo-presenter itself): `sandbox: true`
+# writes the candidate of `repository` to the sandbox repository the variable REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY
+# names (never '*'), as a DRAFT pull request from a throwaway branch, under sandbox/<owner>__<name>/README.md (see
+# src/repo_presenter/propose/sandbox.py). The R15 portfolio predicate is not required for that target and stays required
+# for every other one. In sandbox mode the validate job's `owner`/`name` outputs are the WRITE TARGET (the sandbox), so
+# both mint steps are scoped to the sandbox repository alone; `repository` stays the candidate's.
+#
 # tests/test_propose_workflow.py parses this file: no write step is reachable without the gates, the App secrets
 # appear only in the two mint steps (the only write-scoped one is in `write`), permissions are least privilege and
 # the dry-run job holds no write scope.
@@ -50,6 +57,11 @@ on:
         required: false
         type: boolean
         default: true
+      sandbox:
+        description: "true writes the candidate to the R17 sandbox the repository variable names (draft PR, sandbox/ path) instead of the candidate's own repository"
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       repository:
@@ -66,6 +78,11 @@ on:
         required: false
         type: boolean
         default: true
+      sandbox:
+        description: "Write to the R17 sandbox the repository variable names (draft PR under sandbox/), not to the candidate's own repository"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -86,6 +103,7 @@ jobs:
       repository: ${{ steps.check.outputs.repository }}
       lane: ${{ steps.check.outputs.lane }}
       dry_run: ${{ steps.check.outputs.dry_run }}
+      sandbox: ${{ steps.check.outputs.sandbox }}
       slug: ${{ steps.check.outputs.slug }}
     steps:
       - name: Validate every input against a strict allow-pattern (inputs pass through env, never a script)
@@ -94,26 +112,47 @@ jobs:
           INPUT_REPOSITORY: ${{ inputs.repository }}
           INPUT_LANE: ${{ inputs.lane }}
           INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_SANDBOX: ${{ inputs.sandbox }}
+          SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
           REF: ${{ github.ref }}
         run: |
           set -euo pipefail
           fail() { echo "::error::propose input '$1' rejected: $2"; exit 1; }
           [ "$REF" = "refs/heads/main" ] || fail ref "propose runs from main only"
-          [[ "$INPUT_REPOSITORY" == */* ]] || fail repository "must be OWNER/NAME"
-          owner="${INPUT_REPOSITORY%%/*}"
-          name="${INPUT_REPOSITORY#*/}"
-          [[ "$owner" =~ ^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$ ]] || fail repository "owner is not a valid GitHub owner name"
-          [[ "$name" =~ ^[A-Za-z0-9._][A-Za-z0-9._-]{0,99}$ ]] || fail repository "name is not a valid GitHub repository name"
-          [ "$name" != "." ] && [ "$name" != ".." ] || fail repository "name is not a valid GitHub repository name"
+          valid_repository() {
+            [[ "$1" == */* ]] || fail repository "must be OWNER/NAME"
+            local o="${1%%/*}" n="${1#*/}"
+            [[ "$o" =~ ^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$ ]] || fail repository "owner is not a valid GitHub owner name"
+            [[ "$n" =~ ^[A-Za-z0-9._][A-Za-z0-9._-]{0,99}$ ]] || fail repository "name is not a valid GitHub repository name"
+            [ "$n" != "." ] && [ "$n" != ".." ] || fail repository "name is not a valid GitHub repository name"
+          }
+          valid_repository "$INPUT_REPOSITORY"
           case "$INPUT_LANE" in R | L) ;; *) fail lane "must be R or L" ;; esac
           case "$INPUT_DRY_RUN" in true | false) ;; *) fail dry_run "must be true or false" ;; esac
+          case "${INPUT_SANDBOX:-false}" in true | false) ;; *) fail sandbox "must be true or false" ;; esac
+          sandbox="${INPUT_SANDBOX:-false}"
+          # the WRITE TARGET: the candidate's own repository, or (sandbox mode) the sandbox the variable names
+          target="$INPUT_REPOSITORY"
+          slug_suffix="$INPUT_LANE"
+          if [ "$sandbox" = true ]; then
+            [ -n "$SANDBOX_REPOSITORY" ] && [ "$SANDBOX_REPOSITORY" != "*" ] \
+              || fail sandbox "REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY must name the sandbox repository (unset and '*' select none)"
+            valid_repository "$SANDBOX_REPOSITORY"
+            target="$SANDBOX_REPOSITORY"
+            slug_suffix="${INPUT_LANE}-sandbox"
+          fi
+          owner="${target%%/*}"
+          name="${target#*/}"
+          cand_owner="${INPUT_REPOSITORY%%/*}"
+          cand_name="${INPUT_REPOSITORY#*/}"
           {
             echo "owner=$owner"
             echo "name=$name"
             echo "repository=$INPUT_REPOSITORY"
             echo "lane=$INPUT_LANE"
             echo "dry_run=$INPUT_DRY_RUN"
-            echo "slug=${owner}__${name}-${INPUT_LANE}"
+            echo "sandbox=$sandbox"
+            echo "slug=${cand_owner}__${cand_name}-${slug_suffix}"
           } >> "$GITHUB_OUTPUT"
 
   gate:
@@ -148,8 +187,10 @@ jobs:
           REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED }}
           REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
           REPOSITORY: ${{ needs.validate.outputs.repository }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
         run: |
-          python -m repo_presenter.propose.run gates --repository "$REPOSITORY" \
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
+          python -m repo_presenter.propose.run gates --repository "$REPOSITORY" ${flag[@]+"${flag[@]}"} \
             --out "$RUNNER_TEMP/gates.json" --summary "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
@@ -162,7 +203,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read  # the checkout and the state refs only; no write scope exists in this job
+      contents: read      # the checkout and the state refs only; no write scope exists in this job
+      attestations: read  # gate 3b verifies the acceptance record's Sigstore attestation (read-only)
     outputs:
       write_eligible: ${{ steps.payload.outputs.write_eligible }}
     steps:
@@ -197,14 +239,18 @@ jobs:
         id: payload
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
           READ_TOKEN: ${{ steps.read-token.outputs.token || github.token }}
+          REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
           REPOSITORY: ${{ needs.validate.outputs.repository }}
           LANE: ${{ needs.validate.outputs.lane }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
           TRIGGER_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          python -m repo_presenter.propose.run payload --repository "$REPOSITORY" --lane "$LANE" \
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
+          python -m repo_presenter.propose.run payload --repository "$REPOSITORY" --lane "$LANE" ${flag[@]+"${flag[@]}"} \
             --remote "https://github.com/${{ github.repository }}.git" --trigger-sha "$TRIGGER_SHA" \
             --gates-file "$RUNNER_TEMP/gates/gates.json" --out "$RUNNER_TEMP/payload.json" \
             --summary "$GITHUB_STEP_SUMMARY" > /dev/null
@@ -258,7 +304,7 @@ jobs:
           permission-contents: write
           permission-metadata: read
           permission-pull-requests: write
-      - name: Open or refresh the DRAFT pull request through the App identity
+      - name: Open or update the DRAFT pull request through the App identity
         env:
           GH_PROPOSAL_WRITE_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_TOKEN: ${{ github.token }}
@@ -267,11 +313,13 @@ jobs:
           REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
           REPOSITORY: ${{ needs.validate.outputs.repository }}
           LANE: ${{ needs.validate.outputs.lane }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
           TRIGGER_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          python -m repo_presenter.propose.run write --repository "$REPOSITORY" --lane "$LANE" \
+          python -m repo_presenter.propose.run write --repository "$REPOSITORY" --lane "$LANE" ${flag[@]+"${flag[@]}"} \
             --remote "https://github.com/${{ github.repository }}.git" --trigger-sha "$TRIGGER_SHA" \
             --summary "$GITHUB_STEP_SUMMARY"

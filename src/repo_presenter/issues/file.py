@@ -79,6 +79,7 @@ from repo_presenter.issues.approval import (
     is_valid_repository,
     verify_approval,
 )
+from repo_presenter import sandbox_scope
 from repo_presenter.issues.dedup import body_with_marker
 from repo_presenter.issues.labels import labels_for
 from repo_presenter.issues.model import Handoff, IssueRef
@@ -365,6 +366,11 @@ def file_handoff(
 
     if not write_authorized(environment):
         return _refuse(False, _NOT_AUTHORIZED_REASON)
+
+    # Owner decision 2026-11-22: issue writes are authorised for the sandbox only.
+    sandbox_refusal = sandbox_scope.issue_write_refusal(handoff.repository, environment)
+    if sandbox_refusal is not None:
+        return _refuse(False, sandbox_refusal)
 
     if not token:
         return _refuse(True, _NO_TOKEN_REASON)

@@ -281,7 +281,7 @@ def test_the_cli_write_refuses_on_closed_gates_before_touching_the_state_remote(
     monkeypatch.setattr(run, "export_candidate", no_export)
     for key in (run.AUTHORIZATION_VARIABLE, run.SANDBOX_VARIABLE):
         monkeypatch.delenv(key, raising=False)
-    monkeypatch.setattr(run, "gate_portfolio", lambda readiness=None: run.Gate("portfolio_r15", False, "incomplete"))
+    monkeypatch.setattr(run, "gate_portfolio", lambda readiness=None, **k: run.Gate("portfolio_r15", False, "incomplete"))
     code = run.main(["write", "--repository", TARGET, "--lane", "R"])
     assert code == run.EXIT_REFUSED
     err = capsys.readouterr().err
@@ -300,7 +300,7 @@ def test_the_gates_command_writes_the_outputs_and_the_report(tmp_path, monkeypat
     monkeypatch.setenv("GITHUB_OUTPUT", str(out))
     monkeypatch.setenv(run.AUTHORIZATION_VARIABLE, "true")
     monkeypatch.setenv(run.SANDBOX_VARIABLE, TARGET)
-    monkeypatch.setattr(run, "gate_portfolio", lambda readiness=None: run.Gate("portfolio_r15", False, "incomplete"))
+    monkeypatch.setattr(run, "gate_portfolio", lambda readiness=None, **k: run.Gate("portfolio_r15", False, "incomplete"))
     report = tmp_path / "gates.json"
     assert run.main(["gates", "--repository", TARGET, "--out", str(report), "--summary", str(tmp_path / "s.md")]) == run.EXIT_OK
     lines = dict(line.split("=") for line in out.read_text().splitlines())

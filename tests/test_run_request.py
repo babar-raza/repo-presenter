@@ -717,10 +717,19 @@ PROPOSE = {"job": "propose", "repository": RUST["repository"], "ecosystem": "rus
 
 def test_a_propose_request_is_a_dry_run_unless_dry_run_false_is_written_out():
     expected = {"job": "propose", "repository": RUST["repository"], "ecosystem": "rust", "lane": "R"}
-    assert rr.validate(PROPOSE, REGISTRY, OK, True) == {**expected, "dry_run": "true"}
+    assert rr.validate(PROPOSE, REGISTRY, OK, True) == {**expected, "dry_run": "true", "sandbox": "false"}
     assert rr.validate({**PROPOSE, "dry_run": True}, REGISTRY, OK, True)["dry_run"] == "true"
     assert rr.validate({**PROPOSE, "dry_run": False, "lane": "L"}, REGISTRY, OK, True) == {
-        **expected, "lane": "L", "dry_run": "false"}
+        **expected, "lane": "L", "dry_run": "false", "sandbox": "false"}
+
+
+def test_a_propose_request_selects_the_r17_sandbox_only_with_the_json_boolean_true():
+    assert rr.validate({**PROPOSE, "sandbox": True}, REGISTRY, OK, True)["sandbox"] == "true"
+    assert rr.validate({**PROPOSE, "sandbox": True}, REGISTRY, OK, True)["dry_run"] == "true"  # still a dry run
+    assert rr.validate({**PROPOSE, "sandbox": False}, REGISTRY, OK, True)["sandbox"] == "false"
+    for bad in ("true", 1, None):
+        with pytest.raises(rr.RequestError, match="not a JSON boolean"):
+            rr.validate({**PROPOSE, "sandbox": bad}, REGISTRY, OK, True)
 
 
 @pytest.mark.parametrize(

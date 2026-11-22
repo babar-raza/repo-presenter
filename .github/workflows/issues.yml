@@ -176,6 +176,7 @@ jobs:
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
           REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
           REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
+          REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}  # owner decision 2026-11-22: issue writes only on the sandbox it names
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

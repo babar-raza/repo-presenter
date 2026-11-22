@@ -24,10 +24,18 @@ The five write gates (every one must hold, none can be bypassed by a caller):
 3. ``kill_switch``    the owner variable ``REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`` is truthy.
 4. ``portfolio_r15``  every active repository has a terminal outcome in both lanes
                       (``propose/portfolio_gate.py``; owner ruling R15: nothing upstream before that).
+                      NOT required when the target is exactly the sandbox repository the variable below
+                      names (R17, owner decision 2026-11-22; never for ``*``); required, fail closed, for
+                      every other target.
 5. ``sandbox_target`` the owner variable ``REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY`` names exactly
                       this target. Unset or empty fails closed. The owner lifts the restriction only
                       by setting that variable to ``*`` (every allowlisted repository then passes
                       this gate, the other four unchanged).
+
+``--sandbox`` (all three subcommands) is the R17 path: the candidate of ``--repository`` is written to the
+sandbox repository the variable names (``propose/sandbox.py``: throwaway branch, ``sandbox/<owner>__<repo>/
+README.md``, DRAFT pull request, duplicates refused), never to its own repository; gate 1 is then the
+``data/sandbox_write_target.json`` entry and gate 2 only needs the candidate registered and active.
 
 Exit codes: 0 ok, 2 usage or an unreadable/absent candidate, 3 refused by a gate.
 """
@@ -68,6 +76,12 @@ from repo_presenter.core.registry.loader import load_registry
 from repo_presenter.core.registry.write_gate import require_write_permitted
 from repo_presenter.github import client as github_client
 from repo_presenter.github.read_client import fetch_default_branch_sha
+from repo_presenter.propose.acceptance_evidence import (
+    AttestedAcceptance,
+    bytes_sha256,
+    evaluate_acceptance,
+    read_acceptance_evidence,
+)
 from repo_presenter.propose.effect import (
     AUTHORIZATION_VARIABLE,
     README_PATH,
@@ -85,13 +99,20 @@ from repo_presenter.readme.review.verdict_io import (
     ReviewVerdictError,
     load_review_verdict,
 )
+from repo_presenter.sandbox_scope import (
+    SANDBOX_LIFTED,
+    SANDBOX_VARIABLE,
+    SandboxConfigError,
+    load_sandbox_entry,
+    names_sandbox,
+    sandbox_repository,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY = REPO_ROOT / "data" / "registry.json"
-#: The repository variable that names the one repository the write job may touch (gate 5).
-SANDBOX_VARIABLE = "REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY"
-#: The owner's lift of the sandbox restriction: every allowlisted repository passes gate 5.
-SANDBOX_LIFTED = "*"
+# SANDBOX_VARIABLE (the repository variable that names the one repository the write job may touch, gate 5) and
+# SANDBOX_LIFTED (the owner's lift of that restriction: every allowlisted repository passes gate 5; it is NEVER an
+# R15 exemption) live in ``repo_presenter.sandbox_scope``, the one reader of the variable.
 #: The write token's one variable name (never ``GH_TOKEN``, which the analysis jobs use read-only).
 WRITE_TOKEN_VARIABLE = "GH_PROPOSAL_WRITE_TOKEN"
 STATE_TOKEN_VARIABLE = "REPOSITORY_PRESENTER_STATE_TOKEN"
@@ -107,7 +128,7 @@ class Gate:
     detail: str
 
 
-def _short(text: str, limit: int = 600) -> str:
+def _short(text: object, limit: int = 600) -> str:
     text = " ".join(str(text).split())
     return text if len(text) <= limit else text[: limit - 1] + "..."
 
@@ -143,7 +164,22 @@ def gate_kill_switch(environment: Mapping[str, str]) -> Gate:
     return Gate("kill_switch", False, f"{AUTHORIZATION_VARIABLE} is not set to a truthy value (owner-controlled)")
 
 
-def gate_portfolio(readiness: Callable[[], Any] | None = None) -> Gate:
+def gate_portfolio(
+    readiness: Callable[[], Any] | None = None,
+    *,
+    target: str | None = None,
+    environment: Mapping[str, str] | None = None,
+) -> Gate:
+    """Gate 4, the R15 portfolio predicate. Owner decision 2026-11-22 (R17: sandbox first): it is NOT required
+    when ``target`` is exactly the sandbox repository the variable names (``sandbox_scope.names_sandbox``: never
+    the wildcard, never an unset variable). For every other target it is required and fails closed."""
+    if target is not None and environment is not None and names_sandbox(target, environment):
+        return Gate(
+            "portfolio_r15",
+            True,
+            f"{target} is the R17 sandbox named by {SANDBOX_VARIABLE}: the R15 portfolio predicate is not required "
+            "for the sandbox (it stays required for every other target)",
+        )
     try:
         if readiness is None:
             from repo_presenter.propose.portfolio_gate import (
@@ -180,8 +216,58 @@ def evaluate_gates(
         gate_allowlist(repository, allowlist_path),
         gate_registry(repository, registry_path),
         gate_kill_switch(environment),
-        gate_portfolio(readiness),
+        gate_portfolio(readiness, target=repository, environment=environment),
         gate_sandbox(repository, environment),
+    ]
+
+
+def gate_sandbox_allowlist(environment: Mapping[str, str], path: Path | None = None) -> Gate:
+    """Gate 1 in sandbox mode: the ``sandbox`` entry of ``data/sandbox_write_target.json``, honoured only when
+    the variable names it exactly (never ``*``). The R22 allowlist is not consulted and not widened."""
+    chosen = sandbox_repository(environment, *((path,) if path else ()))
+    if chosen is None:
+        return Gate("allowlist", False, f"no sandbox is selected: {SANDBOX_VARIABLE} must name the sandbox exactly (never '*')")
+    try:
+        entry = load_sandbox_entry(*((path,) if path else ()))
+    except SandboxConfigError as exc:
+        return Gate("allowlist", False, _short(exc))
+    if "pull_request" not in entry.effects or not entry.first_pr_as_draft:
+        return Gate("allowlist", False, "the sandbox entry does not grant draft pull requests")
+    return Gate("allowlist", True, f"{chosen} is the owner's R17 sandbox (data/sandbox_write_target.json): draft pull requests only")
+
+
+def gate_registry_listed(repository: str, registry_path: Path = REGISTRY) -> Gate:
+    """Gate 2 in sandbox mode: the CANDIDATE's repository is registered and active. Its mode need not be
+    ``full``: nothing is written to it, the write target is the sandbox."""
+    try:
+        entry = next((e for e in load_registry(registry_path).entries if e.repository.lower() == repository.lower()), None)
+    except Exception as exc:  # noqa: BLE001
+        return Gate("registry_full", False, f"registry unreadable ({type(exc).__name__}: {_short(exc, 200)})")
+    if entry is None or not entry.active:
+        return Gate("registry_full", False, f"{repository} is not an active registry repository")
+    return Gate("registry_full", True, f"{repository} is registered and active (sandbox mode: its mode {entry.mode!r} is not a write permit here)")
+
+
+def evaluate_sandbox_gates(
+    candidate_repository: str,
+    environment: Mapping[str, str],
+    *,
+    sandbox_path: Path | None = None,
+    registry_path: Path = REGISTRY,
+    readiness: Callable[[], Any] | None = None,
+) -> list[Gate]:
+    """The five gates for a SANDBOX write of ``candidate_repository``'s README, same names and order. The write
+    target is the sandbox repository the variable names (none selected: every target-bound gate fails closed and
+    R15 is evaluated for real)."""
+    target = sandbox_repository(environment, *((sandbox_path,) if sandbox_path else ()))
+    return [
+        gate_sandbox_allowlist(environment, sandbox_path),
+        gate_registry_listed(candidate_repository, registry_path),
+        gate_kill_switch(environment),
+        gate_portfolio(readiness, target=target, environment=environment),
+        Gate("sandbox_target", True, f"{target} is the sandbox target") if target else Gate(
+            "sandbox_target", False, f"{SANDBOX_VARIABLE} does not name the sandbox: no target is cleared (the wildcard never selects it)"
+        ),
     ]
 
 
@@ -200,10 +286,22 @@ class Candidate:
     readme_text: str
     bundle: Path
     manifest_state: str
+    #: SHA-256 of the sealed README's own bytes (what an attested record's ``candidate_sha256`` binds to).
+    readme_sha256: str = ""
 
     @property
     def candidate_hash(self) -> str:
         return sha256_text(self.readme_text)
+
+    @property
+    def bytes_sha256(self) -> str:
+        return self.readme_sha256 or bytes_sha256(self.readme_text)
+
+
+def bytes_sha256_of(data: bytes) -> str:
+    import hashlib
+
+    return hashlib.sha256(data).hexdigest()
 
 
 class CandidateError(Exception):
@@ -236,6 +334,7 @@ def load_candidate(repository: str, lane: str, root: Path) -> Candidate:
         readme_text=readme.read_text(encoding="utf-8"),
         bundle=bundle,
         manifest_state=str(manifest.get("state")),
+        readme_sha256=bytes_sha256_of(readme.read_bytes()),
     )
 
 
@@ -303,6 +402,7 @@ def build_payload(
     fetch_head: Callable[..., Any] = fetch_default_branch_sha,
     verify_token: Callable[..., Any] | None = None,
     now: Callable[[], str] | None = None,
+    acceptance_records: Sequence[AttestedAcceptance] = (),
 ) -> dict[str, Any]:
     """Everything the write job would send, plus every refusal, with NO write. Only read seams are
     parameters of this function; nothing that creates a ref, puts contents or opens a pull request
@@ -346,13 +446,24 @@ def build_payload(
         }
         if review.verdict != "ACCEPT" or not review.model_reviewed:
             refusals.append("independent review: not an ACCEPT by a model review")
-        # The effect's gate 3b, read-only: the acceptance contract must classify the candidate as publishable.
-        state = classify(
-            repository, "unspecified", sealed=True, mechanism_verdicts={"independent_review": review.pr_eligible}
+        # The effect's gate 3b, read-only (BL-731): the real classifier over the attested record(s) for this
+        # revision, bound to the sealed README's bytes; the reviewer's frozen calibration is not an input (R33).
+        verdict = evaluate_acceptance(
+            acceptance_records,
+            repository=repository,
+            lane=candidate.lane,
+            revision=candidate.revision,
+            readme_bytes_sha256=candidate.bytes_sha256,
+            classify_fn=classify,
         )
-        review_note["acceptance_state"] = state
-        if state not in PUBLISHABLE_STATES:
-            refusals.append(f"acceptance contract: classified {state!r}, not one of {sorted(PUBLISHABLE_STATES)}")
+        review_note["acceptance_state"] = verdict.state
+        review_note["acceptance_binding"] = verdict.binding
+        review_note["acceptance_records_at_revision"] = verdict.records_considered
+        if verdict.state not in PUBLISHABLE_STATES:
+            refusals.append(
+                f"acceptance contract: classified {verdict.state!r}, not one of {sorted(PUBLISHABLE_STATES)}"
+                + (f" ({verdict.detail})" if verdict.detail else "")
+            )
     except (ReviewVerdictError, OSError) as exc:
         review_note = {"error": _short(exc, 200)}
         refusals.append(f"independent review unreadable: {_short(exc, 200)}")
@@ -383,8 +494,10 @@ def build_payload(
 
     app_note = "not checked (no read token)"
     if read_token and verify_token is not None:
-        verdict = verify_token(repository, read_token)
-        app_note = "installation token reaches exactly the target" if verdict.ok else _short(verdict.reason, 300)
+        token_verdict = verify_token(repository, read_token)
+        app_note = (
+            "installation token reaches exactly the target" if token_verdict.ok else _short(token_verdict.reason, 300)
+        )
 
     return {
         "mode": "dry_run",
@@ -434,6 +547,7 @@ def run_write(
     root: Path = REPO_ROOT,
     trigger_sha: str,
     propose: Callable[..., Any] = propose_candidate,
+    acceptance_records: Sequence[AttestedAcceptance] = (),
 ) -> int:
     """Refuse unless every gate holds, then call the effect with the App installation token."""
     repository = candidate.repository
@@ -480,6 +594,9 @@ def run_write(
         recheck_source=recheck_source,
         branch=branch,
         reconcile_write=reconcile_write,
+        lane=candidate.lane,
+        acceptance_records=acceptance_records,
+        readme_bytes_sha256=candidate.bytes_sha256,
     )
     print(f"propose: {repository} authorized={result.authorized} effected={result.effected} - {result.reason}")
     if result.reason_code is not None:
@@ -492,6 +609,217 @@ def run_write(
     return EXIT_OK if result.effected else EXIT_REFUSED
 
 
+# --- the R17 sandbox: dry run and gated write ------------------------------------------------------------
+
+
+def _sandbox_context(candidate: Candidate, environment: Mapping[str, str]) -> tuple[Any, str, str]:
+    """``(entry, sandbox repository, sandbox README path)``; raises ``CandidateError`` when no sandbox is selected."""
+    chosen = sandbox_repository(environment)
+    if chosen is None:
+        raise CandidateError(f"no sandbox is selected: {SANDBOX_VARIABLE} must name the sandbox exactly (never '*')")
+    entry = load_sandbox_entry()
+    return entry, chosen, entry.readme_path(candidate.repository)
+
+
+def build_sandbox_payload(
+    candidate: Candidate,
+    gates: Sequence[Gate],
+    *,
+    environment: Mapping[str, str],
+    read_token: str | None,
+    acceptance_records: Sequence[AttestedAcceptance] = (),
+    offline: bool = False,
+    get_contents: Callable[..., Any] = github_client.get_contents,
+    fetch_head: Callable[..., Any] = fetch_default_branch_sha,
+) -> dict[str, Any]:
+    """The exact sandbox branch/file/pull-request payload and every refusal, with NO write. ``offline`` makes no
+    GitHub call at all (the candidate's head, its live README and the sandbox's default branch stay unread and
+    are listed as such); the sealed candidate itself comes from the state ref."""
+    from repo_presenter.propose.sandbox import compose_sandbox_pull_request, sandbox_branch
+
+    repository = candidate.repository
+    refusals: list[str] = [f"gate {g.name}: {g.detail}" for g in gates if not g.ok]
+    try:
+        entry, sandbox, sandbox_path = _sandbox_context(candidate, environment)
+    except (CandidateError, SandboxConfigError) as exc:
+        entry = sandbox = sandbox_path = None  # type: ignore[assignment]
+        refusals.append(str(exc))
+    branch = sandbox_branch(entry, repository, candidate.lane, candidate.bytes_sha256) if entry else None
+
+    live_revision: str | None = None
+    live_readme: str | None = None
+    live_readme_read = False
+    sandbox_base: str | None = None
+    if offline:
+        refusals.append("offline: the candidate's head, its live README and the sandbox's default branch were not read")
+    else:
+        head = fetch_head(repository, token=read_token)
+        live_revision = getattr(head, "sha", None)
+        if getattr(head, "error", None) or not live_revision:
+            refusals.append(f"candidate head unreadable: {getattr(head, 'error', None) or 'no branch'}")
+        elif live_revision != candidate.revision:
+            refusals.append(f"source moved: sealed at {candidate.revision}, head is {live_revision}; re-present first")
+        if getattr(head, "branch", None):
+            try:
+                owner, name = repository.split("/", 1)
+                live = get_contents(owner, name, README_PATH, ref=head.branch, token=read_token or "")
+                live_readme = None if live is None else live.text
+                live_readme_read = True
+            except Exception as exc:  # noqa: BLE001
+                refusals.append(f"live {README_PATH} unreadable: {_short(exc, 200)}")
+        if sandbox:
+            base = fetch_head(sandbox, token=read_token)
+            sandbox_base = getattr(base, "branch", None)
+            if getattr(base, "error", None) or not sandbox_base:
+                refusals.append(f"sandbox default branch unreadable: {getattr(base, 'error', None) or 'no branch'}")
+
+    try:
+        review = load_review_verdict(candidate.bundle / "review_verdict.json")
+        review_note: dict[str, Any] = {"verdict": review.verdict, "model_reviewed": review.model_reviewed}
+        if review.verdict != "ACCEPT" or not review.model_reviewed:
+            refusals.append("independent review: not an ACCEPT by a model review")
+    except (ReviewVerdictError, OSError) as exc:
+        review_note = {"error": _short(exc, 200)}
+        refusals.append(f"independent review unreadable: {_short(exc, 200)}")
+    verdict = evaluate_acceptance(
+        acceptance_records,
+        repository=repository,
+        lane=candidate.lane,
+        revision=candidate.revision,
+        readme_bytes_sha256=candidate.bytes_sha256,
+        classify_fn=classify,
+    )
+    acceptance = {
+        "state": verdict.state,
+        "binding": verdict.binding,
+        "records_at_revision": verdict.records_considered,
+        "attestation_verified": any(r.attested for r in acceptance_records if r.revision == candidate.revision),
+        "detail": verdict.detail,
+    }
+    if verdict.state not in PUBLISHABLE_STATES:
+        refusals.append(
+            f"acceptance contract: classified {verdict.state!r}, not one of {sorted(PUBLISHABLE_STATES)}"
+            + (f" ({verdict.detail})" if verdict.detail else "")
+        )
+
+    content = (
+        compose_sandbox_pull_request(
+            candidate_repository=repository,
+            lane=candidate.lane,
+            candidate_readme=candidate.readme_text,
+            live_readme=live_readme,
+            source_revision=candidate.revision,
+            readme_sha256=candidate.bytes_sha256,
+            sandbox_path=sandbox_path,
+            evidence=load_pull_request_evidence(candidate.bundle),
+            live_read=live_readme_read,
+        )
+        if sandbox_path
+        else None
+    )
+    return {
+        "mode": "sandbox_dry_run",
+        "writes_performed": 0,
+        "github_calls": "none (offline)" if offline else "read-only",
+        "candidate_repository": repository,
+        "lane": candidate.lane,
+        "sandbox_repository": sandbox,
+        "sandbox_base_branch": sandbox_base,
+        "branch": branch,
+        "draft": True,
+        "title": content.title if content else None,
+        "body": content.body if content else None,
+        "files": [{"path": sandbox_path, "sha256": candidate.bytes_sha256, "bytes": len(candidate.readme_text.encode("utf-8"))}]
+        if sandbox_path
+        else [],
+        "source_revision": candidate.revision,
+        "live_revision": live_revision,
+        "live_readme_read": live_readme_read,
+        "bundle_state": candidate.manifest_state,
+        "review": review_note,
+        "acceptance": acceptance,
+        "authorization_record": "not required for the sandbox (the owner's variable selects it)",
+        "gates": [asdict(g) for g in gates],
+        "write_eligible": write_eligible(gates) and not refusals,
+        "refusals": refusals,
+    }
+
+
+def run_sandbox_write(
+    candidate: Candidate,
+    gates: Sequence[Gate],
+    *,
+    environment: Mapping[str, str],
+    acceptance_records: Sequence[AttestedAcceptance] = (),
+    propose: Callable[..., Any] | None = None,
+) -> int:
+    """Refuse unless every gate holds, then open the sandbox draft pull request through the App token."""
+    from repo_presenter.propose import sandbox as sandbox_module
+
+    failed = [g for g in gates if not g.ok]
+    if failed or not write_eligible(gates):
+        for gate in failed:
+            print(f"propose: refused by gate {gate.name}: {gate.detail}", file=sys.stderr)
+        return EXIT_REFUSED
+    token = environment.get(WRITE_TOKEN_VARIABLE) or None
+    if token is None:
+        print(f"propose: refused: no {WRITE_TOKEN_VARIABLE} (a repository-scoped App installation token)", file=sys.stderr)
+        return EXIT_REFUSED
+    repository = candidate.repository
+    entry, sandbox, _ = _sandbox_context(candidate, environment)
+    review = load_review_verdict(candidate.bundle / "review_verdict.json")
+    read_token = environment.get("GH_TOKEN") or None
+    base = fetch_default_branch_sha(sandbox, token=token)
+    if base.error or not base.branch:
+        print(f"propose: refused: could not read the sandbox's default branch: {base.error}", file=sys.stderr)
+        return EXIT_REFUSED
+
+    def live_readme() -> str | None:
+        head = fetch_default_branch_sha(repository, token=read_token)
+        if not head.branch:
+            return None
+        owner, name = repository.split("/", 1)
+        live = github_client.get_contents(owner, name, README_PATH, ref=head.branch, token=read_token or "")
+        return None if live is None else live.text
+
+    def recheck_source() -> str:
+        fresh = fetch_default_branch_sha(repository, token=read_token)
+        return fresh.sha or f"<unreadable: {fresh.error}>"
+
+    evidence = load_pull_request_evidence(candidate.bundle)
+    result = (propose or sandbox_module.propose_sandbox)(
+        candidate_repository=repository,
+        lane=candidate.lane,
+        readme_text=candidate.readme_text,
+        source_revision=candidate.revision,
+        sandbox_base_branch=base.branch,
+        token=token,
+        environment=environment,
+        review=review,
+        acceptance_records=acceptance_records,
+        compose=lambda live, path, digest: sandbox_module.compose_sandbox_pull_request(
+            candidate_repository=repository,
+            lane=candidate.lane,
+            candidate_readme=candidate.readme_text,
+            live_readme=live,
+            source_revision=candidate.revision,
+            readme_sha256=digest,
+            sandbox_path=path,
+            evidence=evidence,
+        ),
+        live_readme_of_candidate=live_readme,
+        recheck_source=recheck_source,
+        readme_bytes_sha256=candidate.bytes_sha256,
+        entry=entry,
+    )
+    print(f"propose: sandbox {result.repository} for {repository} effected={result.effected} - {result.reason}")
+    if result.reason_code is not None:
+        print(f"propose: refused ({result.reason_code})")
+    if result.pr_url:
+        print(f"  pr: {result.pr_url} (branch {result.branch}, commit_written={result.commit_written} pr_created={result.pr_created})")
+    return EXIT_OK if result.effected else EXIT_REFUSED
+
+
 # --- CLI -------------------------------------------------------------------------------------------
 
 
@@ -501,7 +829,8 @@ def _summary(payload: dict[str, Any] | None, gates: Sequence[Gate], title: str) 
     if payload is not None:
         lines += ["", f"write_eligible: **{payload['write_eligible']}** (writes performed: {payload['writes_performed']})", ""]
         lines += [f"- {r}" for r in payload["refusals"]]
-        lines += ["", f"PR title: `{payload['title']}`", "", f"draft: {payload['draft']}, branch: `{payload['branch']}`, base: `{payload['base_branch']}`"]
+        base = payload.get("base_branch", payload.get("sandbox_base_branch"))
+        lines += ["", f"PR title: `{payload['title']}`", "", f"draft: {payload['draft']}, branch: `{payload['branch']}`, base: `{base}`"]
     return "\n".join(lines) + "\n"
 
 
@@ -530,20 +859,32 @@ def main(argv: Sequence[str] | None = None) -> int:
         p = sub.add_parser(command)
         p.add_argument("--repository", required=True, type=_valid_repository)
         p.add_argument("--summary", type=Path, help="append a Markdown report here ($GITHUB_STEP_SUMMARY)")
+        p.add_argument(
+            "--sandbox",
+            action="store_true",
+            help="R17: write the candidate to the sandbox the variable names (sandbox/<owner>__<repo>/README.md), not to its own repository",
+        )
         if command == "gates":
             p.add_argument("--out", type=Path)
         else:
             p.add_argument("--lane", required=True, choices=(LANE_R, LANE_L))
             p.add_argument("--remote", default="origin")
             p.add_argument("--trigger-sha", default=os.environ.get("GITHUB_SHA", ""))
+            p.add_argument("--records-remote", default="origin", help="remote holding the acceptance-record/* branches")
         if command == "payload":
             p.add_argument("--out", type=Path)
             p.add_argument("--gates-file", type=Path, help="gates already evaluated by the gate job")
+            p.add_argument("--offline", action="store_true", help="make no GitHub API call (sandbox payload only)")
     args = parser.parse_args(argv)
     environment = dict(os.environ)
 
+    def gates_for() -> list[Gate]:
+        if args.sandbox:
+            return evaluate_sandbox_gates(args.repository, environment)
+        return evaluate_gates(args.repository, environment)
+
     if args.command == "gates":
-        gates = evaluate_gates(args.repository, environment)
+        gates = gates_for()
         print(json.dumps([asdict(g) for g in gates], indent=2))
         if args.out:
             args.out.write_text(json.dumps([asdict(g) for g in gates], indent=2) + "\n", encoding="utf-8")
@@ -555,7 +896,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "write":
         # Gates first, from the real environment, before any network call: a refusal costs nothing.
-        gates = evaluate_gates(args.repository, environment)
+        gates = gates_for()
         if not write_eligible(gates):
             for gate in (g for g in gates if not g.ok):
                 print(f"propose: refused by gate {gate.name}: {gate.detail}", file=sys.stderr)
@@ -563,7 +904,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.gates_file:
         gates = [Gate(**row) for row in json.loads(args.gates_file.read_text(encoding="utf-8"))]
     else:
-        gates = evaluate_gates(args.repository, environment)
+        gates = gates_for()
 
     state_token = environment.get(STATE_TOKEN_VARIABLE) or environment.get("GITHUB_TOKEN") or None
     with tempfile.TemporaryDirectory(prefix="propose-") as scratch:
@@ -572,18 +913,32 @@ def main(argv: Sequence[str] | None = None) -> int:
         except CandidateError as exc:
             print(f"propose: {exc}", file=sys.stderr)
             return EXIT_USAGE
+        records = read_acceptance_evidence(
+            candidate.repository, candidate.lane, remote=args.records_remote
+        )
         if args.command == "write":
-            return run_write(candidate, gates, environment=environment, trigger_sha=args.trigger_sha)
+            if args.sandbox:
+                return run_sandbox_write(candidate, gates, environment=environment, acceptance_records=records)
+            return run_write(
+                candidate, gates, environment=environment, trigger_sha=args.trigger_sha, acceptance_records=records
+            )
         from repo_presenter.github.token_provenance import verify_installation_token
 
         read_token = environment.get("READ_TOKEN") or None
-        payload = build_payload(
-            candidate,
-            gates,
-            read_token=read_token,
-            trigger_sha=args.trigger_sha,
-            verify_token=verify_installation_token if (read_token or "").startswith("ghs_") else None,
-        )
+        if args.sandbox:
+            payload = build_sandbox_payload(
+                candidate, gates, environment=environment, read_token=read_token,
+                acceptance_records=records, offline=args.offline,
+            )
+        else:
+            payload = build_payload(
+                candidate,
+                gates,
+                read_token=read_token,
+                trigger_sha=args.trigger_sha,
+                verify_token=verify_installation_token if (read_token or "").startswith("ghs_") else None,
+                acceptance_records=records,
+            )
         text = json.dumps(payload, indent=2, ensure_ascii=False)
         print(text)
         if args.out:

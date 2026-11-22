@@ -121,6 +121,6 @@ def test_gate_3b_runs_before_the_write_scoped_token_check_and_makes_no_network_c
     assert len(calls) == 1
     (_, args, kwargs) = calls[0]
     assert args[0] == REPOSITORY
-    # mechanism_verdicts is passed as a keyword derived from the review's own pr_eligible flag -
-    # proof that gate 3b still looks at the review, not just the repository name.
-    assert "mechanism_verdicts" in kwargs
+    # BL-731: with no attested record the gate asks for the bare seal and nothing else; the reviewer's
+    # retired calibration flag (R33) is no longer an input.
+    assert kwargs == {"sealed": True}
