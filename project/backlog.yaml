@@ -3228,6 +3228,74 @@ items:
     next_action: "supervisor decision; until then PDF TypeScript carries two round-6 flags that no deterministic derivation can clear"
     updated: "2026-11-22"
 
+  - id: BL-800
+    title: "Audit round 7 (seed run 44988613948) false flag on BarCode Python line 186 '| `Barcode` | Public barcode object returned by the high-level API (some members not implemented). |': the renderer's own stub marker (renderer._stub_marked) for a type with a stubbed member, kept by the K02 behaviour-claim class although a SUPPORTED limitation statement names Barcode.to_pdf as a member that only throws"
+    type: defect
+    source: "owner rulings R10, R14, R27, R36(b), R44, R46 (universal, repeatable); owner decision 2026-11-22: thresholds (SEEDED_RECALL_MIN 0.90, FALSE_FLAG_RATE_MAX 0.10) and the single-sample rule unchanged, a line is cleared only when derivable from a SUPPORTED fact; audit round 7 (a7.json/f7.json): 6 of 20 clean controls flagged (0.30), seeded recall 51/52"
+    priority: P0
+    status: active
+    implementation_path: "readme/review/derivation.stub_member_provenance, registered in class_provenance under K02: a row of the exact form '| `Type` | <description> (some members not implemented). |' is verified when (1) the description before the marker holds no behaviour cue of its own, (2) surface_claims.StubIndex.members (SUPPORTED inherited_unit limitation statements) names a member of the row's type whose source fact is SUPPORTED, and (3) no read body of that member is throw-free (code_path_claims._Bodies.member_does_not_throw: the statement would then be the false one). The proof (fact id, Type.member) is written into the cleared row. Audit and production review only; no README byte moves (R10)"
+    acceptance: "(1) tests/readme/review/test_audit_false_flags_bl800.py: the BarCode row is verified with inherited_unit:052.list and Barcode.to_pdf cited and keep_reason is None; negative controls keep the flag for a type no statement names, a member whose body returns a value, a CONTRADICTED statement, a description with its own 'Always throws' cue, another marker wording and a non-row line; (2) zero-call over the 38 stored Lane R seals (scripts in the session scratchpad): 11 lines gained (3D .NET 4, Words Python 3, 3D Python 1, BarCode 1, PDF Java 1, Slides Python 1), 0 clearable lines lost, owned lines unchanged; (3) tests/readme/review, tests/acceptance, tests/test_m9_* unchanged and green; seeded flags: 0 of the 101 flagged seeded findings of round 7 have the shape; (4) lean recertify of all latest seals RECERTIFIED unchanged, R10 gate OK; (5) hosted (R41, not proven): audit round 8"
+    evidence:
+      - "round 7 f7.json: BarCode Python line 186 unverifiable (llm), kept 'K02 behaviour claim' on the stored seal 8c29598 (revision 06eca5c0): derivable, clearable 0 before, 1 after"
+      - "stubs: StubIndex.members = {Barcode: {to_pdf}, PdfRenderer: {render}, EciHelper: {normalize}, Gs1Helper: {parse}} from inherited_unit:052.list, none body-refuted"
+      - "lean recertify of all 72 latest seals (38 R, 34 L), 0 provider calls: all RECERTIFIED, R10 gate OK; full suite 7442 passed, 4 failures identical on the base"
+    next_action: "supervisor integrates; audit round 8 (hosted, R41). By itself it clears one of BarCode's 14 flags; the other 13 are authored rows (BL-803, BL-804)"
+    updated: "2026-11-22"
+
+  - id: BL-801
+    title: "Audit round 7 false flag on PDF Go line 1130, the maintainers' 'Full API reference' bullet with the count sentence the renderer appended ('It covers all 297 public types; the [API Reference](#api-reference) section above covers the essentials.'): the flag quotes only the renderer's sentence, which is the facts' K05 computation, on a line the structural reading calls prose"
+    type: defect
+    source: "owner rulings R10, R14, R36(b), R44, R46; owner decision 2026-11-22 (derivable from a SUPPORTED fact, never by weakening the judge); audit round 7 PDF Go (f5eb1d9dc632f64f) line 1130"
+    priority: P0
+    status: active
+    implementation_path: "readme/review/derivation.statement_clearances + flag_within_sentences, scope.renderer_sentence_texts: on a line the facts-only render also prints (origin renderer: no authored unit) that no structural reading owns, the renderer-appended sentences (scope._RENDERER_SENTENCES) that state a K05 count are verified by count_provenance (the facts' computation, SUPPORTED class and enum public_symbol facts, every count on the whole line, the 'below' rule); a model flag there is cleared only when its claim is nothing but those sentences (the kind label and 'Line N:' aside), with the computation written into the cleared row. scripts/run_m9_auditor.apply_derivation and clearances.derived_from_supported_facts apply it. Audit and production review only (R10)"
+    acceptance: "(1) tests/readme/review/test_audit_false_flags_bl800.py: the PDF Go bullet shape verifies against a 5-type facts document; negative controls: a claim that also states the maintainers' text, a claim with another count, a count the facts do not compute (7 vs 5), an authored-origin line, a refuted line, an owned line, a line outside the asked set; apply_derivation clears only the sentence flag; (2) zero-call over the 38 stored seals: 16 lines carry a verified count sentence (PDF Go 1130 among them), 0 clearable lines lost; (3) suites unchanged and green; 0 of 101 seeded flagged findings have the shape; (4) lean recertify unchanged; (5) hosted (R41, not proven): audit round 8"
+    evidence:
+      - "PDF Go stored seal 1ba603d9 (revision dfa75dbf): line 1130 origin renderer in both renders (inherited_unit:081.list kept VERIFIED_PRESERVE), not owned; count 297 = the facts' computation"
+      - "quality note, not a claim defect: the line prints the pointer twice (the maintainers' own parenthesis and the renderer's appended sentence); BL-500's pattern removes the first, renderer._reference_pointer appends the second"
+    next_action: "supervisor integrates; audit round 8 (hosted, R41); the doubled pointer is a rendering polish item for a later refresh, no seal changes"
+    updated: "2026-11-22"
+
+  - id: BL-802
+    title: "Audit round 7 false flag on PDF TypeScript line 3848 '| `OpenOptions` | `password`, `recipient` and `limits` (a `LoadLimits`). |': a kept maintainers' table row that does nothing but list members of its type, each a SUPPORTED member fact (OpenOptions.password, .recipient, .limits; the limits doc comment names LoadLimits), judged as the README's own claim"
+    type: defect
+    source: "owner rulings R10, R14, R36(b), R44, R46; owner decision 2026-11-22; audit round 7 PDF TypeScript (61ce83395730e8b9) line 3848; BL-702 (the same table, rows the facts do not state)"
+    priority: P1
+    status: active
+    implementation_path: "readme/review/derivation.member_list_provenance, called from statement_clearances (lane R, origin renderer, not owned): a row '| `Type` | `a`, `b` and `c` (a `T`). |' is verified only when the type is a SUPPORTED class or enum, every code span is a SUPPORTED public_symbol member 'Type.member' (or, after '(a'/'(an', a SUPPORTED type the preceding member's own docstring, docstring_full or signature names), and the cell holds no word but 'and'/'or'. The proof is written into the cleared row; a cell with any other word, an unknown member, a member of another type or an unnamed type keeps its flag. BL-702's rows (3839/3840: prose no fact states) stay blocking"
+    acceptance: "(1) tests/readme/review/test_audit_false_flags_bl800.py: the row verifies with the three member facts and LoadLimits cited; nine negative controls (extra words, 'Holds ...', unknown member, member of another type, unknown owner, a type the member does not name, a bare type, digits, prose) and a CONTRADICTED member keep the flag; (2) zero-call over the 38 stored seals: exactly 1 row verified (PDF TypeScript 3848), 0 lost; (3) suites unchanged and green; 0 of 101 seeded flagged findings have the shape; (4) lean recertify unchanged; (5) hosted (R41, not proven): audit round 8"
+    evidence:
+      - "PDF TypeScript 5fa17750: facts public_symbol:openoptions.password/.recipient/.limits SUPPORTED; limits docstring_full 'A `LoadLimits` and never a bare patch'; line 3848 origin renderer in both renders"
+    next_action: "supervisor integrates; audit round 8 (hosted, R41). BL-702 stays open"
+    updated: "2026-11-22"
+
+  - id: BL-803
+    title: "The author of an undocumented-looking type's API row is not shown the doc comment the reviewer is shown: authoring._type_batches carried the signature, members and implementation facts of a type with no first-sentence docstring but not its docstring_full, while review.evidence shows the reviewer that text as the docstring, so the sentence is written from the name and the audit's judge faults it (round 7: BarCode Python 13 rows, HTML Python 13 rows)"
+    type: defect
+    source: "owner rulings R14, R36(b), R44, R46 (reliable, repeatable); owner decision 2026-11-22 (no judge weakening: fix the producer); sectionwise.type_row_facts invariant 'what the reviewer is shown for a row is exactly what its author was told'; audit round 7 BarCode Python (fa142107565f07aa) and HTML Python (7782a6ad2921fef9)"
+    priority: P0
+    status: active
+    implementation_path: "readme/composition/authoring.type_doc_comment(fact, facts): the type's docstring_full (or, for a re-exported alias, the doc comment of the class its evidence names, type_paths), cut at the reviewer's DOC_CHARS, joins the type's record in the type batch packet as docstring when the type has no first-sentence docstring. Generation only: sealed units are stored and recertification never calls authoring, so no sealed README byte moves (R10); only a refresh changes the rows"
+    acceptance: "(1) tests/readme/composition/test_type_batch_doc_comment_bl803.py (4): the record carries the doc comment, an alias reads its target's, a long one is cut where the reviewer's is, TYPE_DOC_CHARS equals evidence.DOC_CHARS, a type with a docstring or none adds nothing; (2) tests/readme/composition unchanged and green; (3) lean recertify unchanged; (4) hosted (R41, not proven): refresh:true Lane R runs of BarCode Python and HTML Python, then an audit round on the new seals"
+    evidence:
+      - "zero-call over the stored seals (authored type rows with a docstring_full fact): BarCode Python 22 of 47, HTML Python 275 of 402, PDF TypeScript 117 of 429, 3D .NET 33 of 93, PDF Python 11 of 71; the round-7 flagged rows such as exceptions.EncodingError (doc comment 'Raised when encoding fails.', sentence 'represents errors that occur during barcode encoding') were written from the name"
+    next_action: "supervisor integrates; refresh:true run requests for BarCode Python and HTML Python Lane R (R41), then the audit round that samples them"
+    updated: "2026-11-22"
+
+  - id: BL-804
+    title: "Round 7 controls that stay flagged after BL-800..803 and are real authored lines, not derivable: 3D TypeScript hub paragraphs 267 (Node) and 271 (Mesh), BarCode Python and HTML Python authored API rows (until refreshed under BL-803), PSD Java capabilities 49/50 (old seal predating BL-600)"
+    type: gap
+    source: "owner decision 2026-11-22 (a line is cleared only when derivable; seeded defects must stay flagged); audit round 7 a7.json/f7.json; DECISION_LOG 2026-11-22 round 7"
+    priority: P0
+    status: open
+    implementation_path: "no derivation: each line is an author's sentence. 3D TypeScript 267/271: Detailed Member Reference hub paragraphs ('triangulate converting all polygons to triangles for export': 'for export' is in no cited fact) -> a hub sentence that claims more than its member facts is the producer's (BL-550 replaces a refused hub; the reviewer's draw decides); BarCode and HTML rows -> BL-803 plus a refresh; PSD Java 49/50 -> refresh:true under BL-600/BL-660/BL-661 (the old seal's capabilities cite only identity:family). Measure after the refreshes: expected false-flag rate with BL-800..803 on the stored seals is 4 of 20 (0.20), 2 of 20 (0.10) once BarCode and HTML are refreshed and sample clean"
+    acceptance: "an audit round whose false-flag rate is at most 0.10 on controls that include the refreshed cells; a cell that still carries an authored line the judge faults is refreshed again, never cleared"
+    evidence:
+      - "round 7: 3D TypeScript e4c0f25445750da6 lines 267/271 (unverifiable, llm; cited facts: Node members addChildNode/addEntity/globalTransform, Mesh members controlPoints/createPolygon/triangulate); BarCode Python 13 authored rows; HTML Python 13 authored rows; PSD Java b572ab40869e0496 lines 49/50"
+    next_action: "supervisor: refresh BarCode Python, HTML Python, PSD Java Lane R after the merge (R41); rerun the audit"
+    updated: "2026-11-22"
+
   - id: BL-720
     title: "Every component plans/idea.md and the consolidated goals call for beyond Lane R regeneration works on the GitHub runner (component inventory, gaps, parallel work plan)"
     type: requirement
