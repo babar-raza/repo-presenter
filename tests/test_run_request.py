@@ -760,3 +760,10 @@ def test_a_propose_request_without_a_lane_is_refused_not_defaulted():
     del request["lane"]
     with pytest.raises(rr.RequestError, match="needs lane"):
         rr.validate(request, REGISTRY, OK, True)
+
+def test_a_monitor_request_validates_and_takes_no_other_field():
+    """R50 WP-3: one read-only portfolio observation; it covers every active registry entry."""
+    assert rr.validate({"job": "monitor"}, REGISTRY, OK, True) == {
+        "job": "monitor", "repository": "", "ecosystem": "", "lane": ""}
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "monitor", "repository": "x/y"}, REGISTRY, OK, True)

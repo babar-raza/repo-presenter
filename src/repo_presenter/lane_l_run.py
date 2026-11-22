@@ -60,12 +60,14 @@ from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.registry_entry_stub import RegistryEntryStub
 from repo_presenter.core.snapshot.inventory import scan
 from repo_presenter.lane_l import tree_paths_of
+from repo_presenter.lane_l_gate import LaneLNoProviderCall, decide
 from repo_presenter.lane_l_review import (
     HOLDOUTS_FILENAME,
     holdout_findings,
     holdouts_document,
     review_correction,
 )
+from repo_presenter.lane_l_trigger import TriggerResult
 from repo_presenter.readme.composition.renderer import render_patch
 from repo_presenter.readme.correction.engine import correct, is_stable
 from repo_presenter.readme.correction.model import Context, CorrectionResult
@@ -75,6 +77,7 @@ from repo_presenter.readme.correction.report import (
     canonical_json,
     corrections_document,
     outcome_of,
+    unrepaired_defects,
 )
 from repo_presenter.readme.review.independent_reviewer import (
     REVIEW_VERDICT_FILENAME,
@@ -204,6 +207,7 @@ def run_lane_l(
     config: GatewayConfig,
     prompts_path: Path = DEFAULT_PROMPTS_PATH,
     registry_path: Path = DEFAULT_REGISTRY_PATH,
+    trigger: TriggerResult | None = None,
 ) -> LaneLResult:
     """Correct and review the live README of the clone at ``clone_path`` (a pinned, read-only
     clone), from the facts at ``facts_path``, writing the candidate's artifacts under ``out_dir``.
@@ -271,6 +275,23 @@ def run_lane_l(
         findings, idempotent=idempotent, source_revision=source_revision
     )
     (out_dir / HOLDOUTS_FILENAME).write_bytes(canonical_json(holdouts))
+
+    if trigger is not None:
+        # R5(a) (BL-188): decided on the deterministic results alone, before any provider call.
+        residuals = getattr(findings, "residuals", ())
+        probes_clean = (
+            not findings and not residuals and deterministic and idempotent
+            and not unrepaired_defects(result)
+        )
+        decision = decide(
+            trigger,
+            has_findings=bool(result.edits) or bool(findings) or bool(residuals)
+            or bool(unrepaired_defects(result)),
+            probes_clean=probes_clean,
+            head_revision=source_revision,
+        )
+        if not decision.spends_provider_call:
+            raise LaneLNoProviderCall(decision)
 
     workspace = out_dir / "llm_cache"
     invocation = Invocation.begin()

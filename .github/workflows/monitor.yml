@@ -1,0 +1,76 @@
+name: monitor
+
+# Owner ruling R50 (2026-11-22; WP-3): the change-detection component of the previous project, working
+# here. Every six hours (and on a run request, {"job": "monitor"}) it observes the whole portfolio
+# READ-ONLY:
+#
+#   drift      each active registry repository's default-branch head against the sealed bundle of each
+#              lane (materialized from its bundle ref), classified relevant / irrelevant / unreadable by
+#              the paths the sealed README consumed (repo_presenter/monitor/drift.py, relevance.py);
+#   discovery  the registry against each authorized organization's listing (new, renamed, missing
+#              repositories; it never admits one);
+#   freshness  every sealed bundle older than 30 days, re-checked against its package registry.
+#
+# The report is written to refs/repository-presenter-state/monitor/report in THIS repository (the
+# job's own token, the same compare-and-swap writer the provider-spend ledger uses) and to the job
+# summary. scripts/select_scheduled_cohort.py reads it: a certified cell the report names as relevantly
+# drifted is put in the next cohort instead of being skipped as "recertified" (BL-187/190).
+#
+# No upstream write of any kind (R15): the only credential is the automatic workflow token, used to read
+# public upstream repositories and to write this repository's own state ref. No provider is called, no
+# secret is referenced, no upstream code is executed.
+# tests/test_monitor_workflow.py fails if that stops being true.
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # contents: write only for this repository's refs/repository-presenter-state/monitor/* ref.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Observe drift, discovery and freshness (read-only) and record the report
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m repo_presenter.monitor \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --out .monitor/report.json \
+            --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the report with the run
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitor-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .monitor
+          if-no-files-found: ignore
+          retention-days: 30

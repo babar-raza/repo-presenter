@@ -2490,6 +2490,19 @@ entries:
           as unconfirmed for this repository's own App. Port it with the monitor workflow, after the
           App identity is confirmed.
         blocked_on: "monitor workflow design; owner confirmation of the GitHub App identity"
+    wired_2026_11_22: >
+      R50 / WP-3 (owner: the previous project's components work here; get them working). The
+      ported observation half now has its entry point and its consumers: src/repo_presenter/monitor/
+      run.py (CLI `python -m repo_presenter.monitor`; the old CLI's drift and registry-gaps commands
+      combined, bundles read from the bundle refs instead of a committed candidates/ tree),
+      .github/workflows/monitor.yml (the old cron-every-6-hours read-only shell; no install-record
+      step, no App token), run-request job `monitor`, and scripts/select_scheduled_cohort.py
+      (reads the report: a relevantly drifted certified cell outranks "recertified, skip", BL-851).
+      install_state.py and the sealing-contract half of drift.py stay DEFERRED: the report's cells
+      carry bundle_revision, head_revision and the change class, which is all the cohort selector
+      consumes (the blocked_on "how monitor evidence feeds the hosted present pipeline" is decided:
+      through the state-ref report and the planner). Lane L: monitor.relevance's path rule is reused by
+      lane_l_gate.py through lane_l_trigger.is_relevant_path (BL-852). Backlog: BL-850, BL-851, BL-782.
     shared_dependencies_ported:
       - file: core/github/read_client.py (old repo)
         disposition: PORTED
