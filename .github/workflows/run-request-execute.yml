@@ -227,6 +227,7 @@ jobs:
       contents: write  # the review-page branch of this repository only
       pages: write     # used only when the REVIEW_PAGE_PAGES variable opts in
       id-token: write
+      attestations: read  # review-page.yml's build job verifies each acceptance record's attestation (as the count job)
     uses: ./.github/workflows/review-page.yml
 
   feedback-intake:
