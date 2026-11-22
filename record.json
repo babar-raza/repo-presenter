@@ -134,14 +134,26 @@
    "run_id": "45002500775",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T09:03:20+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write"
+   ],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45004811070",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T08:35:07+00:00",
+  "at": "2026-11-22T09:03:20+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
@@ -158,7 +170,7 @@
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
     "upstream": ""
    }
   },
@@ -167,14 +179,14 @@
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
    "kind": "OutputRejectedError",
    "transient": true
   },
   "findings": [
    {
     "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
     "origin": {
      "id": "OutputRejectedError",
      "kind": "job_error"
@@ -182,9 +194,9 @@
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write",
     "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
     "upstream": ""
    }
   ],
@@ -194,8 +206,8 @@
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "45002500775",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45002500775",
+  "run_id": "45004811070",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45004811070",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
