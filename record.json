@@ -1,18 +1,6 @@
 {
  "history": [
   {
-   "at": "2026-11-19T17:17:52+00:00",
-   "classes": [
-    "job_error|job_error|LaneStepFailure:the_lane_step_ended"
-   ],
-   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
-   "findings": 1,
-   "outcome": "failure",
-   "run_id": "44558565162",
-   "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
-   "version_set": ""
-  },
-  {
    "at": "2026-11-19T20:05:39+00:00",
    "classes": [
     "job_error|job_error|LaneStepFailure:the_lane_step_ended"
@@ -241,36 +229,50 @@
    "run_id": "45052413270",
    "source_revision": "851c1a6a4502a55416537b532d38f69704d16b77",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T20:47:36+00:00",
+   "classes": [
+    "BC-07|unresolved|internal_narration_q"
+   ],
+   "code": "1d34093115d6d0598595d7711865f20ddba82abccc6acb9d6d78f8c279932715",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45064218783",
+   "source_revision": "851c1a6a4502a55416537b532d38f69704d16b77",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T18:56:56+00:00",
+  "at": "2026-11-22T20:47:36+00:00",
   "classes": {
-   "BC-07|inherited_unit|id_is_kept_as": {
-    "example": "inherited_unit:592.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
+   "BC-07|unresolved|internal_narration_q": {
+    "example": "internal narration 'validation status'",
     "findings": 1,
-    "origin_kind": "inherited_unit",
+    "origin_kind": "unresolved",
     "origins": [
-     "inherited_unit:592.paragraph"
+     "-"
     ],
     "rule": "BC-07",
-    "scope": "976e1244ccbab5e9bf6ea04bf332ece2cb2b2919f88e9704faf23deb8f9b1c23",
+    "scope": "44e9b20c8e9d61ddcc8a0984b8310135d571b97e9436f99b7424c33ef4e3262a",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
      "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "id_is_kept_as",
+    "sub_rule": "internal_narration_q",
     "upstream": ""
    }
   },
-  "code": "d3e8d8296bf7b69262402f6988d4420c55dc19c0e2cdaa1ffbc2c68309470e38",
+  "code": "1d34093115d6d0598595d7711865f20ddba82abccc6acb9d6d78f8c279932715",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -282,28 +284,37 @@
   "findings": [
    {
     "label": "BC-07",
-    "message": "inherited_unit:592.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
+    "message": "internal narration 'validation status'",
     "origin": {
-     "id": "inherited_unit:592.paragraph",
-     "kind": "inherited_unit"
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
     "rule": "BC-07",
-    "section_id": "scope_limitations",
-    "signature": "BC-07|inherited_unit|id_is_kept_as",
+    "section_id": "api_reference",
+    "signature": "BC-07|unresolved|internal_narration_q",
     "source": "validation",
-    "sub_rule": "id_is_kept_as",
+    "sub_rule": "internal_narration_q",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "96c95f9ca6f45308780004ec03f84b48a8fe894f",
+  "main_sha": "225342f140758a085021db2cd948a6d05cc3b070",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-07",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "45052413270",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45052413270",
+  "run_id": "45064218783",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45064218783",
   "schema_version": 1,
   "source_revision": "851c1a6a4502a55416537b532d38f69704d16b77",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
