@@ -62,16 +62,16 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.add_page",
-        "public_symbol:aspose_pdf.document.save",
-        "public_symbol:aspose_pdf.document.load_from",
         "public_symbol:aspose_pdf.document.from_bytes",
-        "public_symbol:aspose_pdf.document.to_bytes",
-        "public_symbol:aspose_pdf.document.dispose",
-        "public_symbol:aspose_pdf.document.closed",
+        "public_symbol:aspose_pdf.document.from_stream",
+        "public_symbol:aspose_pdf.document.load_from_stream",
+        "public_symbol:aspose_pdf.document.save",
+        "public_symbol:aspose_pdf.document.pages",
         "public_symbol:aspose_pdf.document.page_count",
-        "public_symbol:aspose_pdf.document.version",
         "public_symbol:aspose_pdf.document.info",
-        "public_symbol:aspose_pdf.document.pages"
+        "public_symbol:aspose_pdf.document.encrypt",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.sign"
       ],
       "symbol_fact_id": "public_symbol:aspose_pdf.document"
     },
@@ -82,49 +82,49 @@
         "public_symbol:aspose_pdf.page.add_image",
         "public_symbol:aspose_pdf.page.draw_path",
         "public_symbol:aspose_pdf.page.draw_rectangle",
-        "public_symbol:aspose_pdf.page.draw_line",
-        "public_symbol:aspose_pdf.page.render",
-        "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.add_table",
         "public_symbol:aspose_pdf.page.size",
-        "public_symbol:aspose_pdf.page.media_box",
-        "public_symbol:aspose_pdf.page.crop_box",
-        "public_symbol:aspose_pdf.page.annotations"
+        "public_symbol:aspose_pdf.page.trim_box",
+        "public_symbol:aspose_pdf.page.annotations",
+        "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.save_as_svg",
+        "public_symbol:aspose_pdf.page.extract_text"
       ],
       "symbol_fact_id": "public_symbol:aspose_pdf.page"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotation.rect",
-        "public_symbol:aspose_pdf.annotation.contents",
-        "public_symbol:aspose_pdf.annotation.title",
-        "public_symbol:aspose_pdf.annotation.author",
-        "public_symbol:aspose_pdf.annotation.subtype",
-        "public_symbol:aspose_pdf.annotation.properties",
-        "public_symbol:aspose_pdf.annotation.generate_appearance",
-        "public_symbol:aspose_pdf.annotationcollection",
-        "public_symbol:aspose_pdf.annotationcollection.add",
-        "public_symbol:aspose_pdf.annotationcollection.to_list",
-        "public_symbol:aspose_pdf.annotationcollection.export_json"
+        "public_symbol:aspose_pdf.form",
+        "public_symbol:aspose_pdf.form.add_text_field",
+        "public_symbol:aspose_pdf.form.add_checkbox",
+        "public_symbol:aspose_pdf.form.fill",
+        "public_symbol:aspose_pdf.form.flatten",
+        "public_symbol:aspose_pdf.form.validate",
+        "public_symbol:aspose_pdf.form.to_json_schema",
+        "public_symbol:aspose_pdf.form.export_json_schema",
+        "public_symbol:aspose_pdf.form.export_csv",
+        "public_symbol:aspose_pdf.form.import_json",
+        "public_symbol:aspose_pdf.form.reset",
+        "public_symbol:aspose_pdf.form.to_dict"
       ],
-      "symbol_fact_id": "public_symbol:aspose_pdf.annotation"
+      "symbol_fact_id": "public_symbol:aspose_pdf.form"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_pdf.form",
-        "public_symbol:aspose_pdf.form.fields",
-        "public_symbol:aspose_pdf.form.fill",
-        "public_symbol:aspose_pdf.form.validate",
-        "public_symbol:aspose_pdf.form.flatten",
-        "public_symbol:aspose_pdf.form.export_json",
-        "public_symbol:aspose_pdf.form.import_json",
-        "public_symbol:aspose_pdf.form.to_schema",
-        "public_symbol:aspose_pdf.form.export_schema",
-        "public_symbol:aspose_pdf.form.add_text_field",
-        "public_symbol:aspose_pdf.form.add_checkbox",
-        "public_symbol:aspose_pdf.form.add_list_box"
+        "public_symbol:aspose_pdf.annotationcollection",
+        "public_symbol:aspose_pdf.annotationcollection.add",
+        "public_symbol:aspose_pdf.annotationcollection.add_text",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.add_file_attachment",
+        "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.annotationcollection.export_xfdf",
+        "public_symbol:aspose_pdf.annotationcollection.import_json",
+        "public_symbol:aspose_pdf.annotationcollection.to_list",
+        "public_symbol:aspose_pdf.annotationcollection.clear",
+        "public_symbol:aspose_pdf.annotationcollection.delete",
+        "public_symbol:aspose_pdf.annotationcollection.generate_appearances"
       ],
-      "symbol_fact_id": "public_symbol:aspose_pdf.form"
+      "symbol_fact_id": "public_symbol:aspose_pdf.annotationcollection"
     },
     {
       "fact_ids": [
@@ -145,52 +145,69 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_pdf.pdffileeditor",
-        "public_symbol:aspose_pdf.pdffileeditor.concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.extract",
-        "public_symbol:aspose_pdf.pdffileeditor.insert",
-        "public_symbol:aspose_pdf.pdffileeditor.delete",
-        "public_symbol:aspose_pdf.pdffileeditor.append",
-        "public_symbol:aspose_pdf.pdffileeditor.add_page_break",
-        "public_symbol:aspose_pdf.pdffileeditor.close",
-        "public_symbol:aspose_pdf.pdffileeditor.dispose",
-        "public_symbol:aspose_pdf.pdffileeditor.last_exception",
-        "public_symbol:aspose_pdf.pdffileeditor.try_concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.make_booklet"
-      ],
-      "symbol_fact_id": "public_symbol:aspose_pdf.pdffileeditor"
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose_pdf.lowcode.converter",
         "public_symbol:aspose_pdf.lowcode.convertoptions",
-        "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions",
         "public_symbol:aspose_pdf.lowcode.imagestopdf",
-        "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
-        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
-        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.formflattener"
+        "public_symbol:aspose_pdf.lowcode.imagestopdfoptions"
       ],
       "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.converter"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose_pdf.lowcode.stamper",
+        "public_symbol:aspose_pdf.lowcode.stampoptions",
+        "public_symbol:aspose_pdf.lowcode.rotator",
+        "public_symbol:aspose_pdf.lowcode.rotateoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener"
+      ],
+      "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.stamper"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.lowcode.imagestopdf",
+        "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
+        "public_symbol:aspose_pdf.lowcode.converter",
+        "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions"
+      ],
+      "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.imagestopdf"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
-        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
-        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
-        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
-        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
-        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
-        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
-        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
-        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions"
+        "public_symbol:aspose_pdf.lowcode.converter",
+        "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions"
       ],
       "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.pdfaconverter"
     },
@@ -198,35 +215,35 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.lowcode.rotator",
         "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions",
-        "public_symbol:aspose_pdf.lowcode.rotator",
-        "public_symbol:aspose_pdf.lowcode.rotateoptions"
+        "public_symbol:aspose_pdf.lowcode.stamper",
+        "public_symbol:aspose_pdf.lowcode.stampoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
+        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener"
       ],
       "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.rotator"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose_pdf.lowcode.pageremover",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.rotator",
+        "public_symbol:aspose_pdf.lowcode.rotateoptions",
         "public_symbol:aspose_pdf.lowcode.stamper",
         "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions",
-        "public_symbol:aspose_pdf.lowcode.stamper",
-        "public_symbol:aspose_pdf.lowcode.stampoptions"
+        "public_symbol:aspose_pdf.lowcode.pdfaconverter",
+        "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.formflattener"
       ],
-      "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.stamper"
+      "symbol_fact_id": "public_symbol:aspose_pdf.lowcode.pageremover"
     },
     {
       "fact_ids": [
@@ -248,27 +265,27 @@
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Create and Edit PDF Documents",
-      "Text Extraction and Editing",
-      "Table Extraction and Authoring",
-      "Rendering and Export",
-      "Annotations and Forms",
-      "Security and Compliance",
-      "Font Management",
-      "Batch and Low-Code Workflows"
+      "Create, load, and save PDF documents",
+      "Page layout and content authoring",
+      "Text extraction, search, and editing",
+      "Table and block extraction",
+      "Annotations, bookmarks, and links",
+      "Rendering and export to images and SVG",
+      "Forms and validation",
+      "Security, signing, and compliance"
     ],
     "input_format_ids": [
-      "format:input.pdf",
-      "format:input.csv",
-      "format:input.json"
+      "format:input.pdf"
     ],
     "output_format_ids": [
       "format:output.pdf",
       "format:output.csv",
       "format:output.html",
+      "format:output.json",
       "format:output.md",
       "format:output.png",
       "format:output.svg",
+      "format:output.tif",
       "format:output.zip"
     ]
   },
@@ -281,268 +298,126 @@
         "example:006",
         "example:007",
         "example:008",
-        "example:010",
-        "example:011",
-        "example:012",
-        "example:013",
-        "example:016"
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
+        "public_symbol:aspose_pdf.document.load_from_stream"
       ],
       "shared_fact_ids": [
-        "example:010",
-        "example:011",
-        "example:012",
-        "example:013",
-        "example:016"
+        "example:001"
       ],
-      "title": "Create and Edit PDF Documents"
+      "title": "Create, load, and save PDF documents"
     },
     {
       "fact_ids": [
-        "example:026",
+        "example:001",
+        "example:029",
         "example:027",
         "example:028",
-        "example:032",
-        "example:033",
-        "example:034",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.draw_path",
+        "public_symbol:aspose_pdf.page.draw_rectangle",
+        "public_symbol:aspose_pdf.page.add_table",
+        "public_symbol:aspose_pdf.graphicspath"
+      ],
+      "shared_fact_ids": [
+        "example:001"
+      ],
+      "title": "Page layout and content authoring"
+    },
+    {
+      "fact_ids": [
         "example:037",
         "example:038",
         "example:039",
         "example:040",
-        "example:041"
+        "example:041",
+        "public_symbol:aspose_pdf.document.extract_text",
+        "public_symbol:aspose_pdf.document.replace_text",
+        "public_symbol:aspose_pdf.document.redact_text",
+        "public_symbol:aspose_pdf.document.auto_link",
+        "public_symbol:aspose_pdf.document.highlight_text"
       ],
-      "shared_fact_ids": [
-        "example:026",
-        "example:027",
-        "example:028",
-        "example:032",
-        "example:033",
-        "example:034",
-        "example:037",
-        "example:038",
-        "example:039"
-      ],
-      "title": "Text Extraction and Editing"
+      "shared_fact_ids": [],
+      "title": "Text extraction, search, and editing"
     },
     {
       "fact_ids": [
         "example:026",
-        "example:027",
-        "example:028",
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.extract_tables",
-        "public_symbol:aspose_pdf.table"
+        "public_symbol:aspose_pdf.extractedtable.save_csv",
+        "public_symbol:aspose_pdf.document.export_blocks_json"
       ],
-      "shared_fact_ids": [
-        "example:026",
-        "example:027",
-        "example:028",
-        "public_symbol:aspose_pdf.document"
+      "shared_fact_ids": [],
+      "title": "Table and block extraction"
+    },
+    {
+      "fact_ids": [
+        "example:020",
+        "example:021",
+        "example:043",
+        "public_symbol:aspose_pdf.document.add_table_of_contents",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.export_bookmarks_json",
+        "public_symbol:aspose_pdf.document.import_bookmarks_json",
+        "public_symbol:aspose_pdf.document.export_annotations_json",
+        "public_symbol:aspose_pdf.document.import_annotations_json",
+        "public_symbol:aspose_pdf.document.extract_links",
+        "public_symbol:aspose_pdf.document.validate_links"
       ],
-      "title": "Table Extraction and Authoring"
+      "shared_fact_ids": [],
+      "title": "Annotations, bookmarks, and links"
     },
     {
       "fact_ids": [
         "example:010",
         "example:011",
-        "example:012",
-        "example:013",
         "example:016",
         "example:017",
-        "example:029",
-        "example:030"
+        "example:030",
+        "public_symbol:aspose_pdf.document.save_page_as_image",
+        "public_symbol:aspose_pdf.document.save_as_tiff",
+        "public_symbol:aspose_pdf.document.save_as_svg",
+        "public_symbol:aspose_pdf.document.render_contact_sheet",
+        "public_symbol:aspose_pdf.document.rasterized_copy"
       ],
-      "shared_fact_ids": [
-        "example:010",
-        "example:011",
-        "example:012",
-        "example:013",
-        "example:016"
-      ],
-      "title": "Rendering and Export"
+      "shared_fact_ids": [],
+      "title": "Rendering and export to images and SVG"
     },
     {
       "fact_ids": [
-        "example:024",
-        "example:025",
-        "example:026",
-        "example:027",
-        "example:028",
-        "example:032",
-        "example:033",
-        "example:034",
-        "example:037",
-        "example:038",
-        "example:039"
+        "public_symbol:aspose_pdf.form",
+        "public_symbol:aspose_pdf.form.add_text_field",
+        "public_symbol:aspose_pdf.form.add_checkbox",
+        "public_symbol:aspose_pdf.form.fill",
+        "public_symbol:aspose_pdf.form.flatten",
+        "public_symbol:aspose_pdf.form.validate",
+        "public_symbol:aspose_pdf.form.to_json_schema",
+        "public_symbol:aspose_pdf.form.export_json_schema"
       ],
-      "shared_fact_ids": [
-        "example:026",
-        "example:027",
-        "example:028",
-        "example:032",
-        "example:033",
-        "example:034",
-        "example:037",
-        "example:038",
-        "example:039"
-      ],
-      "title": "Annotations and Forms"
+      "shared_fact_ids": [],
+      "title": "Forms and validation"
     },
     {
       "fact_ids": [
-        "example:032",
-        "example:033",
-        "example:034",
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.encrypt",
         "public_symbol:aspose_pdf.document.decrypt",
-        "public_symbol:aspose_pdf.document.validate_pdfa"
+        "public_symbol:aspose_pdf.document.sign",
+        "public_symbol:aspose_pdf.document.add_ltv",
+        "public_symbol:aspose_pdf.document.add_document_timestamp",
+        "public_symbol:aspose_pdf.document.embed_fonts",
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.document.validate_pdfua",
+        "public_symbol:aspose_pdf.document.validate_pdfx",
+        "public_symbol:aspose_pdf.document.sanitize"
       ],
-      "shared_fact_ids": [
-        "example:032",
-        "example:033",
-        "example:034",
-        "public_symbol:aspose_pdf.document"
-      ],
-      "title": "Security and Compliance"
-    },
-    {
-      "fact_ids": [
-        "example:033",
-        "example:034",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.fonts",
-        "public_symbol:aspose_pdf.document.embed_fonts"
-      ],
-      "shared_fact_ids": [
-        "example:033",
-        "example:034",
-        "public_symbol:aspose_pdf.document"
-      ],
-      "title": "Font Management"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_pdf.lowcode",
-        "public_symbol:aspose_pdf.lowcode.converter",
-        "public_symbol:aspose_pdf.lowcode.convertoptions",
-        "public_symbol:aspose_pdf.lowcode.decryptoptions",
-        "public_symbol:aspose_pdf.lowcode.decryptor"
-      ],
-      "title": "Batch and Low-Code Workflows"
+      "shared_fact_ids": [],
+      "title": "Security, signing, and compliance"
     }
   ],
-  "deviations": [
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:license"
-      ],
-      "section_id": "identity",
-      "text": "The H1 product name is rendered from facts in the identity section."
-    },
-    {
-      "fact_ids": [
-        "license:spdx",
-        "link_target:001",
-        "link_target:002",
-        "link_target:003",
-        "link_target:004",
-        "link_target:005",
-        "link_target:006"
-      ],
-      "section_id": "badges",
-      "text": "The badge row is rendered from facts in the badges section."
-    },
-    {
-      "fact_ids": [
-        "link_target:007",
-        "link_target:008",
-        "link_target:product.banner",
-        "link_target:product.enterprise",
-        "link_target:product.homepage"
-      ],
-      "section_id": "banner",
-      "text": "The banner image links to the product homepage and is moved to the enterprise relationship section."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "license:spdx",
-        "package:name",
-        "package:published_version",
-        "package:version"
-      ],
-      "section_id": "opening",
-      "text": "The paragraph describes the product, license, target Python version, dependencies, and alpha status, all supported by facts."
-    },
-    {
-      "fact_ids": [
-        "example:002"
-      ],
-      "section_id": "scope_limitations",
-      "text": "The paragraph describes a breaking change in page numbering conventions, which is a material limitation supported by the example."
-    },
-    {
-      "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:006",
-        "example:007",
-        "example:008",
-        "example:010"
-      ],
-      "section_id": "at_a_glance",
-      "text": "The Mermaid diagram is superseded by the deterministic at_a_glance section, which is rendered from verified examples."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_pdf.document",
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:006",
-        "example:007",
-        "example:008"
-      ],
-      "section_id": "key_capabilities",
-      "text": "The list items describe core Document operations supported by the public symbols and examples."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_pdf.document.extract_tables"
-      ],
-      "section_id": "api_reference",
-      "text": "Kept in the collapsed API Reference: it lists public API members. The list items describe text extraction, search, replace, redaction, table extraction, and for"
-    },
-    {
-      "fact_ids": [
-        "install_command:pip"
-      ],
-      "section_id": "installation",
-      "text": "The 'Installation' heading is rendered by the deterministic installation section."
-    },
-    {
-      "fact_ids": [
-        "dependency:asn1crypto-1.5",
-        "dependency:cryptography-50",
-        "dependency:development.dev.brotli-1.2",
-        "dependency:development.dev.build-1.2",
-        "dependency:development.dev.fonttools-4.60.2",
-        "dependency:development.dev.jsonschema-4.18",
-        "dependency:development.dev.pillow-12.3"
-      ],
-      "section_id": "dependencies",
-      "text": "The 'Dependencies' section renders the dependency snapshot, including required, optional, and development dependencies."
-    }
-  ],
+  "deviations": [],
   "flagship_example_id": "example:026",
   "links": [
     {
@@ -579,7 +454,83 @@
     },
     {
       "link_fact_id": "link_target:007",
-      "section_id": "enterprise_relationship"
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:037",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:038",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:039",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:040",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
     }
   ],
   "material_limitations": [],

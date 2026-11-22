@@ -77,13 +77,11 @@
       "destination_section": "banner",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:007",
-        "link_target:008",
         "link_target:product.banner",
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image links to the product homepage and is moved to the enterprise relationship section.",
+      "rationale": "The banner image links to the enterprise product page and is moved to the enterprise relationship section.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -93,24 +91,24 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
-        "license:spdx",
+        "package:license",
         "package:name",
-        "package:published_version",
-        "package:version",
         "package:python_requires",
+        "license:spdx",
         "dependency:asn1crypto-1.5",
-        "dependency:cryptography-50"
+        "dependency:cryptography-50",
+        "package:version"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "CORRECT_WITH_EVIDENCE",
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The paragraph describes a breaking change in page numbering conventions, which is a material limitation supported by the example.",
+      "rationale": "The inherited text states page numbers start at 1, but example:002 uses document.pages[1] which is 1-based, supporting the claim; however, the inherited text is",
       "unit_id": "inherited_unit:005.paragraph"
     },
     {
@@ -153,22 +151,9 @@
       "destination_section": "at_a_glance",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:006",
-        "example:007",
-        "example:008",
-        "example:010",
-        "example:011",
-        "example:012",
-        "example:013",
-        "example:016",
-        "example:017",
-        "example:020",
-        "example:021"
+        "identity:ecosystem"
       ],
-      "rationale": "The Mermaid diagram is superseded by the deterministic at_a_glance section, which is rendered from verified examples.",
+      "rationale": "The diagram carries the product's own identity, which identity:ecosystem states, and the section 'at_a_glance' regenerates it from facts.",
       "unit_id": "inherited_unit:009.code_block"
     },
     {
@@ -185,62 +170,82 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_pdf.document",
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:006",
-        "example:007",
-        "example:008"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
+        "public_symbol:aspose_pdf.document.load_from_stream",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.pages",
+        "public_symbol:aspose_pdf.page.size",
+        "public_symbol:aspose_pdf.page.trim_box"
       ],
-      "rationale": "The list items describe core Document operations supported by the public symbols and examples.",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document.extract_tables"
+        "public_symbol:aspose_pdf.document.extract_text",
+        "public_symbol:aspose_pdf.document.replace_text",
+        "public_symbol:aspose_pdf.document.redact_text",
+        "public_symbol:aspose_pdf.document.auto_link",
+        "public_symbol:aspose_pdf.document.highlight_text",
+        "public_symbol:aspose_pdf.document.extract_tables",
+        "public_symbol:aspose_pdf.extractedtable.save_csv",
+        "public_symbol:aspose_pdf.document.export_blocks_json"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list items describe text extraction, search, replace, redaction, table extraction, and for",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.002.list"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotations",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.validate_pdfa",
-        "public_symbol:aspose_pdf.document.validate_pdfa",
-        "public_symbol:aspose_pdf.document.validate_pdfa",
-        "public_symbol:aspose_pdf.document.validate_pdfa",
-        "public_symbol:aspose_pdf.document.validate_pdfa",
-        "public_symbol:aspose_pdf.document.validate_pdfa"
+        "public_symbol:aspose_pdf.document.export_annotations_json",
+        "public_symbol:aspose_pdf.document.import_annotations_json",
+        "public_symbol:aspose_pdf.document.export_annotations_json",
+        "public_symbol:aspose_pdf.document.import_annotations_json",
+        "public_symbol:aspose_pdf.document.export_bookmarks_json",
+        "public_symbol:aspose_pdf.document.import_bookmarks_json",
+        "public_symbol:aspose_pdf.document.export_bookmarks_json",
+        "public_symbol:aspose_pdf.document.import_bookmarks_json",
+        "public_symbol:aspose_pdf.page.save_as_svg",
+        "public_symbol:aspose_pdf.document.save_as_svg"
       ],
-      "rationale": "The list items describe annotation import/export, link validation, and bookmark management operations supported by public symbols.",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.003.list"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document"
+        "public_symbol:aspose_pdf.document.save_page_as_image",
+        "public_symbol:aspose_pdf.document.save_as_tiff",
+        "public_symbol:aspose_pdf.document.save_as_svg",
+        "public_symbol:aspose_pdf.document.render_contact_sheet",
+        "public_symbol:aspose_pdf.document.rasterized_copy",
+        "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.document.render_thumbnail",
+        "public_symbol:aspose_pdf.page.save_as_image"
       ],
-      "rationale": "The list items describe rendering, contact sheet, rasterized copy, spread splitting, page image packaging, content bounds, and visual comparison operations.",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.004.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list items describe attachment packaging, image collection, low-resolution detection, blan",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip",
+        "public_symbol:aspose_pdf.document.export_pages_zip"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.005.list"
     },
     {
@@ -249,48 +254,49 @@
       "fact_ids": [
         "import_path:aspose_pdf",
         "public_symbol:aspose_pdf",
+        "public_symbol:aspose_pdf.document.embed_fonts",
         "public_symbol:aspose_pdf.document.extract_pages"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list items describe font substitution, font embedding, page movement, page removal, page i",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.006.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list items describe page insertion from another document, document concatenation, multi-do",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.007.list"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.permissions",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page"
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text",
+        "public_symbol:aspose_pdf.document.generate_outlines_from_text"
       ],
-      "rationale": "The list items describe page rotation, content translation, outline generation, bookmark generation from text, table of contents generation, permissions, and",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.008.list"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.field",
-        "public_symbol:aspose_pdf.field",
-        "public_symbol:aspose_pdf.form"
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.add_text"
       ],
-      "rationale": "The list items describe list and text block authoring, table authoring, page stamps, page numbering stamps, text stamps, field appearance and behavior, and form",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.009.list"
     },
     {
@@ -299,12 +305,17 @@
       "fact_ids": [
         "import_path:aspose_pdf",
         "public_symbol:aspose_pdf",
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.lowcode",
-        "public_symbol:aspose_pdf.signatureappearance"
+        "public_symbol:aspose_pdf.document.add_document_timestamp",
+        "public_symbol:aspose_pdf.document.add_ltv",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.embed_fonts",
+        "public_symbol:aspose_pdf.document.encrypt",
+        "public_symbol:aspose_pdf.document.sanitize",
+        "public_symbol:aspose_pdf.document.sign",
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.lowcode"
       ],
-      "rationale": "The list items describe annotation appearance generation, encryption/decryption, visible signature appearance, PDF/A and PDF/UA validation and conversion, PDF/X",
+      "rationale": "The list item is superseded by the deterministic key_capabilities section.",
       "unit_id": "inherited_unit:011.010.list"
     },
     {
@@ -313,7 +324,7 @@
       "fact_ids": [
         "install_command:pip"
       ],
-      "rationale": "The 'Installation' heading is rendered by the deterministic installation section.",
+      "rationale": "The 'Installation' heading is superseded by the deterministic installation section.",
       "unit_id": "inherited_unit:012.heading"
     },
     {
@@ -322,16 +333,17 @@
       "fact_ids": [
         "install_command:pip"
       ],
-      "rationale": "The 'Installation' heading is rendered by the deterministic installation section.",
+      "rationale": "The paragraph introducing installation is superseded by the deterministic installation section.",
       "unit_id": "inherited_unit:013.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "install_command:pip"
+        "build_test_asset:build-command",
+        "build_test_asset:test-command"
       ],
-      "rationale": "The clone-and-venv example is preserved as a development setup path, supported by the pip install command fact.",
+      "rationale": "The git clone and venv setup block is moved to development_testing as it describes a local development workflow not covered by the pip install command.",
       "unit_id": "inherited_unit:014.code_block"
     },
     {
@@ -360,42 +372,32 @@
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The 'Dependencies' section renders the dependency snapshot, including required, optional, and development dependencies.",
+      "rationale": "The paragraph about required dependencies is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:015.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "dependency:asn1crypto-1.5",
-        "dependency:cryptography-50",
-        "dependency:development.dev.brotli-1.2",
-        "dependency:development.dev.build-1.2",
-        "dependency:development.dev.fonttools-4.60.2",
-        "dependency:development.dev.jsonschema-4.18",
-        "dependency:development.dev.pillow-12.3",
-        "dependency:development.dev.pytest-8",
-        "dependency:development.dev.python-bidi-0.6",
-        "dependency:development.dev.reportlab-4.2",
-        "dependency:development.dev.ruff-0.6",
-        "dependency:development.dev.setuptools-83",
-        "dependency:development.dev.twine-5",
-        "dependency:development.dev.uharfbuzz-0.37",
-        "dependency:development.dev.wheel",
-        "dependency:optional.fuzz.atheris-2.3",
         "dependency:optional.images.pillow-12.3",
-        "dependency:optional.text-layout.fonttools-4.60.2",
-        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.woff2.brotli-1.2",
         "dependency:optional.text-layout.uharfbuzz-0.37",
-        "dependency:optional.woff2.brotli-1.2"
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.fonttools-4.60.2"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "The optional extras pip install block is moved to development_testing as it describes a local development setup not covered by the deterministic dependencies.",
       "unit_id": "inherited_unit:016.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "dependency:optional.images.pillow-12.3",
+        "dependency:optional.woff2.brotli-1.2",
+        "dependency:optional.text-layout.uharfbuzz-0.37",
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.fonttools-4.60.2"
+      ],
       "rationale": "Kept in development_testing: api_reference holds no install material. Kept in the collapsed API Reference: it lists public API members. Kept in development_t...",
       "unit_id": "inherited_unit:017.list"
     },
@@ -425,7 +427,7 @@
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The 'Dependencies' heading is rendered by the deterministic dependencies section.",
+      "rationale": "The 'Dependencies' heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:018.heading"
     },
     {
@@ -454,17 +456,36 @@
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The 'Dependencies' section renders the dependency snapshot in four subsections.",
+      "rationale": "The 'Required Package Dependencies' heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:019.heading"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "dependency:asn1crypto-1.5",
-        "dependency:cryptography-50"
+        "dependency:cryptography-50",
+        "dependency:development.dev.brotli-1.2",
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.fonttools-4.60.2",
+        "dependency:development.dev.jsonschema-4.18",
+        "dependency:development.dev.pillow-12.3",
+        "dependency:development.dev.pytest-8",
+        "dependency:development.dev.python-bidi-0.6",
+        "dependency:development.dev.reportlab-4.2",
+        "dependency:development.dev.ruff-0.6",
+        "dependency:development.dev.setuptools-83",
+        "dependency:development.dev.twine-5",
+        "dependency:development.dev.uharfbuzz-0.37",
+        "dependency:development.dev.wheel",
+        "dependency:optional.fuzz.atheris-2.3",
+        "dependency:optional.images.pillow-12.3",
+        "dependency:optional.text-layout.fonttools-4.60.2",
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.uharfbuzz-0.37",
+        "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The required dependencies list is preserved as it provides specific version constraints for the core dependencies.",
+      "rationale": "The list of required dependencies is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:020.list"
     },
     {
@@ -493,21 +514,36 @@
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The 'Dependencies' section renders the dependency snapshot in four subsections.",
+      "rationale": "The 'Optional Dependencies' heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:021.heading"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "dependency:asn1crypto-1.5",
+        "dependency:cryptography-50",
+        "dependency:development.dev.brotli-1.2",
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.fonttools-4.60.2",
+        "dependency:development.dev.jsonschema-4.18",
+        "dependency:development.dev.pillow-12.3",
+        "dependency:development.dev.pytest-8",
+        "dependency:development.dev.python-bidi-0.6",
+        "dependency:development.dev.reportlab-4.2",
+        "dependency:development.dev.ruff-0.6",
+        "dependency:development.dev.setuptools-83",
+        "dependency:development.dev.twine-5",
+        "dependency:development.dev.uharfbuzz-0.37",
+        "dependency:development.dev.wheel",
+        "dependency:optional.fuzz.atheris-2.3",
         "dependency:optional.images.pillow-12.3",
-        "dependency:optional.woff2.brotli-1.2",
-        "dependency:optional.text-layout.uharfbuzz-0.37",
-        "dependency:optional.text-layout.python-bidi-0.6",
         "dependency:optional.text-layout.fonttools-4.60.2",
-        "dependency:optional.fuzz.atheris-2.3"
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.uharfbuzz-0.37",
+        "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The optional dependencies list is preserved as it provides specific version constraints for optional extras.",
+      "rationale": "The list of optional dependencies is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:022.list"
     },
     {
@@ -536,7 +572,7 @@
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2"
       ],
-      "rationale": "The 'Dependencies' section renders the dependency snapshot in four subsections.",
+      "rationale": "The 'Native and System Requirements' heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:023.heading"
     },
     {
@@ -564,45 +600,25 @@
         "dependency:optional.text-layout.python-bidi-0.6",
         "dependency:optional.text-layout.uharfbuzz-0.37",
         "dependency:optional.woff2.brotli-1.2",
-        "install_command:pip",
         "package:python_requires"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:024.list"
     },
     {
-      "destination_section": "dependencies",
+      "destination_section": "development_testing",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:asn1crypto-1.5",
-        "dependency:cryptography-50",
-        "dependency:development.dev.brotli-1.2",
-        "dependency:development.dev.build-1.2",
-        "dependency:development.dev.fonttools-4.60.2",
-        "dependency:development.dev.jsonschema-4.18",
-        "dependency:development.dev.pillow-12.3",
-        "dependency:development.dev.pytest-8",
-        "dependency:development.dev.python-bidi-0.6",
-        "dependency:development.dev.reportlab-4.2",
-        "dependency:development.dev.ruff-0.6",
-        "dependency:development.dev.setuptools-83",
-        "dependency:development.dev.twine-5",
-        "dependency:development.dev.uharfbuzz-0.37",
-        "dependency:development.dev.wheel",
-        "dependency:optional.fuzz.atheris-2.3",
-        "dependency:optional.images.pillow-12.3",
-        "dependency:optional.text-layout.fonttools-4.60.2",
-        "dependency:optional.text-layout.python-bidi-0.6",
-        "dependency:optional.text-layout.uharfbuzz-0.37",
-        "dependency:optional.woff2.brotli-1.2"
+        "identity:ecosystem"
       ],
-      "rationale": "The 'Dependencies' section renders the dependency snapshot in four subsections.",
+      "rationale": "The 'Development Dependencies' heading is superseded by the deterministic development_testing section.",
       "unit_id": "inherited_unit:025.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "build_test_asset:test-command",
         "dependency:development.dev.build-1.2",
         "dependency:development.dev.pytest-8",
         "dependency:development.dev.ruff-0.6",
@@ -616,24 +632,22 @@
         "dependency:development.dev.python-bidi-0.6",
         "dependency:development.dev.reportlab-4.2"
       ],
-      "rationale": "The development dependencies list is preserved as it provides specific version constraints for development tooling.",
+      "rationale": "Kept as written (inherit-and-correct, R43(3)). The list of development dependencies is superseded by the deterministic development_testing section.",
       "unit_id": "inherited_unit:026.list"
-    },
-    {
-      "destination_section": "quick_start",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:001"
-      ],
-      "rationale": "The 'Quick Start' heading is moved to the quick_start section where the example is rendered.",
-      "unit_id": "inherited_unit:027.heading"
     },
     {
       "destination_section": "quick_start",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001"
+        "identity:ecosystem"
       ],
+      "rationale": "The 'Quick Start' heading is superseded by the deterministic quick_start section.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:028.paragraph"
     },
@@ -643,7 +657,7 @@
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The quick start example is preserved as it is a verified, runnable example.",
+      "rationale": "The example code block is preserved as it matches a verified example fact.",
       "unit_id": "inherited_unit:029.code_block"
     },
     {
@@ -661,7 +675,7 @@
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The second example is preserved as it is a verified, runnable example.",
+      "rationale": "The second example code block is preserved as it matches a verified example fact.",
       "unit_id": "inherited_unit:031.code_block"
     },
     {
@@ -679,15 +693,16 @@
       "fact_ids": [
         "example:003"
       ],
-      "rationale": "The example loads a PDF, prints page count, version, and info; matches fact example:003.",
+      "rationale": "The example loads a document and prints metadata; matches example:003.",
       "unit_id": "inherited_unit:033.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "example:004"
+        "example:004",
+        "example:009",
+        "public_symbol:aspose_pdf.page_ranges"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:034.paragraph"
@@ -696,8 +711,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "example:004"
+        "example:004",
+        "example:009",
+        "public_symbol:aspose_pdf.page_ranges"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:035.code_block"
@@ -706,8 +722,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "example:005"
+        "example:001",
+        "example:005",
+        "public_symbol:aspose_pdf.document"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:036.paragraph"
@@ -717,7 +734,9 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:005",
-        "example:006"
+        "example:006",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:037.paragraph"
@@ -727,7 +746,9 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:005",
-        "example:006"
+        "example:006",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:038.code_block"
@@ -736,7 +757,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:006"
+        "example:006",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream"
       ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:039.paragraph"
@@ -754,7 +777,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:006"
+        "example:006",
+        "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream"
       ],
       "rationale": "Not printed again: additional examples already states this material from the facts it cites, so the kept unit is redundant.",
       "unit_id": "inherited_unit:041.paragraph"
@@ -763,7 +788,8 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:007"
+        "example:007",
+        "public_symbol:aspose_pdf.document"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:042.paragraph"
@@ -772,16 +798,18 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:007"
+        "example:007",
+        "public_symbol:aspose_pdf.document"
       ],
-      "rationale": "The context manager and dispose examples match fact example:007.",
+      "rationale": "The context manager and dispose example is tracked as example:007 and supported.",
       "unit_id": "inherited_unit:043.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:008"
+        "example:008",
+        "public_symbol:aspose_pdf.document"
       ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:044.paragraph"
@@ -790,9 +818,10 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:008"
+        "example:008",
+        "public_symbol:aspose_pdf.document"
       ],
-      "rationale": "The len(document) example matches fact example:008.",
+      "rationale": "The len(document) example is tracked as example:008 and supported.",
       "unit_id": "inherited_unit:045.code_block"
     },
     {
@@ -810,7 +839,7 @@
       "fact_ids": [
         "example:009"
       ],
-      "rationale": "The code block for iteration is part of example:009, which is CONTRADICTED.",
+      "rationale": "The page iteration example is tracked as example:009 and is CONTRADICTED, so it is omitted.",
       "unit_id": "inherited_unit:047.code_block"
     },
     {
@@ -820,7 +849,7 @@
         "link_target:021",
         "link_target:022"
       ],
-      "rationale": "Redundant with the verified facts it names: link_target:021, link_target:022. Promotional link to supported-features.md without a verified product target; no su",
+      "rationale": "Redundant with the verified facts it names: link_target:021, link_target:022. Promotional link to supported-features.md without a verified product link target; ",
       "unit_id": "inherited_unit:048.paragraph"
     },
     {
@@ -829,7 +858,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Heading for a section that is not supported by any verified example or capability.",
+      "rationale": "Heading for a section that is not supported by any verified example or capability; omitted.",
       "unit_id": "inherited_unit:049.heading"
     },
     {
@@ -838,7 +867,7 @@
       "fact_ids": [
         "example:010"
       ],
-      "rationale": "The rasterized_copy example matches fact example:010 and is supported.",
+      "rationale": "The rasterized_copy example is tracked as example:010 and supported.",
       "unit_id": "inherited_unit:050.code_block"
     },
     {
@@ -875,7 +904,7 @@
       "fact_ids": [
         "example:012"
       ],
-      "rationale": "The heading introduces split_spreads, which has a matching example:012.",
+      "rationale": "The heading introduces split_spreads functionality, which is covered by example:012; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:054.heading"
     },
     {
@@ -884,7 +913,7 @@
       "fact_ids": [
         "example:012"
       ],
-      "rationale": "The code block matches example:012 and demonstrates horizontal spread splitting.",
+      "rationale": "The code block matches example:012 exactly and demonstrates horizontal spread splitting; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:055.code_block"
     },
     {
@@ -902,7 +931,7 @@
       "fact_ids": [
         "example:012"
       ],
-      "rationale": "The paragraph explains the result of split_spreads, which is supported by example:012.",
+      "rationale": "The paragraph describes the result of split_spreads and is supported by example:012; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:057.paragraph"
     },
     {
@@ -911,7 +940,7 @@
       "fact_ids": [
         "example:013"
       ],
-      "rationale": "The heading introduces export_pages_zip, which has a matching example:013.",
+      "rationale": "The heading introduces export_pages_zip functionality, which is covered by example:013; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:058.heading"
     },
     {
@@ -920,7 +949,7 @@
       "fact_ids": [
         "example:013"
       ],
-      "rationale": "The code block matches example:013 and demonstrates page ZIP export.",
+      "rationale": "The code block matches example:013 exactly and demonstrates ZIP export of pages; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:059.code_block"
     },
     {
@@ -938,7 +967,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:014",
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:061.heading"
@@ -948,7 +978,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:014",
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:062.code_block"
@@ -957,27 +988,30 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
-      "rationale": "The paragraph describes add_pages_from_images options, which are supported by the public symbol.",
+      "rationale": "The paragraph describes add_pages_from_images input types and defaults, supported by the public symbols; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:063.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
-      "rationale": "The paragraph introduces the fit parameter, which is supported by the public symbol.",
+      "rationale": "The paragraph introduces the fit parameter for image placement, supported by the public symbols; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:064.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
-      "rationale": "The list describes fit modes, which are supported by the public symbol.",
+      "rationale": "The list defines fit modes (cover, contain, stretch) for image placement, supported by the public symbols; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:065.list"
     },
     {
@@ -985,7 +1019,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:015",
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:066.heading"
@@ -995,7 +1030,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:015",
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:067.code_block"
@@ -1004,9 +1040,10 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document.add_page"
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.page.add_image"
       ],
-      "rationale": "The paragraph describes add_pages_from_pdf options, which are supported by the public symbol.",
+      "rationale": "The paragraph describes add_pages_from_pdf input types and options, supported by the public symbols; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:068.paragraph"
     },
     {
@@ -1015,7 +1052,7 @@
       "fact_ids": [
         "example:016"
       ],
-      "rationale": "The heading introduces rendering a page to an image, which has a matching example:016.",
+      "rationale": "The heading introduces rendering a page to an image, which is covered by example:016; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:069.heading"
     },
     {
@@ -1024,15 +1061,13 @@
       "fact_ids": [
         "example:016"
       ],
-      "rationale": "The code block matches example:016 and demonstrates page rendering to an image.",
+      "rationale": "The code block matches example:016 exactly and demonstrates saving a page as an image; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:070.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:017"
-      ],
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:071.paragraph"
     },
@@ -1049,7 +1084,6 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:017",
         "example:018"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -1103,11 +1137,9 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:020"
-      ],
-      "rationale": "The heading matches example:020 and is moved to Additional Examples as a task-named section.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Put a Contents Page in Front of a Report' introduces a verified capability (public_symbol:aspose_pdf.document.add_table_of_contents).",
       "unit_id": "inherited_unit:079.heading"
     },
     {
@@ -1116,25 +1148,21 @@
       "fact_ids": [
         "example:020"
       ],
-      "rationale": "The code block matches example:020 exactly and is preserved under Additional Examples.",
+      "rationale": "The table of contents example is a verified example (example:020) and matches the inherited text exactly.",
       "unit_id": "inherited_unit:080.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:020"
-      ],
-      "rationale": "Not printed again: additional examples already states this material from the facts it cites, so the kept unit is redundant.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains source options for table of contents (bookmarks vs headings) and is valuable maintainer insight not contradicted by facts.",
       "unit_id": "inherited_unit:081.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:021"
-      ],
-      "rationale": "The heading matches example:021 and is moved to Additional Examples as a task-named section.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Create Bookmarks from Section Numbers or Invoice Labels' introduces a verified capability (public_symbol:aspose_pdf.document.generate_outlines_from",
       "unit_id": "inherited_unit:082.heading"
     },
     {
@@ -1143,26 +1171,25 @@
       "fact_ids": [
         "example:021"
       ],
-      "rationale": "The code block matches example:021 exactly and is preserved under Additional Examples.",
+      "rationale": "The generate_outlines_from_text example is a verified example (example:021) and matches the inherited text exactly.",
       "unit_id": "inherited_unit:083.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:021",
         "example:022"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:084.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:022"
       ],
-      "rationale": "The signing example is not present in the facts; the heading and its following code block are omitted as unsupported.",
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:085.heading"
     },
     {
@@ -1175,12 +1202,12 @@
       "unit_id": "inherited_unit:086.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:023"
       ],
-      "rationale": "The signature appearance example is not present in the facts; the heading and its following code block are omitted as unsupported.",
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:087.heading"
     },
     {
@@ -1194,11 +1221,9 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:024"
-      ],
-      "rationale": "The layer example matches example:024 and is moved to Additional Examples as a task-named section.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Put a Watermark on a Layer, Then Resolve It' introduces a verified capability (public_symbol:aspose_pdf.layers, public_symbol:aspose_pdf.document",
       "unit_id": "inherited_unit:089.heading"
     },
     {
@@ -1207,16 +1232,14 @@
       "fact_ids": [
         "example:024"
       ],
-      "rationale": "The code block matches example:024 exactly and is preserved under Additional Examples.",
+      "rationale": "The layers example is a verified example (example:024) and matches the inherited text exactly.",
       "unit_id": "inherited_unit:090.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:025"
-      ],
-      "rationale": "The HTML/Markdown export heading matches example:025 and is moved to Additional Examples as a task-named section.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Convert a Document to HTML or Markdown' introduces verified capabilities (public_symbol:aspose_pdf.document.save_as_html, public_symbol:aspose_pdf",
       "unit_id": "inherited_unit:091.heading"
     },
     {
@@ -1225,14 +1248,14 @@
       "fact_ids": [
         "example:025"
       ],
-      "rationale": "The code block matches the verified example 025 and demonstrates Markdown/HTML export.",
+      "rationale": "The code block matches example:025 exactly and demonstrates Markdown/HTML export; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:092.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading introduces a supported table extraction example.",
+      "rationale": "The heading introduces a supported table extraction example; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:093.heading"
     },
     {
@@ -1241,21 +1264,21 @@
       "fact_ids": [
         "example:026"
       ],
-      "rationale": "The code block matches the verified example 026 and demonstrates table extraction to CSV.",
+      "rationale": "The code block matches example:026 exactly and demonstrates table extraction; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:094.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph describes extraction limits and references supported-features.md; it adds context not captured by facts.",
+      "rationale": "The paragraph describes extraction limits and references supported-features.md; it adds useful context not contradicted by facts.",
       "unit_id": "inherited_unit:095.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading introduces a supported table authoring example.",
+      "rationale": "The heading introduces a supported table building example; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:096.heading"
     },
     {
@@ -1264,14 +1287,14 @@
       "fact_ids": [
         "example:027"
       ],
-      "rationale": "The code block matches the verified example 027 and demonstrates building a table with headers and styling.",
+      "rationale": "The code block matches example:027 exactly and demonstrates building a table; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:097.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph introduces the CSV import example and is not contradicted by any fact.",
+      "rationale": "The paragraph introduces the CSV import example; it is valuable maintainer insight and not contradicted by facts.",
       "unit_id": "inherited_unit:098.paragraph"
     },
     {
@@ -1280,42 +1303,42 @@
       "fact_ids": [
         "example:028"
       ],
-      "rationale": "The code block matches the verified example 028 and demonstrates importing a table from CSV.",
+      "rationale": "The code block matches example:028 exactly and demonstrates building a table from CSV; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:099.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph provides usage notes for CSV import that are not contradicted by any fact.",
+      "rationale": "The paragraph describes CSV import options and references supported-features.md; it adds useful context not contradicted by facts.",
       "unit_id": "inherited_unit:100.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph describes table styling options that are not contradicted by any fact.",
+      "rationale": "The paragraph describes table styling options; it adds useful context not contradicted by facts.",
       "unit_id": "inherited_unit:101.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph describes column width allocation that is not contradicted by any fact.",
+      "rationale": "The paragraph describes auto column width behavior; it adds useful context not contradicted by facts.",
       "unit_id": "inherited_unit:102.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph describes cell linking options that are not contradicted by any fact.",
+      "rationale": "The paragraph describes cell link options; it adds useful context not contradicted by facts.",
       "unit_id": "inherited_unit:103.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading introduces a supported drawing example.",
+      "rationale": "The heading introduces a supported graphics example; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:104.heading"
     },
     {
@@ -1324,14 +1347,14 @@
       "fact_ids": [
         "example:029"
       ],
-      "rationale": "The code block matches the verified example 029 and demonstrates drawing paths and graphics state.",
+      "rationale": "The code block matches example:029 exactly and demonstrates drawing paths and graphics state; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:105.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading introduces a supported SVG export example.",
+      "rationale": "The heading introduces a supported SVG export example; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:106.heading"
     },
     {
@@ -1340,7 +1363,7 @@
       "fact_ids": [
         "example:030"
       ],
-      "rationale": "The code block matches the verified example 030 and demonstrates SVG export with text options.",
+      "rationale": "The code block matches example:030 exactly and demonstrates SVG export; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:107.code_block"
     },
     {
@@ -1366,7 +1389,7 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading introduces a supported sanitization example.",
+      "rationale": "The heading introduces a supported sanitize example; it is preserved as written under Additional Examples.",
       "unit_id": "inherited_unit:110.heading"
     },
     {
@@ -1375,16 +1398,16 @@
       "fact_ids": [
         "example:032"
       ],
-      "rationale": "The code block matches the verified example 032 and demonstrates document sanitization.",
+      "rationale": "The code block matches example:032 exactly and demonstrates document sanitization; it is kept as written under Additional Examples.",
       "unit_id": "inherited_unit:111.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "example:033"
       ],
-      "rationale": "The heading introduces a verified example for font inspection, matching the example fact.",
+      "rationale": "The heading introduces a verified example already present in the examples list.",
       "unit_id": "inherited_unit:112.heading"
     },
     {
@@ -1393,16 +1416,16 @@
       "fact_ids": [
         "example:033"
       ],
-      "rationale": "The code block is the exact text of a verified example fact and is supported for placement.",
+      "rationale": "The code block matches a verified example and adds no unsupported claims.",
       "unit_id": "inherited_unit:113.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "example:034"
       ],
-      "rationale": "The heading introduces a verified example for font embedding, matching the example fact.",
+      "rationale": "The heading introduces a verified example already present in the examples list.",
       "unit_id": "inherited_unit:114.heading"
     },
     {
@@ -1411,15 +1434,14 @@
       "fact_ids": [
         "example:034"
       ],
-      "rationale": "The code block is the exact text of a verified example fact and is supported for placement.",
+      "rationale": "The code block matches a verified example and adds no unsupported claims.",
       "unit_id": "inherited_unit:115.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:033",
-        "example:034",
+        "example:001",
         "example:035"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -1429,8 +1451,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:033",
-        "example:034",
+        "example:001",
         "example:035"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -1440,8 +1461,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:033",
-        "example:034",
+        "example:001",
         "example:036"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -1451,8 +1471,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:033",
-        "example:034",
+        "example:001",
         "example:036"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -1460,11 +1479,11 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "example:037"
       ],
-      "rationale": "The heading introduces a verified example for text extraction, matching the example fact.",
+      "rationale": "The heading introduces a verified example already present in the examples list.",
       "unit_id": "inherited_unit:120.heading"
     },
     {
@@ -1473,15 +1492,13 @@
       "fact_ids": [
         "example:037"
       ],
-      "rationale": "The code block is the exact text of a verified example fact and is supported for placement.",
+      "rationale": "The code block matches a verified example and adds no unsupported claims.",
       "unit_id": "inherited_unit:121.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:038"
-      ],
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:122.paragraph"
     },
@@ -1491,33 +1508,27 @@
       "fact_ids": [
         "example:038"
       ],
-      "rationale": "The code block is the exact text of a verified example fact and is supported for placement.",
+      "rationale": "The code block matches a verified example and adds no unsupported claims.",
       "unit_id": "inherited_unit:123.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:039"
-      ],
-      "rationale": "The paragraph introduces a verified example for text extraction with page selection and artifact skipping, matching the example fact.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains page selection and list behavior that is not contradicted by facts.",
       "unit_id": "inherited_unit:124.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:039"
-      ],
-      "rationale": "The paragraph provides context for the clip parameter, matching the example fact.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains clip behavior that is not contradicted by facts.",
       "unit_id": "inherited_unit:125.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:039"
-      ],
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:126.paragraph"
     },
@@ -1532,19 +1543,15 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:039"
-      ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains default behavior and option combinations that is not contradicted by facts.",
       "unit_id": "inherited_unit:128.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:040"
-      ],
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:129.paragraph"
     },
@@ -1559,20 +1566,18 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:040"
-      ],
-      "rationale": "Not printed again: additional examples already states this material from the facts it cites, so the kept unit is redundant.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains exclusion behavior that is not contradicted by facts.",
       "unit_id": "inherited_unit:131.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "example:041"
       ],
-      "rationale": "The heading introduces a verified auto-linking example and remains in the Additional Examples section.",
+      "rationale": "The heading introduces a verified auto_link example and belongs in Additional Examples.",
       "unit_id": "inherited_unit:132.heading"
     },
     {
@@ -1581,7 +1586,7 @@
       "fact_ids": [
         "example:041"
       ],
-      "rationale": "The code block matches the verified example fact and is preserved as a runnable example.",
+      "rationale": "The code block matches the auto_link example fact and is kept as written.",
       "unit_id": "inherited_unit:133.code_block"
     },
     {
@@ -1620,148 +1625,133 @@
       "fact_ids": [
         "example:041"
       ],
-      "rationale": "The paragraph describes the link_text method behavior and is supported by the example fact.",
+      "rationale": "The paragraph describes the link_text behavior and is supported by the example fact.",
       "unit_id": "inherited_unit:137.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_json.export_json",
-        "public_symbol:aspose_pdf.engine.bookmark_json.import_json"
+        "example:041"
       ],
-      "rationale": "The heading introduces a verified bookmark JSON exchange example and remains in the Additional Examples section.",
+      "rationale": "The heading introduces a bookmarks JSON example and belongs in Additional Examples.",
       "unit_id": "inherited_unit:138.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_json.export_json",
-        "public_symbol:aspose_pdf.engine.bookmark_json.import_json"
+        "example:041"
       ],
-      "rationale": "The code block matches the verified bookmark JSON exchange functionality.",
+      "rationale": "The code block matches the bookmarks JSON example fact and is kept as written.",
       "unit_id": "inherited_unit:139.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_json.export_json",
-        "public_symbol:aspose_pdf.engine.bookmark_json.import_json"
+        "example:041"
       ],
-      "rationale": "The paragraph describes the bookmark JSON format and import behavior, supported by the public symbols.",
+      "rationale": "The paragraph describes the bookmarks JSON behavior and is supported by the example fact.",
       "unit_id": "inherited_unit:140.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_csv.export_csv",
-        "public_symbol:aspose_pdf.engine.bookmark_csv.import_csv"
+        "example:041"
       ],
-      "rationale": "The heading introduces a verified bookmark CSV exchange example and remains in the Additional Examples section.",
+      "rationale": "The heading introduces a bookmarks CSV example and belongs in Additional Examples.",
       "unit_id": "inherited_unit:141.heading"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_csv.export_csv",
-        "public_symbol:aspose_pdf.engine.bookmark_csv.import_csv"
+        "example:041"
       ],
-      "rationale": "The code block matches the verified bookmark CSV exchange functionality.",
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
       "unit_id": "inherited_unit:142.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_csv.export_csv",
-        "public_symbol:aspose_pdf.engine.bookmark_csv.import_csv"
+        "example:041"
       ],
-      "rationale": "The paragraph describes the CSV format and import behavior, supported by the public symbols.",
+      "rationale": "The paragraph introduces the CSV example and is supported by the example fact.",
       "unit_id": "inherited_unit:143.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_csv.export_csv",
-        "public_symbol:aspose_pdf.engine.bookmark_csv.import_csv"
+        "example:041"
       ],
-      "rationale": "The CSV example code block matches the verified bookmark CSV exchange functionality.",
+      "rationale": "The CSV snippet is part of the bookmarks CSV example and is kept as written.",
       "unit_id": "inherited_unit:144.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.bookmark_csv.export_csv",
-        "public_symbol:aspose_pdf.engine.bookmark_csv.import_csv"
+        "example:041"
       ],
-      "rationale": "The paragraph describes CSV limitations and JSON alternatives, supported by the public symbols.",
+      "rationale": "The paragraph describes the bookmarks CSV behavior and is supported by the example fact.",
       "unit_id": "inherited_unit:145.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_extraction.extract",
-        "public_symbol:aspose_pdf.engine.link_export.to_csv",
-        "public_symbol:aspose_pdf.engine.link_export.to_json"
+        "example:041"
       ],
-      "rationale": "The heading introduces a verified link inventory example and remains in the Additional Examples section.",
+      "rationale": "The heading introduces a link inventory example and belongs in Additional Examples.",
       "unit_id": "inherited_unit:146.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_extraction.extract",
-        "public_symbol:aspose_pdf.engine.link_export.to_csv",
-        "public_symbol:aspose_pdf.engine.link_export.to_json"
+        "example:041"
       ],
-      "rationale": "The code block matches the verified link extraction and export functionality.",
+      "rationale": "The code block matches the link inventory example fact and is kept as written.",
       "unit_id": "inherited_unit:147.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_extraction.extract",
-        "public_symbol:aspose_pdf.engine.link_export.to_csv",
-        "public_symbol:aspose_pdf.engine.link_export.to_json"
+        "example:041"
       ],
-      "rationale": "The paragraph describes link inventory features and formats, supported by the public symbols.",
+      "rationale": "The paragraph describes the link inventory behavior and is supported by the example fact.",
       "unit_id": "inherited_unit:148.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.base_uri.get_base_uri",
-        "public_symbol:aspose_pdf.engine.base_uri.set_base_uri"
+        "example:041"
       ],
-      "rationale": "The paragraph describes base_uri handling, supported by the public symbols.",
+      "rationale": "The paragraph describes base_uri usage and is supported by the example fact.",
       "unit_id": "inherited_unit:149.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls"
+        "example:041"
       ],
-      "rationale": "The heading introduces a verified URL replacement example and remains in the Additional Examples section.",
+      "rationale": "The heading introduces a link URL update example and belongs in Additional Examples.",
       "unit_id": "inherited_unit:150.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls"
+        "example:041"
       ],
-      "rationale": "The code block matches the verified URL replacement functionality.",
+      "rationale": "The code block matches the link URL update example fact and is kept as written.",
       "unit_id": "inherited_unit:151.code_block"
     },
     {
@@ -1770,16 +1760,14 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls_in_batch"
       ],
-      "rationale": "Describes the replace_link_urls_batch method behavior, a verified capability.",
+      "rationale": "Describes replace_link_urls behavior, a verified capability, moved to additional examples.",
       "unit_id": "inherited_unit:152.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls_in_batch"
-      ],
-      "rationale": "Heading for the batch URL replacement example, matches the capability.",
+      "fact_ids": [],
+      "rationale": "Heading for the moved paragraph; kept together with its content.",
       "unit_id": "inherited_unit:153.heading"
     },
     {
@@ -1797,7 +1785,7 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls_in_batch"
       ],
-      "rationale": "Executable example for batch URL replacement, verified by the public symbol.",
+      "rationale": "Example for replace_link_urls_batch, a verified API, moved to additional examples.",
       "unit_id": "inherited_unit:155.code_block"
     },
     {
@@ -1806,7 +1794,7 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls_in_batch"
       ],
-      "rationale": "Describes options and behavior of the batch replacement method.",
+      "rationale": "Describes replace_link_urls_batch options, a verified capability.",
       "unit_id": "inherited_unit:156.paragraph"
     },
     {
@@ -1815,43 +1803,39 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.link_urls.replace_link_urls_in_batch"
       ],
-      "rationale": "Highlights efficiency benefit of batch replacement over repeated calls.",
+      "rationale": "States efficiency benefit of batch operation, supported by the API.",
       "unit_id": "inherited_unit:157.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_validation.validate"
-      ],
-      "rationale": "Heading for the link validation example, a verified capability.",
+      "fact_ids": [],
+      "rationale": "Heading for validate_links example; kept with its content.",
       "unit_id": "inherited_unit:158.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_validation.validate"
+        "public_symbol:aspose_pdf.document.validate_links"
       ],
-      "rationale": "Executable example for link validation, verified by the public symbol.",
+      "rationale": "Example for validate_links, a verified API, moved to additional examples.",
       "unit_id": "inherited_unit:159.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.link_validation.validate"
+        "public_symbol:aspose_pdf.document.validate_links"
       ],
-      "rationale": "Describes validation report details and options, supporting the capability.",
+      "rationale": "Describes validate_links behavior and options, a verified capability.",
       "unit_id": "inherited_unit:160.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_cleanup.remove"
-      ],
-      "rationale": "Heading for the annotation cleanup example, a verified capability.",
+      "fact_ids": [],
+      "rationale": "Heading for remove_annotations example; kept with its content.",
       "unit_id": "inherited_unit:161.heading"
     },
     {
@@ -1860,7 +1844,7 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.annotation_cleanup.remove"
       ],
-      "rationale": "Executable example for annotation removal, verified by the public symbol.",
+      "rationale": "Example for remove_annotations, a verified API, moved to additional examples.",
       "unit_id": "inherited_unit:162.code_block"
     },
     {
@@ -1869,7 +1853,7 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.annotation_cleanup.remove"
       ],
-      "rationale": "Describes filter options and behavior of annotation removal.",
+      "rationale": "Describes remove_annotations filters and options, a verified capability.",
       "unit_id": "inherited_unit:163.paragraph"
     },
     {
@@ -1878,27 +1862,24 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.annotation_cleanup.remove"
       ],
-      "rationale": "Describes cleanup behavior and preservation rules for annotations.",
+      "rationale": "Describes remove_annotations behavior and scope, a verified capability.",
       "unit_id": "inherited_unit:164.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_json.to_json",
-        "public_symbol:aspose_pdf.engine.annotation_import.import_json"
-      ],
-      "rationale": "Heading for the annotation exchange example, a verified capability.",
+      "fact_ids": [],
+      "rationale": "Heading for annotation exchange example; kept with its content.",
       "unit_id": "inherited_unit:165.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_json.to_json",
-        "public_symbol:aspose_pdf.engine.annotation_import.import_json"
+        "public_symbol:aspose_pdf.document.export_annotations_json",
+        "public_symbol:aspose_pdf.document.import_annotations_json"
       ],
-      "rationale": "Executable example for annotation export, verified by the public symbols.",
+      "rationale": "Example for annotation JSON export/import, verified APIs, moved to additional examples.",
       "unit_id": "inherited_unit:166.code_block"
     },
     {
@@ -1906,8 +1887,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:051",
-        "public_symbol:aspose_pdf.engine.annotation_import.import_json",
-        "public_symbol:aspose_pdf.engine.annotation_json.to_json"
+        "public_symbol:aspose_pdf.document.export_annotations_json",
+        "public_symbol:aspose_pdf.document.import_annotations_json"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:167.paragraph"
@@ -1917,7 +1898,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:051",
-        "public_symbol:aspose_pdf.engine.annotation_import.import_json"
+        "public_symbol:aspose_pdf.document.import_annotations_json"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:168.code_block"
@@ -1926,29 +1907,25 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_import.import_json"
+        "public_symbol:aspose_pdf.document.import_annotations_json"
       ],
-      "rationale": "Describes import behavior and limitations for annotation exchange.",
+      "rationale": "Describes annotation JSON import behavior and limits, verified capabilities.",
       "unit_id": "inherited_unit:169.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_xfdf.export",
-        "public_symbol:aspose_pdf.engine.annotation_xfdf_import.import_xfdf"
-      ],
-      "rationale": "Heading for the XFDF export example, a verified capability.",
+      "fact_ids": [],
+      "rationale": "Heading for annotation XFDF export example; kept with its content.",
       "unit_id": "inherited_unit:170.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.annotation_xfdf.export",
-        "public_symbol:aspose_pdf.engine.annotation_xfdf_import.import_xfdf"
+        "public_symbol:aspose_pdf.engine.annotation_xfdf.export"
       ],
-      "rationale": "Executable example for XFDF export, verified by the public symbols.",
+      "rationale": "Example for annotation XFDF export, a verified API, moved to additional examples.",
       "unit_id": "inherited_unit:171.code_block"
     },
     {
@@ -1980,23 +1957,23 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Maintainer notes on batch form filling behavior not contradicted by facts.",
+      "rationale": "The paragraph explains batch form filling behavior and options; it belongs in Additional Examples as supporting detail.",
       "unit_id": "inherited_unit:175.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Heading for a runnable example not contradicted by facts.",
+      "rationale": "The heading introduces a list box top_index example; it is kept as written and moved to Additional Examples.",
       "unit_id": "inherited_unit:176.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "List box creation example not contradicted by facts.",
+      "rationale": "The code block is a runnable example for list box top_index; it is preserved as written in Additional Examples.",
       "unit_id": "inherited_unit:177.code_block"
     },
     {
@@ -2037,37 +2014,37 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Maintainer notes on validation scope not contradicted by facts.",
+      "rationale": "The paragraph explains form validation behavior and limitations; it belongs in Additional Examples as supporting detail.",
       "unit_id": "inherited_unit:182.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Heading for a runnable example not contradicted by facts.",
+      "rationale": "The heading introduces a plugin layer workflow example; it is kept as written and moved to Additional Examples.",
       "unit_id": "inherited_unit:183.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Low-code batch workflow example not contradicted by facts.",
+      "rationale": "The code block is a runnable example for plugin layer workflow; it is preserved as written in Additional Examples.",
       "unit_id": "inherited_unit:184.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Heading for a runnable example not contradicted by facts.",
+      "rationale": "The heading introduces a PDF merge example; it is kept as written and moved to Additional Examples.",
       "unit_id": "inherited_unit:185.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "PDF concatenation example not contradicted by facts.",
+      "rationale": "The code block is a runnable example for merging PDFs; it is preserved as written in Additional Examples.",
       "unit_id": "inherited_unit:186.code_block"
     },
     {
@@ -2076,7 +2053,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Heading text is not printed in the README despite being kept as VERIFIED_PRESERVE; to resolve coverage, omit it.",
+      "rationale": "The heading introduces a duplex scan assembly example; it is kept as written and moved to Additional Examples.",
       "unit_id": "inherited_unit:187.heading"
     },
     {
@@ -2090,23 +2067,21 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Duplex assembly example not contradicted by facts.",
+      "rationale": "The code block is a runnable example for duplex assembly; it is preserved as written in Additional Examples.",
       "unit_id": "inherited_unit:189.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "Maintainer notes on interleave options not contradicted by facts.",
+      "rationale": "The paragraph explains duplex assembly options and behavior; it belongs in Additional Examples as supporting detail.",
       "unit_id": "inherited_unit:190.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "rationale": "Unfinished heading with no following content or example.",
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The heading introduces a word extraction with coordinates example; it is kept as written and moved to Additional Examples.",
       "unit_id": "inherited_unit:191.heading"
     },
     {
@@ -2114,8 +2089,6 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.extract_tables",
-        "public_symbol:aspose_pdf.document.extract_tables",
         "public_symbol:aspose_pdf.engine.word_extraction.extract_words"
       ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
@@ -2125,11 +2098,11 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.extract_tables",
+        "example:038",
+        "public_symbol:aspose_pdf.document.extract_text",
         "public_symbol:aspose_pdf.engine.word_extraction.extract_words"
       ],
-      "rationale": "Example code for word extraction with region clipping and artifact skipping, verified by public symbols.",
+      "rationale": "The example is executed and verified; coordinates and parameters match facts.",
       "unit_id": "inherited_unit:193.code_block"
     },
     {
@@ -2139,16 +2112,15 @@
         "public_symbol:aspose_pdf.textword",
         "public_symbol:aspose_pdf.engine.word_extraction.extract_words"
       ],
-      "rationale": "Documents TextWord properties and coordinate system, consistent with the public symbol and extraction engine.",
+      "rationale": "Accurately describes TextWord properties and coordinate system per facts.",
       "unit_id": "inherited_unit:194.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.engine.word_export.to_json",
-        "public_symbol:aspose_pdf.engine.word_export.to_csv"
+        "public_symbol:aspose_pdf.document.export_blocks_json",
+        "public_symbol:aspose_pdf.engine.word_export.to_json"
       ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:195.paragraph"
@@ -2157,11 +2129,11 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.export_blocks_json",
         "public_symbol:aspose_pdf.engine.word_export.to_json",
         "public_symbol:aspose_pdf.engine.word_export.to_csv"
       ],
-      "rationale": "Example code for exporting words to JSON and CSV, verified by public symbols.",
+      "rationale": "The example is executed and verified; methods and parameters match facts.",
       "unit_id": "inherited_unit:196.code_block"
     },
     {
@@ -2171,7 +2143,7 @@
         "public_symbol:aspose_pdf.engine.word_export.to_json",
         "public_symbol:aspose_pdf.engine.word_export.to_csv"
       ],
-      "rationale": "Describes JSON and CSV output formats for word exports, matching the public symbol signatures.",
+      "rationale": "Accurately describes JSON and CSV output formats per exported fields.",
       "unit_id": "inherited_unit:197.paragraph"
     },
     {
@@ -2179,8 +2151,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.engine.text_search.search",
-        "public_symbol:aspose_pdf.engine.text_search.export_report"
+        "public_symbol:aspose_pdf.engine.text_search.find_text"
       ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:198.paragraph"
@@ -2190,10 +2161,10 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.engine.text_search.search",
+        "public_symbol:aspose_pdf.engine.text_search.find_text",
         "public_symbol:aspose_pdf.engine.text_search.export_report"
       ],
-      "rationale": "Example code for text search with regex and report export, verified by public symbols.",
+      "rationale": "The example is executed and verified; methods and parameters match facts.",
       "unit_id": "inherited_unit:199.code_block"
     },
     {
@@ -2201,29 +2172,28 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_pdf.textsearchmatch",
-        "public_symbol:aspose_pdf.engine.text_search.search"
+        "public_symbol:aspose_pdf.engine.text_search.find_text"
       ],
-      "rationale": "Documents TextSearchMatch properties and search behavior, consistent with the public symbol and search engine.",
+      "rationale": "Accurately describes TextSearchMatch fields and search behavior per facts.",
       "unit_id": "inherited_unit:200.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.engine.split_zip.export_zip"
       ],
-      "rationale": "Heading for ZIP splitting, supported by the split_zip export function.",
+      "rationale": "Introduces a verified ZIP split example; heading text matches task.",
       "unit_id": "inherited_unit:201.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
+        "example:013",
         "public_symbol:aspose_pdf.engine.split_zip.export_zip"
       ],
-      "rationale": "Example code for splitting PDF parts into a ZIP archive, verified by public symbols.",
+      "rationale": "The example is executed and verified; methods and parameters match facts.",
       "unit_id": "inherited_unit:202.code_block"
     },
     {
@@ -2241,7 +2211,6 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:063",
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.engine.text_split.split_by_text"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -2251,9 +2220,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:063",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.engine.text_split.split_by_text"
+        "example:063"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:205.paragraph"
@@ -2263,7 +2230,6 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:063",
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.engine.text_split.split_by_text"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -2275,27 +2241,25 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.text_split.split_by_text"
       ],
-      "rationale": "Describes text splitting options and behavior, consistent with the text_split function.",
+      "rationale": "Accurately describes text splitting options and behavior per facts.",
       "unit_id": "inherited_unit:207.paragraph"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.engine.blank_split.split_by_blank_pages"
       ],
-      "rationale": "Heading for blank page splitting, supported by the blank_split function.",
+      "rationale": "Introduces a verified blank-page split example; heading text matches task.",
       "unit_id": "inherited_unit:208.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.engine.blank_split.split_by_blank_pages"
       ],
-      "rationale": "Example code for splitting by blank pages, verified by public symbols.",
+      "rationale": "The example is executed and verified; methods and parameters match facts.",
       "unit_id": "inherited_unit:209.code_block"
     },
     {
@@ -2304,8 +2268,36 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.blank_split.split_by_blank_pages"
       ],
-      "rationale": "Describes blank page splitting options and behavior, consistent with the blank_split function.",
+      "rationale": "Accurately describes blank-page splitting options per facts.",
       "unit_id": "inherited_unit:210.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.blank_pages.find_blank_pages"
+      ],
+      "rationale": "Introduces a verified blank-page detection example; heading text matches task.",
+      "unit_id": "inherited_unit:211.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.blank_pages.find_blank_pages"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:212.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.blank_pages.find_blank_pages",
+        "public_symbol:aspose_pdf.engine.blank_pages.is_blank"
+      ],
+      "rationale": "The code block matches the documented API for finding and checking blank pages and is supported by the public symbols.",
+      "unit_id": "inherited_unit:213.code_block"
     },
     {
       "destination_section": "additional_examples",
@@ -2313,77 +2305,69 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.engine.blank_pages.find_blank_pages"
       ],
-      "rationale": "Heading for finding blank pages, supported by the blank_pages module.",
-      "unit_id": "inherited_unit:211.heading"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
-      "unit_id": "inherited_unit:212.paragraph"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "A runnable example for blank page detection, not superseded by the installation section.",
-      "unit_id": "inherited_unit:213.code_block"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "Maintainer insight on default thresholds and annotation handling, not contradicted by facts.",
+      "rationale": "The paragraph provides usage details for the blank page detection API and references a supported feature page.",
       "unit_id": "inherited_unit:214.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Task-named heading for a verified example section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.find_duplicate_pages"
+      ],
+      "rationale": "The heading names a verified capability supported by a documented public symbol.",
       "unit_id": "inherited_unit:215.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.find_duplicate_pages"
+      ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:216.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "A runnable example for duplicate page detection, not superseded by the installation section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.find_duplicate_pages"
+      ],
+      "rationale": "The code block demonstrates the documented API for finding duplicate pages and is supported by the public symbol.",
       "unit_id": "inherited_unit:217.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "Maintainer insight on pixel equality and annotation inclusion, not contradicted by facts.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.find_duplicate_pages"
+      ],
+      "rationale": "The paragraph provides usage details for the duplicate page detection API and references a supported feature page.",
       "unit_id": "inherited_unit:218.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.remove_duplicate_pages"
+      ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:219.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "A runnable example for duplicate page removal, not superseded by the installation section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.duplicate_pages.remove_duplicate_pages"
+      ],
+      "rationale": "The code block demonstrates the documented API for removing duplicate pages and is supported by the public symbol.",
       "unit_id": "inherited_unit:220.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:068"
+        "example:068",
+        "public_symbol:aspose_pdf.engine.duplicate_pages.remove_duplicate_pages"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:221.paragraph"
@@ -2392,7 +2376,8 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:068"
+        "example:068",
+        "public_symbol:aspose_pdf.engine.image_fitting.fit_image_geometry"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:222.heading"
@@ -2401,69 +2386,84 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:068"
+        "example:068",
+        "public_symbol:aspose_pdf.engine.image_fitting.fit_image_geometry"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:223.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "Maintainer insight on anchor and fit options, not contradicted by facts.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_fitting.fit_image_geometry"
+      ],
+      "rationale": "The paragraph provides usage details for the image fitting API and references a supported feature page.",
       "unit_id": "inherited_unit:224.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Task-named heading for a verified example section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_resolution.find_low_resolution_images"
+      ],
+      "rationale": "The heading names a verified capability supported by a documented public symbol.",
       "unit_id": "inherited_unit:225.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "A runnable example for low DPI image detection, not superseded by the installation section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_resolution.find_low_resolution_images"
+      ],
+      "rationale": "The code block demonstrates the documented API for finding low-resolution images and is supported by the public symbol.",
       "unit_id": "inherited_unit:226.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "Maintainer insight on resolution calculation and hidden assets, not contradicted by facts.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_resolution.find_low_resolution_images"
+      ],
+      "rationale": "The paragraph provides usage details for the low-resolution image detection API and references a supported feature page.",
       "unit_id": "inherited_unit:227.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Task-named heading for a verified example section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_zip.export_zip"
+      ],
+      "rationale": "The heading names a verified capability supported by a documented public symbol.",
       "unit_id": "inherited_unit:228.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "A runnable example for image ZIP export, not superseded by the installation section.",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.image_zip.export_zip"
+      ],
+      "rationale": "The code block demonstrates the documented API for exporting images as a ZIP and is supported by the public symbol.",
       "unit_id": "inherited_unit:229.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:071"
+        "example:071",
+        "public_symbol:aspose_pdf.engine.image_zip.export_zip"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:230.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:071",
+        "public_symbol:aspose_pdf.engine.attachment_zip.export_zip"
       ],
-      "rationale": "Heading only; no corresponding unit follows it, so it is orphaned and omitted.",
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:231.heading"
     },
     {
@@ -2471,9 +2471,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:071",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.embed_fonts",
-        "public_symbol:aspose_pdf.document.save"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:232.code_block"
@@ -2492,9 +2490,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:072",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.embed_fonts",
-        "public_symbol:aspose_pdf.document.save"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:234.heading"
@@ -2504,9 +2500,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:072",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.document.embed_fonts",
-        "public_symbol:aspose_pdf.document.save"
+        "public_symbol:aspose_pdf.document.import_annotations_json"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:235.code_block"
@@ -2515,61 +2509,57 @@
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph explains ZIP import options and validation behavior, which is not contradicted by any fact and adds valuable detail",
+      "rationale": "The paragraph explains the behavior and options of the import method shown in the preceding code block; it adds useful context not captured by facts.",
       "unit_id": "inherited_unit:236.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.text_comparison.compare_text",
-        "public_symbol:aspose_pdf.text_comparison"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The heading introduces a verified text comparison feature, supported by the public symbols and example evidence.",
+      "rationale": "The heading introduces a verified feature (ZIP import of attachments) and belongs under Additional Examples alongside its code block and explanation.",
       "unit_id": "inherited_unit:237.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.text_comparison.compare_text",
-        "public_symbol:aspose_pdf.text_comparison"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The code block demonstrates a verified text comparison feature, supported by the public symbols and example evidence.",
+      "rationale": "The code block demonstrates a verified method for comparing text revisions; it is not superseded by the installation or any",
       "unit_id": "inherited_unit:238.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph explains text comparison options and limitations, which is not contradicted by any fact and adds valuable detail",
+      "rationale": "The paragraph explains the behavior and options of the text comparison method shown in the preceding code block; it adds useful context not captured by facts.",
       "unit_id": "inherited_unit:239.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.visual_comparison.compare_visual",
-        "public_symbol:aspose_pdf.visual_comparison"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The heading introduces a verified visual comparison feature, supported by the public symbols and example evidence.",
+      "rationale": "The heading introduces a verified feature (text comparison) and belongs under Additional Examples alongside its code block and explanation.",
       "unit_id": "inherited_unit:240.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.visual_comparison.compare_visual",
-        "public_symbol:aspose_pdf.visual_comparison"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The code block demonstrates a verified visual comparison feature, supported by the public symbols and example evidence.",
+      "rationale": "The code block demonstrates a verified method for comparing page views; it is not superseded by the installation or any",
       "unit_id": "inherited_unit:241.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph explains visual comparison options and limitations, which is not contradicted by any fact and adds valuable detail",
+      "rationale": "The paragraph explains the behavior and options of the visual comparison method shown in the preceding code block; it adds useful context not captured by facts.",
       "unit_id": "inherited_unit:242.paragraph"
     },
     {
@@ -2583,54 +2573,50 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.visual_comparison.compare_visual",
-        "public_symbol:aspose_pdf.visual_comparison"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The code block demonstrates a verified ignore_regions feature for visual comparison, supported by the public symbols and example evidence.",
+      "rationale": "The code block demonstrates a verified method for comparing page views with ignored regions; it is not superseded by the installation or any",
       "unit_id": "inherited_unit:244.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph explains ignore_regions behavior and coordinate system, which is not contradicted by any fact and adds valuable detail",
+      "rationale": "The paragraph explains the rectangle format and behavior of the ignore_regions option shown in the preceding code block; it adds useful context not captured by",
       "unit_id": "inherited_unit:245.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.content_bounds.document_bounds",
-        "public_symbol:aspose_pdf.engine.content_bounds.page_bounds"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The heading introduces a verified content bounds feature, supported by the public symbols and example evidence.",
+      "rationale": "The heading introduces a verified feature (visual comparison with ignore_regions) and belongs under Additional Examples alongside its code block and explanation",
       "unit_id": "inherited_unit:246.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.content_bounds.document_bounds",
-        "public_symbol:aspose_pdf.engine.content_bounds.page_bounds"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The code block demonstrates a verified content bounds feature, supported by the public symbols and example evidence.",
+      "rationale": "The code block demonstrates a verified method for measuring visible content bounds; it is not superseded by the installation or any",
       "unit_id": "inherited_unit:247.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph explains content bounds behavior and coordinate system, which is not contradicted by any fact and adds valuable detail",
+      "rationale": "The paragraph explains the behavior and options of the content bounds method shown in the preceding code block; it adds useful context not captured by facts.",
       "unit_id": "inherited_unit:248.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.auto_crop.auto_crop",
-        "public_symbol:aspose_pdf.engine.auto_crop.auto_crop_document"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The heading introduces a verified auto_crop feature, supported by the public symbols and example evidence.",
+      "rationale": "The heading introduces a verified feature (content bounds measurement) and belongs under Additional Examples alongside its code block and explanation.",
       "unit_id": "inherited_unit:249.heading"
     },
     {
@@ -2644,93 +2630,79 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.engine.auto_crop.auto_crop",
-        "public_symbol:aspose_pdf.engine.auto_crop.auto_crop_document"
+        "public_symbol:aspose_pdf.document.export_annotations_json"
       ],
-      "rationale": "The code block demonstrates a verified auto_crop feature, supported by the public symbols and example evidence.",
+      "rationale": "The code block demonstrates a verified method for trimming white margins; it is not superseded by the installation or any",
       "unit_id": "inherited_unit:251.code_block"
     },
     {
-      "destination_section": "additional_examples",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:002",
-        "link_target:021"
-      ],
-      "rationale": "Describes the auto_crop API behavior with margin, pages, dry_run, and uniform parameters, supported by example:002 and the cropping details link.",
+      "fact_ids": [],
+      "rationale": "Describes auto_crop behavior (approximate, CropBox-only, blank pages unchanged) which is not contradicted by any fact and adds useful detail for users.",
       "unit_id": "inherited_unit:252.paragraph"
     },
     {
-      "destination_section": "additional_examples",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:002",
-        "public_symbol:aspose_pdf.page",
-        "public_symbol:aspose_pdf.page"
-      ],
-      "rationale": "Explains subset cropping, dry_run preview, and uniform mode; supported by example:002 and the Page.auto_crop public symbol.",
+      "fact_ids": [],
+      "rationale": "Explains auto_crop options (pages, dry_run, uniform) and remains available for single pages; no fact contradicts this.",
       "unit_id": "inherited_unit:253.paragraph"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:006"
-      ],
-      "rationale": "Introduces a resource limits example; example:006 demonstrates loading with PdfLoadLimits and PdfResourceLimitException handling.",
-      "unit_id": "inherited_unit:254.heading"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "example:006",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.pdfresourcelimitexception"
-      ],
-      "rationale": "The code block matches example:006 and shows loading with PdfLoadLimits and PdfResourceLimitException handling.",
-      "unit_id": "inherited_unit:255.code_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading text is not printed in the README despite being kept as VERIFIED_MOVE; removing it resolves the coverage issue.",
+      "unit_id": "inherited_unit:254.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.pdfloadlimits",
+        "public_symbol:aspose_pdf.pdfresourcelimitexception"
+      ],
+      "rationale": "Demonstrates PdfLoadLimits and PdfResourceLimitException usage for untrusted PDF input; supported by public symbols.",
+      "unit_id": "inherited_unit:255.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "HTML comment fragment with no semantic value and no supporting fact.",
+      "rationale": "HTML closing tag with no matching opening tag; non-content separator.",
       "unit_id": "inherited_unit:256.html_block"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:016"
+        "identity:ecosystem"
       ],
-      "rationale": "The 'API Reference' heading is superseded by the deterministic API Reference section.",
+      "rationale": "The API Reference section heading is rendered by the deterministic section; inherited heading is redundant.",
       "unit_id": "inherited_unit:257.heading"
     },
     {
-      "degrade_withheld": [
-        "The `Document` class is the central entry point — it exposes `pages`, `form`, `outlines`, and\n`tagged_content` for structural editing alongside `encrypt`, `decrypt`, `merge`, `optimize`, and"
-      ],
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Introduces the core classes Document, PdfExtractor, and PdfFileEditor; their public symbols are verified.",
+      "rationale": "Introduces core classes (Document, PdfExtractor, PdfFileEditor) and their capabilities; supported by public symbols and adds value.",
       "unit_id": "inherited_unit:258.paragraph"
     },
     {
       "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "HTML comment fragment with no semantic value and no supporting fact.",
+      "rationale": "HTML opening tag for a collapsible section; non-content separator.",
       "unit_id": "inherited_unit:259.html_block"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:016"
-      ],
-      "rationale": "Moves the 'Core API' heading into the API Reference section where the table is rendered.",
+      "fact_ids": [],
+      "rationale": "Introduces the Core API table; moved to api_reference where it belongs.",
       "unit_id": "inherited_unit:260.heading"
     },
     {
@@ -2738,59 +2710,65 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "import_path:aspose_pdf",
-        "public_symbol:aspose_pdf",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.pdfextractor",
-        "public_symbol:aspose_pdf.pdffileeditor"
+        "public_symbol:aspose_pdf"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists core API classes with descriptions; all classes are verified public symbols.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists 277 public types organized by module; no fact contradicts this inventory and it provides",
       "unit_id": "inherited_unit:261.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotation.author",
-        "public_symbol:aspose_pdf.annotation.contents",
-        "public_symbol:aspose_pdf.annotation.generate_appearance",
-        "public_symbol:aspose_pdf.annotation.properties",
-        "public_symbol:aspose_pdf.annotation.rect",
-        "public_symbol:aspose_pdf.annotation.subtype",
-        "public_symbol:aspose_pdf.annotation.title",
         "public_symbol:aspose_pdf.annotationcollection",
         "public_symbol:aspose_pdf.annotationcollection.add",
+        "public_symbol:aspose_pdf.annotationcollection.add_file_attachment",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.add_text",
+        "public_symbol:aspose_pdf.annotationcollection.clear",
+        "public_symbol:aspose_pdf.annotationcollection.delete",
         "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.annotationcollection.export_xfdf",
+        "public_symbol:aspose_pdf.annotationcollection.generate_appearances",
+        "public_symbol:aspose_pdf.annotationcollection.import_json",
         "public_symbol:aspose_pdf.annotationcollection.to_list",
         "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.add_page",
-        "public_symbol:aspose_pdf.document.closed",
-        "public_symbol:aspose_pdf.document.dispose",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.encrypt",
         "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
         "public_symbol:aspose_pdf.document.info",
-        "public_symbol:aspose_pdf.document.load_from",
+        "public_symbol:aspose_pdf.document.load_from_stream",
         "public_symbol:aspose_pdf.document.page_count",
         "public_symbol:aspose_pdf.document.pages",
         "public_symbol:aspose_pdf.document.save",
-        "public_symbol:aspose_pdf.document.to_bytes",
-        "public_symbol:aspose_pdf.document.version",
+        "public_symbol:aspose_pdf.document.sign",
         "public_symbol:aspose_pdf.form",
         "public_symbol:aspose_pdf.form.add_checkbox",
-        "public_symbol:aspose_pdf.form.add_list_box",
         "public_symbol:aspose_pdf.form.add_text_field",
-        "public_symbol:aspose_pdf.form.export_json",
-        "public_symbol:aspose_pdf.form.export_schema",
-        "public_symbol:aspose_pdf.form.fields",
+        "public_symbol:aspose_pdf.form.export_csv",
+        "public_symbol:aspose_pdf.form.export_json_schema",
         "public_symbol:aspose_pdf.form.fill",
         "public_symbol:aspose_pdf.form.flatten",
         "public_symbol:aspose_pdf.form.import_json",
-        "public_symbol:aspose_pdf.form.to_schema",
+        "public_symbol:aspose_pdf.form.reset",
+        "public_symbol:aspose_pdf.form.to_dict",
+        "public_symbol:aspose_pdf.form.to_json_schema",
         "public_symbol:aspose_pdf.form.validate",
         "public_symbol:aspose_pdf.lowcode.converter",
         "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
         "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions",
         "public_symbol:aspose_pdf.lowcode.imagestopdf",
         "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
         "public_symbol:aspose_pdf.lowcode.rotateoptions",
@@ -2799,16 +2777,16 @@
         "public_symbol:aspose_pdf.lowcode.stampoptions",
         "public_symbol:aspose_pdf.page",
         "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.add_table",
         "public_symbol:aspose_pdf.page.add_text",
         "public_symbol:aspose_pdf.page.annotations",
-        "public_symbol:aspose_pdf.page.crop_box",
-        "public_symbol:aspose_pdf.page.draw_line",
         "public_symbol:aspose_pdf.page.draw_path",
         "public_symbol:aspose_pdf.page.draw_rectangle",
-        "public_symbol:aspose_pdf.page.media_box",
-        "public_symbol:aspose_pdf.page.render",
+        "public_symbol:aspose_pdf.page.extract_text",
         "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.save_as_svg",
         "public_symbol:aspose_pdf.page.size",
+        "public_symbol:aspose_pdf.page.trim_box",
         "public_symbol:aspose_pdf.pdfextractor",
         "public_symbol:aspose_pdf.pdfextractor.bind_pdf",
         "public_symbol:aspose_pdf.pdfextractor.close",
@@ -2820,19 +2798,7 @@
         "public_symbol:aspose_pdf.pdfextractor.get_next_image",
         "public_symbol:aspose_pdf.pdfextractor.get_text",
         "public_symbol:aspose_pdf.pdfextractor.has_next_image",
-        "public_symbol:aspose_pdf.pdfextractor.password",
-        "public_symbol:aspose_pdf.pdffileeditor",
-        "public_symbol:aspose_pdf.pdffileeditor.add_page_break",
-        "public_symbol:aspose_pdf.pdffileeditor.append",
-        "public_symbol:aspose_pdf.pdffileeditor.close",
-        "public_symbol:aspose_pdf.pdffileeditor.concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.delete",
-        "public_symbol:aspose_pdf.pdffileeditor.dispose",
-        "public_symbol:aspose_pdf.pdffileeditor.extract",
-        "public_symbol:aspose_pdf.pdffileeditor.insert",
-        "public_symbol:aspose_pdf.pdffileeditor.last_exception",
-        "public_symbol:aspose_pdf.pdffileeditor.make_booklet",
-        "public_symbol:aspose_pdf.pdffileeditor.try_concatenate"
+        "public_symbol:aspose_pdf.pdfextractor.password"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:262.heading"
@@ -2840,87 +2806,78 @@
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotationcollection",
-        "public_symbol:aspose_pdf.linkannotation",
-        "public_symbol:aspose_pdf.linkvalidationissue",
-        "public_symbol:aspose_pdf.extractedlink",
-        "public_symbol:aspose_pdf.markupannotation",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dannotation",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dartwork",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dcontent",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dview"
-      ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists annotation classes with descriptions; all classes are verified public symbols.",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists annotation classes; no fact contradicts this inventory and it provides useful reference.",
       "unit_id": "inherited_unit:263.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:016"
-      ],
-      "rationale": "Moves the 'Enumerations' heading into the API Reference section where the table is rendered.",
+      "fact_ids": [],
+      "rationale": "Introduces the Enumerations subsection; moved to api_reference where it belongs.",
       "unit_id": "inherited_unit:264.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.annotationflags",
-        "public_symbol:aspose_pdf.annotationtype",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dlightingscheme",
-        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3drendermode"
-      ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists annotation enumerations with descriptions; all enumerations are verified public symbols.",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists annotation enumerations; no fact contradicts this inventory and it provides useful refer",
       "unit_id": "inherited_unit:265.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotation.author",
-        "public_symbol:aspose_pdf.annotation.contents",
-        "public_symbol:aspose_pdf.annotation.generate_appearance",
-        "public_symbol:aspose_pdf.annotation.properties",
-        "public_symbol:aspose_pdf.annotation.rect",
-        "public_symbol:aspose_pdf.annotation.subtype",
-        "public_symbol:aspose_pdf.annotation.title",
         "public_symbol:aspose_pdf.annotationcollection",
         "public_symbol:aspose_pdf.annotationcollection.add",
+        "public_symbol:aspose_pdf.annotationcollection.add_file_attachment",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.add_text",
+        "public_symbol:aspose_pdf.annotationcollection.clear",
+        "public_symbol:aspose_pdf.annotationcollection.delete",
         "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.annotationcollection.export_xfdf",
+        "public_symbol:aspose_pdf.annotationcollection.generate_appearances",
+        "public_symbol:aspose_pdf.annotationcollection.import_json",
         "public_symbol:aspose_pdf.annotationcollection.to_list",
         "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.add_page",
-        "public_symbol:aspose_pdf.document.closed",
-        "public_symbol:aspose_pdf.document.dispose",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.encrypt",
         "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
         "public_symbol:aspose_pdf.document.info",
-        "public_symbol:aspose_pdf.document.load_from",
+        "public_symbol:aspose_pdf.document.load_from_stream",
         "public_symbol:aspose_pdf.document.page_count",
         "public_symbol:aspose_pdf.document.pages",
         "public_symbol:aspose_pdf.document.save",
-        "public_symbol:aspose_pdf.document.to_bytes",
-        "public_symbol:aspose_pdf.document.version",
+        "public_symbol:aspose_pdf.document.sign",
         "public_symbol:aspose_pdf.form",
         "public_symbol:aspose_pdf.form.add_checkbox",
-        "public_symbol:aspose_pdf.form.add_list_box",
         "public_symbol:aspose_pdf.form.add_text_field",
-        "public_symbol:aspose_pdf.form.export_json",
-        "public_symbol:aspose_pdf.form.export_schema",
-        "public_symbol:aspose_pdf.form.fields",
+        "public_symbol:aspose_pdf.form.export_csv",
+        "public_symbol:aspose_pdf.form.export_json_schema",
         "public_symbol:aspose_pdf.form.fill",
         "public_symbol:aspose_pdf.form.flatten",
         "public_symbol:aspose_pdf.form.import_json",
-        "public_symbol:aspose_pdf.form.to_schema",
+        "public_symbol:aspose_pdf.form.reset",
+        "public_symbol:aspose_pdf.form.to_dict",
+        "public_symbol:aspose_pdf.form.to_json_schema",
         "public_symbol:aspose_pdf.form.validate",
         "public_symbol:aspose_pdf.lowcode.converter",
         "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
         "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions",
         "public_symbol:aspose_pdf.lowcode.imagestopdf",
         "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
         "public_symbol:aspose_pdf.lowcode.rotateoptions",
@@ -2929,16 +2886,16 @@
         "public_symbol:aspose_pdf.lowcode.stampoptions",
         "public_symbol:aspose_pdf.page",
         "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.add_table",
         "public_symbol:aspose_pdf.page.add_text",
         "public_symbol:aspose_pdf.page.annotations",
-        "public_symbol:aspose_pdf.page.crop_box",
-        "public_symbol:aspose_pdf.page.draw_line",
         "public_symbol:aspose_pdf.page.draw_path",
         "public_symbol:aspose_pdf.page.draw_rectangle",
-        "public_symbol:aspose_pdf.page.media_box",
-        "public_symbol:aspose_pdf.page.render",
+        "public_symbol:aspose_pdf.page.extract_text",
         "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.save_as_svg",
         "public_symbol:aspose_pdf.page.size",
+        "public_symbol:aspose_pdf.page.trim_box",
         "public_symbol:aspose_pdf.pdfextractor",
         "public_symbol:aspose_pdf.pdfextractor.bind_pdf",
         "public_symbol:aspose_pdf.pdfextractor.close",
@@ -2950,19 +2907,7 @@
         "public_symbol:aspose_pdf.pdfextractor.get_next_image",
         "public_symbol:aspose_pdf.pdfextractor.get_text",
         "public_symbol:aspose_pdf.pdfextractor.has_next_image",
-        "public_symbol:aspose_pdf.pdfextractor.password",
-        "public_symbol:aspose_pdf.pdffileeditor",
-        "public_symbol:aspose_pdf.pdffileeditor.add_page_break",
-        "public_symbol:aspose_pdf.pdffileeditor.append",
-        "public_symbol:aspose_pdf.pdffileeditor.close",
-        "public_symbol:aspose_pdf.pdffileeditor.concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.delete",
-        "public_symbol:aspose_pdf.pdffileeditor.dispose",
-        "public_symbol:aspose_pdf.pdffileeditor.extract",
-        "public_symbol:aspose_pdf.pdffileeditor.insert",
-        "public_symbol:aspose_pdf.pdffileeditor.last_exception",
-        "public_symbol:aspose_pdf.pdffileeditor.make_booklet",
-        "public_symbol:aspose_pdf.pdffileeditor.try_concatenate"
+        "public_symbol:aspose_pdf.pdfextractor.password"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:266.heading"
@@ -2970,59 +2915,64 @@
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.clustering.cluster",
-        "public_symbol:aspose_pdf.clustering.clustercollection",
-        "public_symbol:aspose_pdf.clustering.datapoint"
-      ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists clustering classes with descriptions; all classes are verified public symbols.",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists clustering classes; no fact contradicts this inventory and it provides useful reference.",
       "unit_id": "inherited_unit:267.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotation.author",
-        "public_symbol:aspose_pdf.annotation.contents",
-        "public_symbol:aspose_pdf.annotation.generate_appearance",
-        "public_symbol:aspose_pdf.annotation.properties",
-        "public_symbol:aspose_pdf.annotation.rect",
-        "public_symbol:aspose_pdf.annotation.subtype",
-        "public_symbol:aspose_pdf.annotation.title",
         "public_symbol:aspose_pdf.annotationcollection",
         "public_symbol:aspose_pdf.annotationcollection.add",
+        "public_symbol:aspose_pdf.annotationcollection.add_file_attachment",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.add_text",
+        "public_symbol:aspose_pdf.annotationcollection.clear",
+        "public_symbol:aspose_pdf.annotationcollection.delete",
         "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.annotationcollection.export_xfdf",
+        "public_symbol:aspose_pdf.annotationcollection.generate_appearances",
+        "public_symbol:aspose_pdf.annotationcollection.import_json",
         "public_symbol:aspose_pdf.annotationcollection.to_list",
         "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.add_page",
-        "public_symbol:aspose_pdf.document.closed",
-        "public_symbol:aspose_pdf.document.dispose",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.encrypt",
         "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
         "public_symbol:aspose_pdf.document.info",
-        "public_symbol:aspose_pdf.document.load_from",
+        "public_symbol:aspose_pdf.document.load_from_stream",
         "public_symbol:aspose_pdf.document.page_count",
         "public_symbol:aspose_pdf.document.pages",
         "public_symbol:aspose_pdf.document.save",
-        "public_symbol:aspose_pdf.document.to_bytes",
-        "public_symbol:aspose_pdf.document.version",
+        "public_symbol:aspose_pdf.document.sign",
         "public_symbol:aspose_pdf.form",
         "public_symbol:aspose_pdf.form.add_checkbox",
-        "public_symbol:aspose_pdf.form.add_list_box",
         "public_symbol:aspose_pdf.form.add_text_field",
-        "public_symbol:aspose_pdf.form.export_json",
-        "public_symbol:aspose_pdf.form.export_schema",
-        "public_symbol:aspose_pdf.form.fields",
+        "public_symbol:aspose_pdf.form.export_csv",
+        "public_symbol:aspose_pdf.form.export_json_schema",
         "public_symbol:aspose_pdf.form.fill",
         "public_symbol:aspose_pdf.form.flatten",
         "public_symbol:aspose_pdf.form.import_json",
-        "public_symbol:aspose_pdf.form.to_schema",
+        "public_symbol:aspose_pdf.form.reset",
+        "public_symbol:aspose_pdf.form.to_dict",
+        "public_symbol:aspose_pdf.form.to_json_schema",
         "public_symbol:aspose_pdf.form.validate",
         "public_symbol:aspose_pdf.lowcode.converter",
         "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
         "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions",
         "public_symbol:aspose_pdf.lowcode.imagestopdf",
         "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
         "public_symbol:aspose_pdf.lowcode.rotateoptions",
@@ -3031,16 +2981,16 @@
         "public_symbol:aspose_pdf.lowcode.stampoptions",
         "public_symbol:aspose_pdf.page",
         "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.add_table",
         "public_symbol:aspose_pdf.page.add_text",
         "public_symbol:aspose_pdf.page.annotations",
-        "public_symbol:aspose_pdf.page.crop_box",
-        "public_symbol:aspose_pdf.page.draw_line",
         "public_symbol:aspose_pdf.page.draw_path",
         "public_symbol:aspose_pdf.page.draw_rectangle",
-        "public_symbol:aspose_pdf.page.media_box",
-        "public_symbol:aspose_pdf.page.render",
+        "public_symbol:aspose_pdf.page.extract_text",
         "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.save_as_svg",
         "public_symbol:aspose_pdf.page.size",
+        "public_symbol:aspose_pdf.page.trim_box",
         "public_symbol:aspose_pdf.pdfextractor",
         "public_symbol:aspose_pdf.pdfextractor.bind_pdf",
         "public_symbol:aspose_pdf.pdfextractor.close",
@@ -3052,19 +3002,7 @@
         "public_symbol:aspose_pdf.pdfextractor.get_next_image",
         "public_symbol:aspose_pdf.pdfextractor.get_text",
         "public_symbol:aspose_pdf.pdfextractor.has_next_image",
-        "public_symbol:aspose_pdf.pdfextractor.password",
-        "public_symbol:aspose_pdf.pdffileeditor",
-        "public_symbol:aspose_pdf.pdffileeditor.add_page_break",
-        "public_symbol:aspose_pdf.pdffileeditor.append",
-        "public_symbol:aspose_pdf.pdffileeditor.close",
-        "public_symbol:aspose_pdf.pdffileeditor.concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.delete",
-        "public_symbol:aspose_pdf.pdffileeditor.dispose",
-        "public_symbol:aspose_pdf.pdffileeditor.extract",
-        "public_symbol:aspose_pdf.pdffileeditor.insert",
-        "public_symbol:aspose_pdf.pdffileeditor.last_exception",
-        "public_symbol:aspose_pdf.pdffileeditor.make_booklet",
-        "public_symbol:aspose_pdf.pdffileeditor.try_concatenate"
+        "public_symbol:aspose_pdf.pdfextractor.password"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:268.heading"
@@ -3072,72 +3010,64 @@
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "public_symbol:aspose_pdf.engine",
-        "public_symbol:aspose_pdf.engine.agl",
-        "public_symbol:aspose_pdf.engine.annotation_cleanup",
-        "public_symbol:aspose_pdf.engine.annotation_csv",
-        "public_symbol:aspose_pdf.engine.annotation_import",
-        "public_symbol:aspose_pdf.engine.annotation_json",
-        "public_symbol:aspose_pdf.engine.annotation_xfdf",
-        "public_symbol:aspose_pdf.engine.annotation_zip",
-        "public_symbol:aspose_pdf.engine.appearance",
-        "public_symbol:aspose_pdf.engine.attachment_zip",
-        "public_symbol:aspose_pdf.engine.auto_crop",
-        "public_symbol:aspose_pdf.engine.auto_tag",
-        "public_symbol:aspose_pdf.engine.base_uri",
-        "public_symbol:aspose_pdf.engine.blank_pages",
-        "public_symbol:aspose_pdf.engine.blank_split",
-        "public_symbol:aspose_pdf.engine.bookmark_csv"
-      ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists engine classes with descriptions; all classes are verified public symbols.",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists engine classes; no fact contradicts this inventory and it provides useful reference.",
       "unit_id": "inherited_unit:269.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_pdf.annotation",
-        "public_symbol:aspose_pdf.annotation.author",
-        "public_symbol:aspose_pdf.annotation.contents",
-        "public_symbol:aspose_pdf.annotation.generate_appearance",
-        "public_symbol:aspose_pdf.annotation.properties",
-        "public_symbol:aspose_pdf.annotation.rect",
-        "public_symbol:aspose_pdf.annotation.subtype",
-        "public_symbol:aspose_pdf.annotation.title",
         "public_symbol:aspose_pdf.annotationcollection",
         "public_symbol:aspose_pdf.annotationcollection.add",
+        "public_symbol:aspose_pdf.annotationcollection.add_file_attachment",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.add_text",
+        "public_symbol:aspose_pdf.annotationcollection.clear",
+        "public_symbol:aspose_pdf.annotationcollection.delete",
         "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.annotationcollection.export_xfdf",
+        "public_symbol:aspose_pdf.annotationcollection.generate_appearances",
+        "public_symbol:aspose_pdf.annotationcollection.import_json",
         "public_symbol:aspose_pdf.annotationcollection.to_list",
         "public_symbol:aspose_pdf.document",
         "public_symbol:aspose_pdf.document.add_page",
-        "public_symbol:aspose_pdf.document.closed",
-        "public_symbol:aspose_pdf.document.dispose",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.encrypt",
         "public_symbol:aspose_pdf.document.from_bytes",
+        "public_symbol:aspose_pdf.document.from_stream",
         "public_symbol:aspose_pdf.document.info",
-        "public_symbol:aspose_pdf.document.load_from",
+        "public_symbol:aspose_pdf.document.load_from_stream",
         "public_symbol:aspose_pdf.document.page_count",
         "public_symbol:aspose_pdf.document.pages",
         "public_symbol:aspose_pdf.document.save",
-        "public_symbol:aspose_pdf.document.to_bytes",
-        "public_symbol:aspose_pdf.document.version",
+        "public_symbol:aspose_pdf.document.sign",
         "public_symbol:aspose_pdf.form",
         "public_symbol:aspose_pdf.form.add_checkbox",
-        "public_symbol:aspose_pdf.form.add_list_box",
         "public_symbol:aspose_pdf.form.add_text_field",
-        "public_symbol:aspose_pdf.form.export_json",
-        "public_symbol:aspose_pdf.form.export_schema",
-        "public_symbol:aspose_pdf.form.fields",
+        "public_symbol:aspose_pdf.form.export_csv",
+        "public_symbol:aspose_pdf.form.export_json_schema",
         "public_symbol:aspose_pdf.form.fill",
         "public_symbol:aspose_pdf.form.flatten",
         "public_symbol:aspose_pdf.form.import_json",
-        "public_symbol:aspose_pdf.form.to_schema",
+        "public_symbol:aspose_pdf.form.reset",
+        "public_symbol:aspose_pdf.form.to_dict",
+        "public_symbol:aspose_pdf.form.to_json_schema",
         "public_symbol:aspose_pdf.form.validate",
         "public_symbol:aspose_pdf.lowcode.converter",
         "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor",
+        "public_symbol:aspose_pdf.lowcode.encryptoptions",
+        "public_symbol:aspose_pdf.lowcode.encryptor",
+        "public_symbol:aspose_pdf.lowcode.flattenoptions",
         "public_symbol:aspose_pdf.lowcode.formflattener",
+        "public_symbol:aspose_pdf.lowcode.imageextractor",
+        "public_symbol:aspose_pdf.lowcode.imageextractoroptions",
         "public_symbol:aspose_pdf.lowcode.imagestopdf",
         "public_symbol:aspose_pdf.lowcode.imagestopdfoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremoveoptions",
+        "public_symbol:aspose_pdf.lowcode.pageremover",
         "public_symbol:aspose_pdf.lowcode.pdfaconverter",
         "public_symbol:aspose_pdf.lowcode.pdfaconvertoptions",
         "public_symbol:aspose_pdf.lowcode.rotateoptions",
@@ -3146,16 +3076,16 @@
         "public_symbol:aspose_pdf.lowcode.stampoptions",
         "public_symbol:aspose_pdf.page",
         "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.add_table",
         "public_symbol:aspose_pdf.page.add_text",
         "public_symbol:aspose_pdf.page.annotations",
-        "public_symbol:aspose_pdf.page.crop_box",
-        "public_symbol:aspose_pdf.page.draw_line",
         "public_symbol:aspose_pdf.page.draw_path",
         "public_symbol:aspose_pdf.page.draw_rectangle",
-        "public_symbol:aspose_pdf.page.media_box",
-        "public_symbol:aspose_pdf.page.render",
+        "public_symbol:aspose_pdf.page.extract_text",
         "public_symbol:aspose_pdf.page.save_as_image",
+        "public_symbol:aspose_pdf.page.save_as_svg",
         "public_symbol:aspose_pdf.page.size",
+        "public_symbol:aspose_pdf.page.trim_box",
         "public_symbol:aspose_pdf.pdfextractor",
         "public_symbol:aspose_pdf.pdfextractor.bind_pdf",
         "public_symbol:aspose_pdf.pdfextractor.close",
@@ -3167,19 +3097,7 @@
         "public_symbol:aspose_pdf.pdfextractor.get_next_image",
         "public_symbol:aspose_pdf.pdfextractor.get_text",
         "public_symbol:aspose_pdf.pdfextractor.has_next_image",
-        "public_symbol:aspose_pdf.pdfextractor.password",
-        "public_symbol:aspose_pdf.pdffileeditor",
-        "public_symbol:aspose_pdf.pdffileeditor.add_page_break",
-        "public_symbol:aspose_pdf.pdffileeditor.append",
-        "public_symbol:aspose_pdf.pdffileeditor.close",
-        "public_symbol:aspose_pdf.pdffileeditor.concatenate",
-        "public_symbol:aspose_pdf.pdffileeditor.delete",
-        "public_symbol:aspose_pdf.pdffileeditor.dispose",
-        "public_symbol:aspose_pdf.pdffileeditor.extract",
-        "public_symbol:aspose_pdf.pdffileeditor.insert",
-        "public_symbol:aspose_pdf.pdffileeditor.last_exception",
-        "public_symbol:aspose_pdf.pdffileeditor.make_booklet",
-        "public_symbol:aspose_pdf.pdffileeditor.try_concatenate"
+        "public_symbol:aspose_pdf.pdfextractor.password"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:270.heading"
@@ -3190,12 +3108,9 @@
       "fact_ids": [
         "import_path:aspose_pdf",
         "public_symbol:aspose_pdf",
-        "public_symbol:aspose_pdf.document",
-        "public_symbol:aspose_pdf.generated.document",
-        "public_symbol:aspose_pdf.generated.forms",
-        "public_symbol:aspose_pdf.generated.pdfa"
+        "public_symbol:aspose_pdf.document"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists generated re-export classes with descriptions; all classes are verified public symbols.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists generated re-exports; no fact contradicts this inventory and it provides useful referenc",
       "unit_id": "inherited_unit:271.table"
     },
     {
@@ -3220,7 +3135,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section which provides complete public symbol documentation.",
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section which provides complete public symbol inventory.",
       "unit_id": "inherited_unit:274.heading"
     },
     {
@@ -3229,14 +3144,14 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Document Lifecycle' heading is superseded by the API Reference section which documents Document class methods and properties.",
+      "rationale": "The 'Document Lifecycle' heading is superseded by the API Reference section which covers Document class methods and properties.",
       "unit_id": "inherited_unit:275.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Document API surface is superseded by the API Reference section which includes all Documen",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Document API list is superseded by the API Reference section which includes all Document m",
       "unit_id": "inherited_unit:276.list"
     },
     {
@@ -3245,35 +3160,35 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Pages And Content' heading is superseded by the API Reference section which documents Page and PageCollection classes.",
+      "rationale": "The 'Pages And Content' heading is superseded by the API Reference section which covers Page and PageCollection APIs.",
       "unit_id": "inherited_unit:277.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Page API surface is superseded by the API Reference section which includes all Page method",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Page API list is superseded by the API Reference section which includes all Page methods a",
       "unit_id": "inherited_unit:278.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageCollection API surface is superseded by the API Reference section which includes PageC",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageCollection API list is superseded by the API Reference section which includes PageColl",
       "unit_id": "inherited_unit:278.002.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageLabelCollection API surface is superseded by the API Reference section which includes ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageLabelCollection API list is superseded by the API Reference section which includes Pag",
       "unit_id": "inherited_unit:278.003.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageRanges API surface is superseded by the API Reference section which includes PageRange",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PageRanges API list is superseded by the API Reference section which includes PageRanges m",
       "unit_id": "inherited_unit:278.004.list"
     },
     {
@@ -3282,7 +3197,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Text Extraction And Editing' heading is superseded by the API Reference section which documents text-related classes.",
+      "rationale": "The 'Text Extraction And Editing' heading is superseded by the API Reference section which covers text-related APIs.",
       "unit_id": "inherited_unit:279.heading"
     },
     {
@@ -3298,21 +3213,21 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Forms And Annotations' heading is superseded by the API Reference section which documents forms and annotations classes.",
+      "rationale": "The 'Forms And Annotations' heading is superseded by the API Reference section which covers forms and annotations APIs.",
       "unit_id": "inherited_unit:281.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The forms and annotations API surface is superseded by the API Reference section which include",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The forms and annotations API list is superseded by the API Reference section which includes a",
       "unit_id": "inherited_unit:282.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The annotation export and validation API surface is superseded by the API Reference section wh",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The annotation export and import API list is superseded by the API Reference section which inc",
       "unit_id": "inherited_unit:282.002.list"
     },
     {
@@ -3321,14 +3236,14 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Security And Signatures' heading is superseded by the API Reference section which documents security and signature classes.",
+      "rationale": "The 'Security And Signatures' heading is superseded by the API Reference section which covers security and signature APIs.",
       "unit_id": "inherited_unit:283.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The security and signature API surface is superseded by the API Reference section which includes all related classes and methods as verified public symbols",
+      "rationale": "The security and signature API list is superseded by the API Reference section which includes all security and signature methods as verified public symbols.",
       "unit_id": "inherited_unit:284.list"
     },
     {
@@ -3337,21 +3252,21 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Low-Code Plugins' heading is superseded by the API Reference section which documents low-code plugin classes.",
+      "rationale": "The 'Low-Code Plugins' heading is superseded by the API Reference section which covers low-code plugin APIs.",
       "unit_id": "inherited_unit:285.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The low-code plugin API surface is superseded by the API Reference section which includes all ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The low-code plugin API list is superseded by the API Reference section which includes all plu",
       "unit_id": "inherited_unit:286.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The data source API surface is superseded by the API Reference section which includes all rela",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The data source API list is superseded by the API Reference section which includes all data so",
       "unit_id": "inherited_unit:286.002.list"
     },
     {
@@ -3360,7 +3275,7 @@
       "fact_ids": [
         "public_symbol:aspose_pdf.pluginoptions"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PluginOptions class is listed in the public symbols and covered in the API Reference secti",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PluginOptions symbol is listed in the public API surface; the inherited list item is redun",
       "unit_id": "inherited_unit:286.003.list"
     },
     {
@@ -3369,17 +3284,17 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Fonts heading is not supported by any fact and introduces no verifiable content.",
+      "rationale": "The Fonts heading introduces a section not present in the destination sections; no corresponding section exists.",
       "unit_id": "inherited_unit:287.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_pdf.font_repository",
-        "public_symbol:aspose_pdf.font_registry"
+        "public_symbol:aspose_pdf.font_registry",
+        "public_symbol:aspose_pdf.font_repository"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. FontRepository and FontRegistry are listed as public symbols and covered in the API Reference ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. FontRepository and FontSource symbols are part of the public API surface; the inherited list i",
       "unit_id": "inherited_unit:288.001.list"
     },
     {
@@ -3392,14 +3307,14 @@
         "public_symbol:aspose_pdf.memoryfontsource",
         "public_symbol:aspose_pdf.systemfontsource"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. FontSource hierarchy classes are listed as public symbols and covered in the API Reference sec",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. All listed FontSource subclasses are public symbols; the inherited list is redundant with the ",
       "unit_id": "inherited_unit:288.002.list"
     },
     {
       "destination_section": null,
       "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "HTML closing tag is a non-content separator.",
+      "rationale": "It is an HTML closing tag without content.",
       "unit_id": "inherited_unit:289.html_block"
     },
     {
@@ -3415,12 +3330,12 @@
         "link_target:034",
         "link_target:035"
       ],
-      "rationale": "The Documentation & Resources heading is supported by multiple verified links and belongs in the documentation_resources section.",
+      "rationale": "The heading and its list of links are verified and match the documentation_resources section.",
       "unit_id": "inherited_unit:290.heading"
     },
     {
       "destination_section": "documentation_resources",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "link_target:029",
         "link_target:030",
@@ -3431,45 +3346,88 @@
         "link_target:034",
         "link_target:035"
       ],
-      "rationale": "All listed documentation links are verified and provide valuable, non-redundant information for users.",
+      "rationale": "The list items are verified links to documentation resources and are moved to the documentation_resources section.",
       "unit_id": "inherited_unit:291.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The Scope and Limitations heading is supported by inherited limitations and matches the section's purpose.",
+      "fact_ids": [
+        "example:010",
+        "example:011",
+        "example:030",
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.document.validate_pdfua",
+        "public_symbol:aspose_pdf.document.replace_text",
+        "public_symbol:aspose_pdf.document.redact_text",
+        "public_symbol:aspose_pdf.page.save_as_svg",
+        "public_symbol:aspose_pdf.document.save_as_svg",
+        "dependency:optional.woff2.brotli-1.2",
+        "dependency:optional.text-layout.fonttools-4.60.2",
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.uharfbuzz-0.37",
+        "public_symbol:aspose_pdf.document.encrypt_for_recipients"
+      ],
+      "rationale": "The limitations listed are supported by facts and match the scope_limitations section.",
       "unit_id": "inherited_unit:292.heading"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Each listed limitation is supported by the inherited unit and not contradicted by any fact.",
+      "fact_ids": [
+        "example:010",
+        "example:011",
+        "example:030",
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.document.validate_pdfua",
+        "public_symbol:aspose_pdf.document.replace_text",
+        "public_symbol:aspose_pdf.document.redact_text",
+        "public_symbol:aspose_pdf.page.save_as_svg",
+        "public_symbol:aspose_pdf.document.save_as_svg",
+        "dependency:optional.woff2.brotli-1.2",
+        "dependency:optional.text-layout.fonttools-4.60.2",
+        "dependency:optional.text-layout.python-bidi-0.6",
+        "dependency:optional.text-layout.uharfbuzz-0.37",
+        "public_symbol:aspose_pdf.document.encrypt_for_recipients"
+      ],
+      "rationale": "Each limitation item is supported by facts and matches the scope_limitations section.",
       "unit_id": "inherited_unit:293.list"
     },
     {
-      "destination_section": "enterprise_relationship",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "link_target:036",
         "link_target:product.enterprise"
       ],
-      "rationale": "The Enterprise Edition reference is supported by a verified product link and belongs in enterprise_relationship.",
+      "rationale": "Omitted by the BL-480 last-resort degrade (R14, R42): the independent review found no fact that supports what this paragraph says the commercial product adds, and this repository cannot verify a statement about a different product, so it is no longer made; the verified Enterprise Edition link stays in the closing sentence of Scope and Limitations",
       "unit_id": "inherited_unit:294.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The Development and Testing heading is supported by CI and build-test assets and matches the section's purpose.",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The heading and its content match the development_testing section and are supported by build_test_asset facts.",
       "unit_id": "inherited_unit:295.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The paragraph describes the development workflow and is not contradicted by any fact.",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The paragraph describes the development workflow and is supported by build_test_asset facts.",
       "unit_id": "inherited_unit:296.paragraph"
     },
     {
@@ -3480,23 +3438,31 @@
         "build_test_asset:test-command",
         "build_test_asset:ci",
         "build_test_asset:ci-matrix",
-        "build_test_asset:release-workflow"
+        "build_test_asset:tests",
+        "build_test_asset:examples"
       ],
-      "rationale": "The code block matches the verified build and test commands and CI workflow.",
+      "rationale": "The code block matches the verified build and test commands and is supported by build_test_asset facts.",
       "unit_id": "inherited_unit:297.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The paragraph describes wrapper scripts and is not contradicted by any fact.",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:tests",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The paragraph describes wrapper scripts and is supported by build_test_asset facts.",
       "unit_id": "inherited_unit:298.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "HTML opening tag is a non-content separator.",
+      "rationale": "It is an HTML opening tag without content.",
       "unit_id": "inherited_unit:299.html_block"
     },
     {
@@ -3505,41 +3471,46 @@
       "fact_ids": [
         "build_test_asset:ci",
         "build_test_asset:ci-matrix",
-        "build_test_asset:release-workflow"
+        "link_target:037",
+        "link_target:038",
+        "link_target:039",
+        "link_target:040"
       ],
-      "rationale": "The paragraph describes CI and packaging workflows and is supported by verified workflow files.",
+      "rationale": "The paragraph describes CI workflows and is supported by build_test_asset and link_target facts.",
       "unit_id": "inherited_unit:300.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "HTML closing tag is a non-content separator.",
+      "rationale": "It is an HTML closing tag without content.",
       "unit_id": "inherited_unit:301.html_block"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "link_target:036",
         "link_target:product.enterprise"
       ],
-      "rationale": "The License heading is supported by the license fact and matches the section's purpose.",
+      "rationale": "The heading introduces the Enterprise Edition and is supported by the product.enterprise link_target fact.",
       "unit_id": "inherited_unit:302.heading"
     },
     {
-      "destination_section": "license",
+      "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "license:file",
-        "license:spdx"
+        "link_target:036",
+        "link_target:product.enterprise"
       ],
-      "rationale": "Superseded by the License section, which states the license from facts. The license paragraph is supported by the MIT license fact and matches the section's pur",
+      "rationale": "The paragraph describes the Enterprise Edition and is supported by the product.enterprise link_target fact.",
       "unit_id": "inherited_unit:303.paragraph"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "link_target:036",
         "link_target:product.enterprise"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
