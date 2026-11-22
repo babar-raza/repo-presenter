@@ -1,18 +1,6 @@
 {
  "history": [
   {
-   "at": "2026-11-18T20:34:37+00:00",
-   "classes": [
-    "job_error|job_error|JobError:section_authoring_gateway_answered_http"
-   ],
-   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
-   "findings": 1,
-   "outcome": "failure",
-   "run_id": "44384802232",
-   "source_revision": "b4fdd46724ab271205aa92e1ad7b3272346d657e",
-   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
-  },
-  {
    "at": "2026-11-19T17:17:52+00:00",
    "classes": [
     "job_error|job_error|LaneStepFailure:the_lane_step_ended"
@@ -241,115 +229,83 @@
    "run_id": "45040357304",
    "source_revision": "717d0cce139171bc2e47f9da114ab3c892b5998c",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T18:56:56+00:00",
+   "classes": [
+    "BC-07|inherited_unit|id_is_kept_as"
+   ],
+   "code": "d3e8d8296bf7b69262402f6988d4420c55dc19c0e2cdaa1ffbc2c68309470e38",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45052413270",
+   "source_revision": "851c1a6a4502a55416537b532d38f69704d16b77",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T17:01:52+00:00",
+  "at": "2026-11-22T18:56:56+00:00",
   "classes": {
-   "llm:factuality|inherited_unit|scope_limitations": {
-    "example": "  - **The content.** Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version. Acrobat's XML encoding is recognised but not recomputed, and is reported.",
-    "findings": 4,
+   "BC-07|inherited_unit|id_is_kept_as": {
+    "example": "inherited_unit:592.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
+    "findings": 1,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:572.002.list",
-     "inherited_unit:572.003.list"
+     "inherited_unit:592.paragraph"
     ],
-    "rule": "llm:factuality",
-    "scope": "5832e934ad9f6da89b23fc15256470ad5591366a0d1e9f1b09074bd70f0e3086",
+    "rule": "BC-07",
+    "scope": "976e1244ccbab5e9bf6ea04bf332ece2cb2b2919f88e9704faf23deb8f9b1c23",
     "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "scope_limitations",
+    "sub_rule": "id_is_kept_as",
     "upstream": ""
    }
   },
-  "code": "23be31ef38f54a2baeed624a0d572145eb52e22bf2a9e94f8c5bca7f48123130",
+  "code": "d3e8d8296bf7b69262402f6988d4420c55dc19c0e2cdaa1ffbc2c68309470e38",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-07; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version.",
+    "label": "BC-07",
+    "message": "inherited_unit:592.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
     "origin": {
-     "id": "inherited_unit:572.002.list",
+     "id": "inherited_unit:592.paragraph",
      "kind": "inherited_unit"
     },
-    "quote": "  - **The content.** Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version. Acrobat's XML encoding is recognised but not recomputed, and is reported.",
-    "rule": "llm:factuality",
+    "quote": "",
+    "rule": "BC-07",
     "section_id": "scope_limitations",
-    "signature": "llm:factuality|inherited_unit|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "Reader neither recomputes nor draws these barcodes: Acrobat's script needs an object Reader lacks, so the value becomes a single space there.",
-    "origin": {
-     "id": "inherited_unit:572.002.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "  - **Reader.** Reader neither recomputes nor draws these barcodes: Acrobat's script needs an object Reader lacks, so the value becomes a single space there. A paper barcode therefore stays current only in Acrobat Pro or through this library.",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|inherited_unit|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "A larger run makes its line taller. (+2 identical findings merged)",
-    "origin": {
-     "id": "inherited_unit:572.003.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "- **Document JavaScript is stored, never executed, by decision** \u2014 scripts are written and read (`SetJavaScript`, `GetJavaScripts`, JavaScript actions, and a field's `format`, `keystroke`, `validate` and `calculate` actions through `SetActions`), but the library runs none of them. XFA's FormCalc doe",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|inherited_unit|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "Stream payloads are *not* decoded on open: page content, images and fonts are decompressed only when something reads them, and the decoded bytes are not retained by the object model.",
-    "origin": {
-     "id": "inherited_unit:572.003.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "- **No lazy or streaming open, by decision** \u2014 `Document.Open` parses every object in the file (about 670 bytes each) and keeps the input bytes alive, because an encoded stream payload is a view into them rather than a copy. Stream payloads are *not* decoded on open: page content, images and fonts a",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|inherited_unit|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
+    "signature": "BC-07|inherited_unit|id_is_kept_as",
+    "source": "validation",
+    "sub_rule": "id_is_kept_as",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "5dcd87542779d5189a9d8d71582fe963be53e0e4",
+  "main_sha": "96c95f9ca6f45308780004ec03f84b48a8fe894f",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "45040357304",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45040357304",
+  "run_id": "45052413270",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45052413270",
   "schema_version": 1,
-  "source_revision": "717d0cce139171bc2e47f9da114ab3c892b5998c",
+  "source_revision": "851c1a6a4502a55416537b532d38f69704d16b77",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
