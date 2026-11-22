@@ -5,7 +5,7 @@
   "provider_repository_id": 1345974189,
   "registry_revision": null,
   "active_transaction_id": "898eb50d67d64580a4eb78f5c76e7752",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:547.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T11:57:40.204847+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-22T12:33:16.582921+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 2
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 78,
+  "state_version": 79,
   "recent_trigger_dedup_keys": {
     "run:41304473088:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "f2dd0b321c364d5f8a3b3aaa734b701e",
     "run:42685713384:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "3b81377c7b004742bf823317e960e501",
@@ -68,5 +68,5 @@
     "run:44959557965:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "59d677351d37457c943df3488f1c12e0",
     "run:44967388128:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "898eb50d67d64580a4eb78f5c76e7752"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
