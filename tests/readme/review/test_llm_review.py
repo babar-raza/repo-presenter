@@ -420,15 +420,7 @@ def test_an_accept_reply_that_carries_findings_is_never_an_accept(
         json.dumps({"verdict": "ACCEPT"}),
         json.dumps(reply("REJECT_FACTUAL")),
         json.dumps(reply("MAYBE")),
-        json.dumps(
-            reply(
-                "REJECT_FACTUAL", finding("quality", absent=["x" * 5])
-            )  # a field its kind lacks
-        ),
         json.dumps(reply("REJECT_FACTUAL", finding("absence", absent=[]))),
-        json.dumps(
-            reply("REJECT_FACTUAL", finding("quality", section_id="nonexistent"))
-        ),
     ],
 )
 def test_no_malformed_reply_ever_becomes_a_verdict(
@@ -878,3 +870,46 @@ def test_a_blocked_omission_names_the_ids_and_phrases_it_demands() -> None:
     text = blocked_predicate(verdict)  # type: ignore[arg-type]
     assert "S2-F03 [omission] in api_reference (names public_symbol:ns.widget.save, 'Saves it.') blocks until" in text
     assert "S2-F04 [omission] in api_reference blocks until" in text  # negative control: no claim, nothing named
+
+
+# ---------------------------------------------------------------------------
+# BL-710: a finding that still breaks the per-finding contract after the re-ask does not lose the review
+# ---------------------------------------------------------------------------
+
+
+def test_bl710_hosted_shape_a_contradiction_citing_no_product_fact_keeps_the_unit_review(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Hosted PSD Java run 44985283929: 'finding F06: a contradiction finding must cite at least one
+    product fact', twice. The model got its re-ask; the second reply's void finding is then dropped with
+    a note and the real finding beside it still blocks."""
+    void = finding("contradiction", id="F02", fact_ids=["inherited_unit:001.paragraph"])
+    real = finding("quality", id="F01")
+    bad = completion(reply("REJECT_PRESENTATION", real, void))
+    client = install(monkeypatch, [bad, bad])
+    verdict = harness.review()
+    assert harness.provider_calls() == 2  # the re-ask was spent; no third call
+    assert verdict.verdict.startswith("REJECT") and len(verdict.blocking_findings) == 1
+    notes = [n for unit in verdict.unit_reviews for n in unit.get("contract_notes", [])]
+    assert [n["class"] for n in notes if n["action"] == "dropped"] == ["no_product_fact"]
+
+
+def test_bl710_a_reply_whose_only_finding_is_void_by_contract_is_accepted_with_the_note(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    void = finding("contradiction", fact_ids=[])
+    bad = completion(reply("REJECT_FACTUAL", void))
+    install(monkeypatch, [bad, bad])
+    verdict = harness.review()
+    assert verdict.verdict == "ACCEPT"
+    notes = [n for unit in verdict.unit_reviews for n in unit.get("contract_notes", [])]
+    assert {n["action"] for n in notes} == {"dropped", "verdict_changed"}
+
+
+def test_bl710_negative_control_an_unlocatable_only_finding_still_makes_the_review_unavailable(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    unlocatable = completion(reply("REJECT_FACTUAL", finding("contradiction", lines=[9999])))
+    install(monkeypatch, [unlocatable, unlocatable])
+    with pytest.raises(ReviewUnavailable):
+        harness.review()

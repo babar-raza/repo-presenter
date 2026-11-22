@@ -14,11 +14,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from dataclasses import MISSING, asdict, dataclass, fields, replace
 from pathlib import Path
 from typing import Any, Literal
 
-from repo_presenter.core.errors import ProviderCallBudgetError
+from repo_presenter.core.errors import CascadeTimeBoxError, ProviderCallBudgetError
 
 CallDisposition = Literal["provider_call", "cache_reuse", "cache_stale"]
 CallOutcome = Literal[
@@ -128,6 +129,9 @@ class Ledger:
         self.invocation_id = invocation_id
         self.call_budget = call_budget
         self.appended: list[CallRecord] = []
+        #: BL-711: returns a reason once the run's hard wall-clock stop has passed, else ``None``; the
+        #: cascade sets it. Checked before every physical call, so no call starts past the stop.
+        self.hard_stop: Callable[[], str | None] | None = None
 
     def append(self, record: CallRecord) -> None:
         if self.invocation_id is not None and record.invocation_id is None:
@@ -151,8 +155,14 @@ class Ledger:
     def reserve_provider_call(self) -> None:
         """Refuse a physical provider call once this process has spent its budget.
 
-        Called before the request is sent, so the refused call never reaches the gateway.
+        Called before the request is sent, so the refused call never reaches the gateway. Past the
+        run's hard wall-clock stop (``hard_stop``, BL-711) the call is refused with
+        ``CascadeTimeBoxError`` instead.
         """
+        if self.hard_stop is not None:
+            reason = self.hard_stop()
+            if reason:
+                raise CascadeTimeBoxError(reason)
         if self.physical_calls_made >= self.call_budget:
             raise ProviderCallBudgetError(
                 f"provider-call budget of {self.call_budget} reached in this invocation; "

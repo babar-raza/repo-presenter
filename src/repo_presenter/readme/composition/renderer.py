@@ -266,7 +266,10 @@ class RenderContext:
         self.members = verified_members(facts)
         self.methods = surface_members(facts)
         self.name_tokens = product_name_tokens(self.name)
-        self.hosts = host_names(fact.value for fact in facts.facts if fact.polarity == "SUPPORTED")
+        self.hosts = facts.memo(
+            "supported_hosts",
+            lambda: host_names(fact.value for fact in facts.facts if fact.polarity == "SUPPORTED"),
+        )  # BL-711
         self.abbreviations = canonical_abbreviations(facts)
         self.symbol_names: frozenset[str] = frozenset(
             fact.value.rsplit(".", 1)[-1]

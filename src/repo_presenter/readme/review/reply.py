@@ -330,6 +330,293 @@ def drop_maintainer_unsupported_findings(
     return notes
 
 
+#: Error text (as ``resolve_cited_lines`` / ``_finding_errors`` word it) -> the class a drop records.
+#: Order matters: the first match names the class. Every per-finding contract error is listed here.
+_ERROR_CLASSES: tuple[tuple[str, str], ...] = (
+    ("must cite at least one product fact", "no_product_fact"),
+    ("maintainer_lines", "maintainer_text"),
+    ("were not shown to you", "unshown_lines"),
+    ("was not shown to you", "unshown_lines"),
+    ("cite at most", "span_too_long"),
+    ("cross more than one section", "cross_section"),
+    ("are blank", "blank_lines"),
+    ("do not exist", "lines_out_of_range"),
+    ("lines must be", "malformed_lines"),
+    ("line numbers start", "malformed_lines"),
+    ("the first line after the last", "malformed_lines"),
+    ("quote is not", "unlocatable_quote"),
+    ("must quote the candidate text", "missing_quote"),
+    ("renderer owns", "renderer_owned_quality"),
+    ("fills no typed field", "typed_field"),
+    ("must fill its typed field", "typed_field"),
+    ("fills only its own typed field", "typed_field"),
+    ("is text the finding's own quote shows is present", "absence_contradicted_by_quote"),
+    ("claim_kind must", "claim_kind"),
+    ("criterion must", "criterion"),
+    ("causal_stage must", "causal_stage"),
+    ("omission", "omission"),
+    ("section_id", "section"),
+    ("fact_ids", "fact_ids"),
+    ("must be a non-empty string", "empty_text"),
+    ("must be an object", "not_an_object"),
+)
+
+
+#: The dropped-finding classes that are void by the contract's own text although the finding is
+#: well-formed and located (it names shown lines and a quote the candidate holds): it asserts a defect that
+#: the contract says cannot be asserted that way, or one its own quote proves false. Only when every
+#: dropped finding is of these classes may a reply left with no finding become an ACCEPT. A finding that
+#: could not even be located or typed (a line the packet never had, a quote that is not the candidate's,
+#: a missing field) leaves the model's REJECT standing without a finding, so the reply stays rejected and
+#: retryable: it may have seen a defect it could not point at, and that is never counted clean.
+VOID_BY_CONTRACT = frozenset(
+    {"no_product_fact", "maintainer_text", "renderer_owned_quality", "absence_contradicted_by_quote"}
+)
+
+
+def _error_class(message: str) -> str:
+    for needle, name in _ERROR_CLASSES:
+        if needle in message:
+            return name
+    return "other"
+
+
+def _is_text(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _repair_finding(
+    finding: dict[str, Any],
+    *,
+    candidate_readme: str,
+    facts: FactsDocument,
+    sections: Collection[str],
+) -> list[str]:
+    """Deterministic repairs of one finding's own fields, each a statement the model already made in
+    another field (never a new claim). Edits ``finding`` in place; returns what was repaired."""
+    done: list[str] = []
+    known = {fact.id: fact for fact in facts.facts}
+
+    ids = finding.get("fact_ids")
+    if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids):
+        finding["fact_ids"] = []
+        done.append("fact_ids was not a list of strings: emptied")
+    elif any(i not in known for i in ids):
+        unknown = [i for i in ids if i not in known]
+        finding["fact_ids"] = [i for i in ids if i in known]
+        done.append(f"fact_ids named facts not in the input, removed: {unknown[:4]}")
+
+    for key in ("absent", "unsupported_names"):
+        if key in finding and _strings(finding[key]) is None:
+            finding[key] = []
+            done.append(f"{key} was not a list of strings: emptied")
+
+    text, repair = finding.get("text"), finding.get("repair")
+    if _is_text(text) and not _is_text(repair):
+        finding["repair"] = text.strip()
+        done.append("repair was empty: the finding's text stands as the repair")
+    elif _is_text(repair) and not _is_text(text):
+        finding["text"] = repair.strip()
+        done.append("text was empty: the finding's repair stands as the text")
+
+    if finding.get("causal_stage") not in CAUSAL_STAGES:
+        finding["causal_stage"] = "unclear"  # routing metadata only; 'unclear' is the sanctioned unknown
+        done.append("causal_stage was not a stage: set to 'unclear'")
+
+    cited = finding.get("lines")
+    section = finding.get("section_id")
+    rows = candidate_readme.splitlines()
+    if (
+        (not isinstance(section, str) or section not in sections)
+        and isinstance(cited, list)
+        and len(cited) in (1, 2)
+        and all(_whole(n) for n in cited)
+        and 1 <= cited[0] <= cited[-1] <= len(rows)
+    ):
+        where = _cited_section(candidate_readme, cited[0], cited[-1])
+        if isinstance(where, str) and where in sections:
+            finding["section_id"] = where
+            done.append(f"section_id was not a section of the unit: the cited lines are in {where}")
+
+    omission = finding.get("omission")
+    if omission is not None:
+        if not isinstance(omission, Mapping) or omission.get("kind") != "omission":
+            finding["omission"] = None
+            done.append("omission was not an omission object: cleared")
+        else:
+            fixed = dict(omission)
+            ids_ = _strings(fixed.get("missing_ids"))
+            quotes = _strings(fixed.get("missing_quotes"))
+            fixed["missing_ids"] = [
+                i for i in (ids_ or []) if i in known and known[i].polarity == "SUPPORTED"
+            ]
+            fixed["missing_quotes"] = quotes or []
+            if isinstance(finding.get("section_id"), str):
+                fixed["section_id"] = finding["section_id"]
+            if fixed != dict(omission):
+                finding["omission"] = fixed
+                done.append("omission: ids that are not SUPPORTED facts of the input removed, section aligned")
+
+    kind = finding.get("claim_kind")
+    if kind in CLAIM_KINDS:
+        filled = _filled(finding)
+        clear = {"absence": ("absent", []), "name_denial": ("unsupported_names", []), "omission": ("omission", None)}
+        if kind in UNTYPED_KINDS:
+            for field_, value in filled.items():
+                if value:
+                    finding[clear[field_][0]] = clear[field_][1]
+                    done.append(f"a {kind} finding fills no typed field: {field_} cleared")
+        else:
+            others = [k for k, v in filled.items() if v and k != kind]
+            if others and filled[kind]:
+                for other in others:
+                    finding[clear[other][0]] = clear[other][1]
+                    done.append(f"a {kind} finding fills only its own typed field: {other} cleared")
+            elif len(others) == 1 and not filled[kind]:
+                finding["claim_kind"] = others[0]
+                kind = others[0]
+                done.append(f"claim_kind relabelled to {others[0]}: the only typed field the finding fills")
+        if kind == "omission" and finding.get("criterion") == "factuality":
+            fact_ids = finding.get("fact_ids") or []
+            if not any(i in known and known[i].kind != "inherited_unit" for i in fact_ids):
+                body = finding.get("omission")
+                missing = [
+                    i for i in (body.get("missing_ids") or [])
+                    if isinstance(body, Mapping) and i in known and known[i].kind != "inherited_unit"
+                ] if isinstance(body, Mapping) else []
+                if missing:
+                    finding["fact_ids"] = [*fact_ids, *[i for i in missing if i not in fact_ids]]
+                    done.append("fact_ids: the omission's own missing SUPPORTED facts cited")
+    return done
+
+
+def set_aside_void_findings(
+    reply: Any,
+    candidate_readme: str,
+    facts: FactsDocument,
+    plan: Mapping[str, Any] | None = None,
+    scope: ReviewScope | None = None,
+    max_findings: int = MAX_FINDINGS,
+) -> list[dict[str, Any]]:
+    """BL-710: one finding that breaks the per-finding contract must not lose the unit's whole review.
+    Generalises BL-660 (maintainer-only ``unsupported_claim``) to every contract error
+    ``validate_review_reply`` / ``resolve_cited_lines`` can raise on ONE finding (hosted PSD Java run
+    44985283929, unit u2: finding F06 'a contradiction finding must cite at least one product fact',
+    rejected twice, so the unit and the candidate had no review).
+
+    For each finding: first the repairs that are deterministic (``_repair_finding``: unknown or empty
+    ``fact_ids`` emptied, an empty text/repair taken from its sibling, an unknown ``causal_stage`` set to
+    'unclear', a section taken from the cited lines, an omission reduced to its SUPPORTED ids, a
+    mislabelled typed field relabelled or cleared, an id that is malformed or repeated renumbered);
+    a finding that still breaks the contract is dropped, and the drop is recorded. A dropped finding is
+    one nothing can check: a contradiction that cites no product fact has nothing to be cleared
+    against or confirmed by, a quote that is not in the candidate, lines the unit was not shown (renderer
+    text or another unit's), a renderer-owned quality complaint, an unusable span. The deterministic
+    claim detectors, the other review units and the second sample judge those lines; nothing here
+    clears a finding that is valid. Over ``max_findings`` the first are kept (BL-690 precedent).
+
+    The model's verdict stays while any finding is kept; when every finding was dropped and the verdict
+    is a REJECT, it becomes ACCEPT only when every dropped finding was well-formed and located but void
+    by the contract (``VOID_BY_CONTRACT``: no product fact cited, maintainer-only, renderer-owned, or
+    disproved by its own quote; BL-660 precedent), with that change recorded; if any dropped finding could
+    not even be located or typed the reply is left untouched and stays rejected (retryable). A reply the validator accepts is not
+    touched (no notes), so a stored valid reply replays identically. Reply-level errors (an invalid
+    verdict, ``findings`` not a list, an ACCEPT that carries findings, a REJECT with none to begin with)
+    are left to the validator and the re-ask. Edits ``reply`` in place; idempotent. Returns the notes
+    added, which ``reply[CONTRACT_NOTES_KEY]`` carries into the unit's record."""
+    if not isinstance(reply, dict):
+        return []
+    findings = reply.get("findings")
+    verdict = reply.get("verdict")
+    if not isinstance(findings, list) or verdict not in MODEL_VERDICTS:
+        return []
+    sections = valid_section_ids(plan) if scope is None else scope.sections
+    notes: list[dict[str, Any]] = []
+    kept: list[Any] = []
+    unlocatable = False
+    for position, original in enumerate(findings, 1):
+        if not isinstance(original, dict):
+            notes.append({"rule": "BL-710", "action": "dropped", "finding": f"#{position}",
+                          "class": "not_an_object", "reason": "a finding must be an object"})
+            unlocatable = True
+            continue
+        label = str(original.get("id", "?"))
+        working = dict(original)
+        repairs = _repair_finding(
+            working, candidate_readme=candidate_readme, facts=facts, sections=sections
+        )
+        probe = dict(working)
+        probe["id"] = "F01"  # ids are renumbered below; they are not what makes a finding void
+        errors = resolve_cited_lines({"findings": [probe]}, candidate_readme, scope)
+        if not errors:
+            errors = _finding_errors(
+                probe, candidate_readme=candidate_readme, facts=facts,
+                sections=sections, scoped=scope is not None,
+            )
+        if errors:
+            reasons = [e.split(": ", 1)[-1] for e in errors]
+            unlocatable = unlocatable or _error_class(errors[0]) not in VOID_BY_CONTRACT
+            notes.append(
+                {
+                    "rule": "BL-710",
+                    "action": "dropped",
+                    "finding": label,
+                    "claim_kind": original.get("claim_kind"),
+                    "class": _error_class(errors[0]),
+                    "lines": original.get("lines") if isinstance(original.get("lines"), list) else None,
+                    "reason": "; ".join(reasons)[:400],
+                }
+            )
+            continue
+        if repairs:
+            original.clear()
+            original.update(working)
+            notes.append({"rule": "BL-710", "action": "repaired", "finding": label, "repairs": repairs})
+        kept.append(original)
+    if not kept and verdict in REJECT_VERDICTS and unlocatable:
+        return []  # a REJECT whose findings could not even be located stays rejected (retryable), untouched
+    if len(kept) > max_findings:
+        notes.append(
+            {"rule": "BL-710", "action": "dropped", "class": "too_many_findings",
+             "reason": f"{len(kept) - max_findings} finding(s) after the first {max_findings} set aside; "
+                       "the verdict is unchanged and the next review round reports what remains"}
+        )
+        del kept[max_findings:]
+    used = {f["id"] for f in kept if isinstance(f.get("id"), str) and _ID.fullmatch(f["id"])}
+    seen: set[str] = set()
+    counter = 0
+    for finding in kept:
+        current = finding.get("id")
+        if isinstance(current, str) and _ID.fullmatch(current) and current not in seen:
+            seen.add(current)
+            continue
+        while f"F{counter + 1:02d}" in used:
+            counter += 1
+        counter += 1
+        fresh = f"F{counter:02d}"
+        notes.append({"rule": "BL-710", "action": "repaired", "finding": str(current),
+                      "repairs": [f"id was malformed or repeated: renumbered {fresh}"]})
+        finding["id"] = fresh
+        used.add(fresh)
+        seen.add(fresh)
+    if _strings(reply.get("preserve")) is None:
+        reply["preserve"] = []
+        notes.append({"rule": "BL-710", "action": "repaired", "finding": "reply",
+                      "repairs": ["preserve was not a list of strings: emptied"]})
+    dropped = any(n["action"] == "dropped" for n in notes)
+    if dropped and not kept and verdict in REJECT_VERDICTS:
+        notes.append(
+            {"rule": "BL-710", "action": "verdict_changed", "verdict_changed": [verdict, MODEL_ACCEPT],
+             "reason": "every finding of the reply was void by the contract; a reject verdict needs a finding"}
+        )
+        reply["verdict"] = MODEL_ACCEPT
+    if not notes:
+        return []
+    findings[:] = kept
+    reply.setdefault(CONTRACT_NOTES_KEY, []).extend(notes)
+    return notes
+
+
 #: Shortest ``text`` (and shortest line) the citation repair will match by content: shorter strings
 #: occur in too many lines to say which one a finding is about.
 MIN_REPAIR_CHARS = 12

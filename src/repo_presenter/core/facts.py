@@ -17,10 +17,10 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from collections.abc import Collection, Iterable
+from collections.abc import Callable, Collection, Hashable, Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Literal, get_args
+from typing import Any, Literal, get_args
 
 FactKind = Literal[
     "identity",
@@ -196,17 +196,38 @@ class FactsDocument:
             object.__setattr__(self, "_kind_index", index)
         return index.get(kind, ())
 
+    def memo(self, key: Hashable, build: Callable[[], Any]) -> Any:
+        """BL-711: a value derived only from this (immutable) document, built once per document. Checks that
+        run once per model call or per unit (the identifiers a unit may spell, the public surface's names)
+        re-derived it from every fact each time: 20 to 45 minutes of one Words Java round (45,838 facts, a
+        few hundred units), all of it the same answer. Not a field: equality, hashing and serialisation are
+        unchanged. The value must be treated as read-only by every caller."""
+        cache = self.__dict__.get("_memo")
+        if cache is None:
+            cache = {}
+            object.__setattr__(self, "_memo", cache)
+        if key not in cache:
+            cache[key] = build()
+        return cache[key]
+
     def canonical(self) -> FactsDocument:
         """The same document with its facts in ID order: the one order a bundle stores
         (``to_json``) and the renderer reads, so a candidate renders the same bytes live
         and again from its own ``facts.json``.
         """
-        return FactsDocument(
-            self.repository,
-            self.source_revision,
-            tuple(sorted(self.facts, key=lambda fact: fact.id)),
-            self.schema_version,
-        )
+        # BL-711: one canonical copy per document, itself canonical, so every render and validation shares
+        # the memos (a fresh copy per render rebuilt every derived index: ~25 s per render on 45,838 facts).
+        def build() -> FactsDocument:
+            copy = FactsDocument(
+                self.repository,
+                self.source_revision,
+                tuple(sorted(self.facts, key=lambda fact: fact.id)),
+                self.schema_version,
+            )
+            object.__setattr__(copy, "_memo", {"canonical": copy})
+            return copy
+
+        return self.memo("canonical", build)
 
     def to_json(self) -> str:
         payload = {

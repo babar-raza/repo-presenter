@@ -48,7 +48,12 @@ from repo_presenter.cascade import (
 )
 from repo_presenter.core.candidates import CANDIDATES_DIRNAME, LANE_L, LANE_R, LANES
 from repo_presenter.core.config import GatewayConfig, load_gateway_config
-from repo_presenter.core.errors import ConfigError, OutputRejectedError, PresenterError
+from repo_presenter.core.errors import (
+    CascadeTimeBoxError,
+    ConfigError,
+    OutputRejectedError,
+    PresenterError,
+)
 from repo_presenter.core.facts import write_facts
 from repo_presenter.core.git_safety.clone import clone_pinned, pinned_read_only_clone
 from repo_presenter.core.llm.prompts import load_manifests
@@ -547,6 +552,13 @@ def run_present(
             failure["detail"] = (
                 "model output was rejected by the job's own checks after its bounded re-asks "
                 f"(retryable: a re-run asks the model again): {type(exc).__name__}: {exc}"
+            )
+            failure["class"] = "transient"
+            return 1
+        except CascadeTimeBoxError as exc:
+            failure["detail"] = (
+                "the cascade reached its hard time limit before reaching a verdict, so nothing was sealed "
+                f"(retryable: a re-run resumes from the saved call store): {type(exc).__name__}: {exc}"
             )
             failure["class"] = "transient"
             return 1

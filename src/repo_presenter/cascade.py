@@ -54,7 +54,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
-from repo_presenter.core.errors import JobError, PresenterError
+from repo_presenter.core.errors import CascadeTimeBoxError, JobError, PresenterError
 from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
 from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import (
@@ -543,6 +543,7 @@ def _compose(
     tree_paths: list[str], original_bytes: bytes, out_dir: Path, prompts: PromptRegistry,
     config: GatewayConfig, ledger: Ledger, store: CallStore, context: JobContext,
     dispositions_override: dict[str, Any] | None = None,
+    progress: Callable[[str], None] | None = None,
 ) -> _Composition:
     """S4 through S8, then account for the kept units the render does not print (S9).
 
@@ -563,6 +564,7 @@ def _compose(
     it, both reverted to the pre-repair text, and the already-rejected candidate's review
     verdict came back from cache byte-identical to the one the repair was meant to fix."""
     common = {"config": config, "ledger": ledger, "store": store, "context": context}
+    note = progress or _no_progress  # BL-711: where the time of one compose goes, visible in the hosted log
     dispositions = (
         dispositions_override
         if dispositions_override is not None
@@ -570,6 +572,7 @@ def _compose(
             entry=entry, document=document, investigation=investigation, prompts=prompts, **common
         )
     )
+    note("S4 reconciliation end")
     write_dispositions(dispositions, out_dir / "dispositions.json")
     # What the planning, authoring and coherence calls are made from. dispositions.json is
     # rewritten below with the S9 accounting, so a repair that rebuilds those calls' request
@@ -581,12 +584,14 @@ def _compose(
         ecosystem=ecosystem, prompts=prompts, **common,
     )
     write_plan(plan, out_dir / "plan.json")
+    note("S5 planning end")
 
     units_document = _run_authoring(
         entry=entry, document=document, investigation=investigation, dispositions=dispositions,
         plan=plan, prompts=prompts, **common,
     )
     write_content_units(units_document, out_dir / "content_units.json")
+    note("S6 authoring end")
 
     pre_coherence_readme = render_readme(entry, document, plan, units_document, dispositions)
     original = original_bytes.decode("utf-8", errors="replace")
@@ -600,6 +605,7 @@ def _compose(
         plan=plan, units_document=units_document, pre_coherence_readme=pre_coherence_readme,
         prompts=prompts, **common,
     )
+    note("S8 coherence end")
     final_readme = render_readme(entry, document, plan, coherent_units, dispositions)
     tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
     candidate = _candidate(
@@ -818,6 +824,7 @@ def _settle_s9(
             tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
             dispositions_override=override,
+            progress=lambda event, _r=rounds: progress(f"S9 settle round {_r}: compose {event}"),
         )
         # The composition this round's calls were made from, and the one the next round
         # reproduces: repairs are keyed against it (below), never against a partial restore's.
@@ -1394,6 +1401,16 @@ DEGRADE_GRACE_SECONDS = 1200.0
 #: the degrade and the final review inside the job timeout.
 CASCADE_TIMEBOX_SECONDS = 3000.0
 
+#: BL-711: the cascade's HARD wall-clock stop, in seconds from its start. The time-box above only stops a
+#: repair round from STARTING; a round already running (Words Java: one S9 compose of several hundred
+#: serial model calls) was bounded only by the runner's 90-minute cancel, which records nothing, so the
+#: cell ended 'cancelled' with no stage and no failure record (hosted runs 44943578461, 44952689353,
+#: 44977866731). Past this point no provider call and no stage starts: ``CascadeTimeBoxError`` ends the
+#: run as a recorded retryable failure naming the stage, the call store (every completed call) is saved
+#: by the workflow, and the next run resumes from it. 4,800 s leaves ten minutes of the 90-minute job for
+#: the install, the cache restore/save, the budget settle and the failure record.
+CASCADE_HARD_STOP_SECONDS = 4800.0
+
 #: BL-430: a candidate the production review accepts is reviewed once more, a fresh sample over the packet
 #: the independent audit uses, and a blocking finding of either sample on author-written text blocks
 #: (``llm_review.merge_second_sample``). ``run_cascade(second_review=None)`` reads this; the offline suite
@@ -1636,6 +1653,7 @@ def run_cascade(
     timebox_seconds: float = CASCADE_TIMEBOX_SECONDS,
     clock: Callable[[], float] = time.monotonic,
     second_review: bool | None = None,
+    hard_stop_seconds: float = CASCADE_HARD_STOP_SECONDS,
 ) -> CascadeResult:
     """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
     review, for one repository, as one process under one invocation. Writes the same artifact
@@ -1689,7 +1707,23 @@ def run_cascade(
     store = CallStore(workspace / "calls")
     context = JobContext(repository=repository, source_revision=source_revision)
 
+    last_stage = ["start"]
+
+    def hard_stop_reason() -> str | None:
+        """BL-711: why no further call or stage may start, once the hard stop has passed."""
+        elapsed = clock() - started
+        if elapsed < hard_stop_seconds:
+            return None
+        return (
+            f"the cascade's hard time limit of {hard_stop_seconds:.0f}s was reached after {elapsed:.0f}s in "
+            f"stage '{last_stage[0]}'; no further provider call or stage starts, every completed call is "
+            "in the call store, so a re-run resumes from it"
+        )
+
+    ledger.hard_stop = hard_stop_reason
+
     def progress(event: str) -> None:
+        last_stage[0] = event
         try:
             calls = count_provider_calls(ledger_path, invocation.invocation_id)
         except Exception:  # noqa: BLE001 -- a progress line never fails the run
@@ -1710,6 +1744,10 @@ def run_cascade(
             )
         except Exception:  # noqa: BLE001 -- a progress marker never fails the run
             pass
+        if not event.startswith("cascade end"):
+            reason = hard_stop_reason()
+            if reason:  # a stage boundary past the hard stop: deterministic work, no call to refuse
+                raise CascadeTimeBoxError(reason)
 
     def expired() -> bool:
         return clock() - started >= timebox_seconds
