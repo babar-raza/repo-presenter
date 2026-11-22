@@ -167,63 +167,84 @@
    "run_id": "44952689353",
    "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-22T02:06:31+00:00",
+   "classes": [
+    "job_error|job_error|unknown:no_valid_independent_review"
+   ],
+   "code": "bb9e7f2abc4e4d6c6867b6e60eef612c76a69f4752e3fbe3c7db8eb2ed0797d3",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44967430141",
+   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T23:12:13+00:00",
+  "at": "2026-11-22T02:06:31+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|unknown:no_valid_independent_review": {
+    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "unknown"
     ],
     "rule": "job_error",
     "scope": "",
     "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   },
-  "code": "c6f694d87085c7bc8f8bcc1648bfa848ed697e7338a8e1e37b535395d46d9a01",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "bb9e7f2abc4e4d6c6867b6e60eef612c76a69f4752e3fbe3c7db8eb2ed0797d3",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
+   "kind": "unknown",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "unknown",
+    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "unknown",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|unknown:no_valid_independent_review",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "9e410e710900fa0eb651981e22ef1495143499f1",
+  "main_sha": "77c2262d531b2154a7a33dff60ed57c77bd48b0c",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README names `addRange` as a method of `RectangleF` ('RectangleFList class provides a list of RectangleF values with methods such as add, addRange, clear, contains, copyTo, and properties such as capacity and count; setCapacity throws IllegalArgumentException conditionally.'), but `com.aspose.ms.System.Drawing.RectangleF` has no such member; `addRan",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
-  "run_id": "44952689353",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44952689353",
+  "run_id": "44967430141",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44967430141",
   "schema_version": 1,
   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
-  "version_set": ""
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
  "schema_version": 1
