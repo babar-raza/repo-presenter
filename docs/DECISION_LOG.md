@@ -8690,3 +8690,5 @@ Backlog: BL-890, BL-891
 Owner answer through the interactive form on 2026-11-23: GIS .NET (aspose-gis-foss/.NET) has no upstream README and no package, so neither lane can cover it; it is excluded from the portfolio and both denominators become 39. R42: aspose.org has no published candidate for it either, so there is nothing to adopt or beat. Pipeline status: the official count job still reports records=40 because the exclusion is recorded here and has not yet been coded into `ops/checks/portfolio_delivery_count.py`; until it is, report both readings (of 40 as counted, of 39 as decided). No candidate was altered and no seal demoted (R10, R14).
 
 Official count after audit round 11 (run 45125322787, main 959b1790): Lane R records=40, pipeline_good=38, independently_accepted=37, pipeline_good_uncalibrated=1 (PDF TypeScript, sealed at 22:58Z on 2026-11-22 after BL-892 and BL-893; round 12 `audit-r12-0709` seeded for it). Lane L records=40, pipeline_good=38, independently_accepted=33, no_action_justified=5. Audit rounds were repeated until a round passed; that retry-until-pass selection is disclosed.
+
+Backlog: none
