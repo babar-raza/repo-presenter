@@ -66,9 +66,42 @@
     }
    ],
    "run": "45035070753-1"
+  },
+  {
+   "at": "2026-11-23T18:42:24Z",
+   "checks": "ok",
+   "live_blockers": [
+    "pilot mode is 'dry_run' in data/issue_pilot.json (live writes need 'live')",
+    "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1",
+    "issue writes are authorised for the sandbox only: REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY must name aspose-tex-foss/Aspose.TeX-FOSS-for-Python exactly (it is 'not set'; the wildcard never applies, and no upstream repository is cleared)",
+    "no App installation token was minted for this run"
+   ],
+   "mode": "dry_run",
+   "notes": [],
+   "revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+   "rows": [
+    {
+     "decision": "CLOSE",
+     "error": null,
+     "issue": 2,
+     "note": "dry run: would CLOSE #2 (verified resolved at 07db320334a0)",
+     "outcome": "VERIFIED_RESOLVED",
+     "output_digest": "sha256:0dd53d4f9ca165e25ccb90955554e663e2e5d0467d9273af03dff23dabfd0977",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-23 at revision `07db320334a0a58e11107b6ca8092b2e5047c1f8`: this defect no longer reproduces (the output matches the expected result), so this issue is closed as completed.\n\nThe reproduction in this issue was run again (`ast.parse` over every `.py` file of the checkout, Python 3.13.18) and printed:\n\n```\nFAILED/TOTAL 0/248\n```\n\nOutput digest: `sha256:0dd53d4f9ca165e25ccb90955554e663e2e5d0467d9273af03dff23dabfd0977`.\n\n<!-- repo-presenter:closing-comment:sha256:c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188:completed -->\n",
+      "state_change": "closed (completed)"
+     },
+     "reason": "verified resolved at 07db320334a0",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    }
+   ],
+   "run": "45241043226-1"
   }
  ],
- "dry_run_cycles": 2,
+ "dry_run_cycles": 3,
  "ledger": [
   {
    "count": 1,
@@ -131,7 +164,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/issues/2",
    "last_check": {
-    "at": "2026-11-22T14:52:22Z",
+    "at": "2026-11-23T18:42:24Z",
     "outcome": "VERIFIED_RESOLVED",
     "output_digest": "sha256:0dd53d4f9ca165e25ccb90955554e663e2e5d0467d9273af03dff23dabfd0977",
     "revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8"
