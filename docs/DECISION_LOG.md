@@ -8684,3 +8684,11 @@ Alternatives (R36(a)(2)): keep blocking (the cell is lost for true sentences); w
 Cost and convergence (BL-891, recorded, not changed). 540 calls over 4277 s: S4 reconciliation 46 calls and 1378 s (about 30 s per call), S6 authoring 14 calls and 720 s, first review 99 calls, then four degrade passes of 93 to 97 review calls each (280 to 330 s). The passes withheld 7, 9, 10, 12 units cumulatively, so the loop was converging slowly rather than diverging, and ended on the time allowance (time-box 3000 s + grace 1200 s inside the 90-minute job). The cost of a pass is the review's absolute line numbers: withholding text shifts every later unit's request, so no review is replayed. Keyed-by-text requests would let unchanged units replay; that is an investigation item, not a change made here.
 
 Backlog: BL-890, BL-891
+
+## 2026-11-23: GIS .NET excluded from the 40-cell portfolio (owner decision, R42/R44)
+
+Owner answer through the interactive form on 2026-11-23: GIS .NET (aspose-gis-foss/.NET) has no upstream README and no package, so neither lane can cover it; it is excluded from the portfolio and both denominators become 39. R42: aspose.org has no published candidate for it either, so there is nothing to adopt or beat. Pipeline status: the official count job still reports records=40 because the exclusion is recorded here and has not yet been coded into `ops/checks/portfolio_delivery_count.py`; until it is, report both readings (of 40 as counted, of 39 as decided). No candidate was altered and no seal demoted (R10, R14).
+
+Official count after audit round 11 (run 45125322787, main 959b1790): Lane R records=40, pipeline_good=38, independently_accepted=37, pipeline_good_uncalibrated=1 (PDF TypeScript, sealed at 22:58Z on 2026-11-22 after BL-892 and BL-893; round 12 `audit-r12-0709` seeded for it). Lane L records=40, pipeline_good=38, independently_accepted=33, no_action_justified=5. Audit rounds were repeated until a round passed; that retry-until-pass selection is disclosed.
+
+Backlog: none
