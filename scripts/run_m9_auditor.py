@@ -262,6 +262,20 @@ def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]],
                                + f"; was: {row.get('evidence', '')}")[:900]
             if proof:
                 row["provenance"] = proof
+        elif (
+            line in derived.maintainer and str(row.get("claim") or "").startswith("[unsupported_claim]")
+        ):
+            # BL-894: the production review's maintainer-line contract (``scope.maintainer_lines``: attributed
+            # maintainer text, and BL-890 scope-limitation bullets kept verbatim and verified only by symbol
+            # names) calls an ``unsupported_claim`` citing only such lines void; the whole-document audit
+            # (``rendered=False``) never applied it, so the same sealed bullets were flagged here that the seal's
+            # own review voids. Row by row: a quote that also spans an authored line keeps its row there.
+            row["verdict"] = "supported"
+            row["cleared_by"] = "maintainer_contract"
+            row["evidence"] = ("cleared: the line is the maintainers' own text kept verbatim by the seal "
+                               "(scope.maintainer_lines over its dispositions; no fact contradicts it), so an "
+                               "unsupported_claim on it is void by the review contract; was: "
+                               f"{row.get('evidence', '')}")[:900]
         elif line in derived.statements or (
             line in derived.sentences and flag_within_sentences(str(row.get("claim") or ""), derived.sentences[line][0])
         ):
@@ -504,7 +518,18 @@ def case_derivation(
     except Exception as error:  # noqa: BLE001 -- no re-derivation is no derivation, never a crash
         print(f"derivation unavailable for {seal.repository} lane {seal.lane}: {error}", file=sys.stderr)
         return None
-    return derivation(seal.lane, text, facts, rederived, repository=seal.repository, register=load_register(), ask=ask)
+    maintainer: frozenset[int] = frozenset()
+    if seal.lane == "R":  # BL-894: Lane L has no dispositions, hence no attributed lines
+        try:
+            from repo_presenter.readme.review.scope import maintainer_lines
+
+            record = bundle / "dispositions.json"
+            if record.is_file():
+                maintainer = maintainer_lines(text, facts, json.loads(record.read_text(encoding="utf-8")))
+        except Exception as error:  # noqa: BLE001 -- no maintainer lines is the stricter reading
+            print(f"maintainer lines unavailable for {seal.repository}: {error}", file=sys.stderr)
+    return derivation(seal.lane, text, facts, rederived, repository=seal.repository, register=load_register(), ask=ask,
+                      maintainer=maintainer)
 
 
 def evidence_validity(findings: Sequence[Mapping[str, Any]]) -> tuple[bool, str]:

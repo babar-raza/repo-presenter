@@ -466,6 +466,10 @@ class Derivation(NamedTuple):
     #: BL-801: lines whose renderer-appended count sentence verifies against the facts' computation: a flag is
     #: cleared there only when its claim is nothing but those sentences (``flag_within_sentences``)
     sentences: Mapping[int, tuple[tuple[str, ...], str]] = {}
+    #: BL-894: the case's attributed maintainer lines (``scope.maintainer_lines`` over the seal's own dispositions,
+    #: Lane R only): the production review's contract voids an ``unsupported_claim`` citing only them, so the
+    #: whole-document audit does not count one either (``run_m9_auditor.apply_derivation``)
+    maintainer: frozenset[int] = frozenset()
 
 
 def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
@@ -613,6 +617,7 @@ def load_register(path: Path = Path("data/readme_findings.json")) -> list[Mappin
 def derivation(
     lane: str, text: str, facts: Any, rederived: str | Rederived, *, repository: str = "",
     register: Sequence[Mapping[str, Any]] = (), ask: Collection[int] | None = None,
+    maintainer: Collection[int] = (),
 ) -> Derivation:
     """Align ``text`` with the re-derived README (``difflib`` over whole lines). A deterministic-owned
     line in an ``equal`` block is derivable, any other deterministic-owned line is underived; a
@@ -662,7 +667,7 @@ def derivation(
                       cited={n: tuple(str(f) for f in (source_of[n] or {}).get("fact_ids") or ())
                              for n in clearable if (source_of[n] or {}).get("fact_ids")},
                       corrected=frozenset(n for n in clearable if (source_of[n] or {}).get("count_corrected")),
-                      statements=statements, sentences=sentences)
+                      statements=statements, sentences=sentences, maintainer=frozenset(maintainer))
 
 
 def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[Any]) -> tuple[Mapping[str, Any], ...]:

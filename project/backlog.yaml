@@ -3852,3 +3852,18 @@ items:
       - "592 at 851c1a6a is 589 at the sealed 5fa17750 (README shifted by three units); the sealed seal OMITs it with its table; offline, restoring it into key_capabilities reproduces the exact BC-07 detail"
     next_action: "supervisor integrates; hosted PDF TypeScript Lane R refresh. If S4 reconciliation stays near 1700 s the time-box leaves no model repair round (BL-891), so this fix is what lets the run reach review"
     updated: "2026-11-22"
+
+  - id: BL-894
+    title: "M9 audit round 12 (seed run 45129080547) false-flagged the PDF TypeScript Lane R control (851c1a6a, run 45074125387) on seven unsupported_claim findings that are all kept-verbatim maintainers' text: five are the BL-890 scope_limitations class, which the production review voids but the whole-document audit (rendered=False) never applied"
+    type: defect
+    source: "owner rulings R10, R14, R21, R36, R44, R46; audit round 12 scorecard audit-score/seed-run-45129080547 (false_flag_rate 1/1, seeded recall 75/75); frozen findings audit-findings/run-45129080547; BL-890, BL-660 precedents"
+    priority: P0
+    status: active
+    implementation_path: "run_m9_auditor.case_derivation computes scope.maintainer_lines over the case seal's own facts and dispositions (Lane R only) into Derivation.maintainer; apply_derivation clears, row by row, an llm unsupported_claim whose line is a maintainer line (cleared_by maintainer_contract). Thresholds, judging prompts, packets, validators and the seeded-recall path are unchanged"
+    acceptance: "(1) tests/readme/review/test_audit_maintainer_contract_bl894.py with negative controls; (2) offline replay on the frozen findings: lines 4751, 4753-4756 clear, 2573 and 4567 (VERIFIED_PRESERVE into api_reference, outside the BL-890 class) keep their flags; (3) hosted: a new audit round over a PDF TypeScript refresh (R41, not yet proven)"
+    evidence:
+      - "scorecard-45129080547: false_flag_rate matched 1 of 1, controls_not_recertified empty; the control is 5a49afae2662795e, Lane R, 851c1a6a, recertify true"
+      - "findings: 7 unresolved llm unsupported_claim rows on lines 2573, 4567, 4751, 4753, 4754, 4755, 4756 plus one quality flag already cleared by derivation; lines 4751-4756 are inherited_unit:575.002.list, VERIFIED_PRESERVE into scope_limitations citing five public_symbol facts (maintainer_lines marks all of them); 2573 (014.005.list) and 4567 (579.004.list) are VERIFIED_PRESERVE into api_reference"
+      - "the other PDF TypeScript-named finding (e52560a9883be911, Lane L, line 1) is a seeded D14 row (a sentence written on the title line) and is correctly caught"
+    next_action: "supervisor decides whether the two api_reference lines need a further general rule (owner ruled on 2026-11-22 that VERIFIED_* units outside scope_limitations keep the full review); then refresh and a new audit round"
+    updated: "2026-11-24"
