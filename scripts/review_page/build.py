@@ -63,7 +63,12 @@ def attested(remote: str) -> set[tuple[str, str]]:
 def candidates(remote: str) -> list[dict]:
     accepted = attested(remote)
     out = []
+    from repo_presenter.core.registry.portfolio_exclusions import excluded_repositories  # noqa: PLC0415
+
+    outside = excluded_repositories()  # owner-recorded exclusions: not part of the counted portfolio
     for row in certified_seals(remote):
+        if row["repository"] in outside:
+            continue
         commit, rev, lane = row["seal_commit"], row["revision"], row["lane"]
         readme = _git_show(commit, f"{rev}/README.md")
         if readme is None:

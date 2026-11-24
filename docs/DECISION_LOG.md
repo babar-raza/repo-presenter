@@ -8692,3 +8692,9 @@ Owner answer through the interactive form on 2026-11-23: GIS .NET (aspose-gis-fo
 Official count after audit round 11 (run 45125322787, main 959b1790): Lane R records=40, pipeline_good=38, independently_accepted=37, pipeline_good_uncalibrated=1 (PDF TypeScript, sealed at 22:58Z on 2026-11-22 after BL-892 and BL-893; round 12 `audit-r12-0709` seeded for it). Lane L records=40, pipeline_good=38, independently_accepted=33, no_action_justified=5. Audit rounds were repeated until a round passed; that retry-until-pass selection is disclosed.
 
 Backlog: none
+
+## 2026-11-24: GIS .NET exclusion coded into the official count (BL-895)
+
+The 2026-11-23 owner decision is now data, not prose: `data/portfolio_exclusions.json` records the repository (`aspose-gis-foss/Aspose.GIS.FOSS-for-.Net`, the registry spelling), the reason, the decision-log entry and the owner decision date, and `repo_presenter.core.registry.portfolio_exclusions.split_portfolio` applies it in the official count (`ops/checks/portfolio_delivery_count.py`), the delivery funnel, the R15 portfolio gate, the monitor, the scheduled cohort selection and the review page. Per-lane `records` is 39 and the count prints a line naming the exclusion and the 40 to 39 reading; the R44 85% bar and the >= 25 gate use the 39 denominator. The registry entry, its records and any seal are untouched and nothing is demoted (R10, R14); removing the exclusion from the file restores the 40 reading. Reports before this change that say "of 40" keep that wording.
+
+Backlog: BL-895

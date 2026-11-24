@@ -61,7 +61,7 @@ def test_header_does_not_call_accepted_candidates_mechanism_only_or_claim_zero_i
     monkeypatch.setattr(funnel.pdc, "collect", lambda remote: (
         verified_outcomes(), None, SimpleNamespace(complete=True)
     ))
-    monkeypatch.setattr(loader, "load_registry", lambda path: SimpleNamespace(entries=[None] * 5))
+    monkeypatch.setattr(loader, "load_registry", lambda path: SimpleNamespace(entries=[SimpleNamespace(repository=f"o/r{i}") for i in range(5)]))
 
     assert funnel.main([]) == 0
     header = capsys.readouterr().out.splitlines()[0]

@@ -3852,3 +3852,15 @@ items:
       - "592 at 851c1a6a is 589 at the sealed 5fa17750 (README shifted by three units); the sealed seal OMITs it with its table; offline, restoring it into key_capabilities reproduces the exact BC-07 detail"
     next_action: "supervisor integrates; hosted PDF TypeScript Lane R refresh. If S4 reconciliation stays near 1700 s the time-box leaves no model repair round (BL-891), so this fix is what lets the run reach review"
     updated: "2026-11-22"
+
+  - id: BL-895
+    title: "Code the owner's exclusion of GIS .NET (no upstream README, no package) into the official count and every enumeration of the 40-cell portfolio: both denominators become 39, the repository, its records and any seal stay"
+    type: task
+    source: "owner decision 2026-11-23 (docs/DECISION_LOG.md 'GIS .NET excluded from the 40-cell portfolio'); owner rulings R42, R44, R10, R14"
+    priority: P1
+    status: active
+    implementation_path: "data/portfolio_exclusions.json (repository, reason, decision-log reference, owner decision date) read by core/registry/portfolio_exclusions.split_portfolio; applied in ops/checks/portfolio_delivery_count.py (collect, summary 'excluded_repositories', printed line), delivery_funnel.py, propose/portfolio_gate.py, monitor/run.py, scripts/select_scheduled_cohort.py and scripts/review_page/build.py. No hard-coded repository name; data/registry.json is unchanged"
+    acceptance: "(1) tests/ops/test_portfolio_exclusions_bl895.py; (2) the official count prints records=39 per lane and a line naming the exclusion; (3) hosted count job after merge (not yet proven)"
+    evidence: []
+    next_action: "supervisor integrates; verify the hosted count job prints records=39 and the exclusion line"
+    updated: "2026-11-24"
