@@ -8706,3 +8706,9 @@ Backlog: BL-894
 The 2026-11-23 owner decision is now data, not prose: `data/portfolio_exclusions.json` records the repository (`aspose-gis-foss/Aspose.GIS.FOSS-for-.Net`, the registry spelling), the reason, the decision-log entry and the owner decision date, and `repo_presenter.core.registry.portfolio_exclusions.split_portfolio` applies it in the official count (`ops/checks/portfolio_delivery_count.py`), the delivery funnel, the R15 portfolio gate, the monitor, the scheduled cohort selection and the review page. Per-lane `records` is 39 and the count prints a line naming the exclusion and the 40 to 39 reading; the R44 85% bar and the >= 25 gate use the 39 denominator. The registry entry, its records and any seal are untouched and nothing is demoted (R10, R14); removing the exclusion from the file restores the 40 reading. Reports before this change that say "of 40" keep that wording.
 
 Backlog: BL-895
+
+## 2026-11-27: BL-894 audit-derivation change withheld pending an owner decision (R10, R21; owner: audit gate and judging unchanged)
+
+The worker branch `bl894-pdf-ts-audit-flag` changed the M9 audit derivation so that unsupported_claim flags on the seal's maintainer lines are cleared (the production contract applied to the audit). It was merged into the development branch by mistake and is reverted here: the owner decided on 2026-11-20 to keep the audit gate and single-sample judging unchanged, and a change to which audit flags clear is a change to judging that needs the owner's explicit decision, particularly since it would make a cell this session wants accepted easier to pass, and by its own notes would still leave two api_reference flags. Nothing from it reached main. The work stays on the branch; the PDF TypeScript Lane R seal remains sealed and not independently accepted (round 12 false-flagged it 1/1).
+
+Backlog: BL-894
