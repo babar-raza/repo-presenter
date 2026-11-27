@@ -1,0 +1,576 @@
+--- a/README.md
++++ b/README.md
+@@ -10,7 +10,7 @@
+ gradient fills, watermarks, annotations, AcroForm fields, and bookmarks). It links against nothing but the C++ standard
+ library: every primitive, including the TIFF, JPEG, and PNG codecs and the page rasteriser, is
+ implemented from scratch with no dependency on any commercial PDF stack. Its public API is a
+-strict subset of the commercial Aspose.PDF for .NET library — class names, method names, and
++strict subset of Aspose.PDF for .NET — Enterprise Edition library — class names, method names, and
+ shapes mirror it where natural for migrants — and spec references throughout follow ISO 32000-1
+ (PDF 1.7) and ISO 32000-2 (PDF 2.0).
+ 
+@@ -33,39 +33,44 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+-    direction LR
+-    i1["An existing PDF document"]
+-    i2["Nothing — authored from scratch"]
++    direction TB
++    i1["An existing PDF<br/>document"]
++    i2["Nothing — authored<br/>from scratch"]
+   end
+   PRODUCT["Aspose.PDF FOSS for C++"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Open, edit, and save existing PDF documents"]
+-      c2["Text extraction with TextAbsorber and TextFragmentAbsorber"]
+-      c3["Render pages to raster images (PNG, JPEG, BMP, TIFF)"]
+-      c4["Encrypt and decrypt with RC4-40/128 and AES-128/256"]
+-      c5["Digital signatures via a detached PKCS#7 signature"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c6["Author new PDF documents from scratch"]
+-      c7["Annotations across a gallery of subtypes"]
+-      c8["AcroForm fields and form flattening"]
+-      c9["Outlines, named destinations, and embedded files"]
+-      c10["Classic Aspose.Pdf.Facades API"]
+-    end
++    direction TB
++    c1["Open, edit, and save<br/>existing PDF documents"]
++    c2["Text extraction with<br/>TextAbsorber and<br/>TextFragmentAbsorber"]
++    c3["Render pages to raster<br/>images (PNG, JPEG,<br/>BMP, TIFF)"]
++    c4["Encrypt and decrypt<br/>with RC4-40/128 and<br/>AES-128/256"]
++    c5["Digital signatures via<br/>a detached PKCS#7<br/>signature"]
++    c6["Author new PDF<br/>documents from scratch"]
++    c7["Annotations across a<br/>gallery of subtypes"]
++    c8["AcroForm fields and<br/>form flattening"]
++    c9["Outlines, named<br/>destinations, and<br/>embedded files"]
++    c10["Classic<br/>Aspose.Pdf.Facades API"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c9
++    c7 ~~~ c10
++    c8 ~~~ c10
++    c9 ~~~ c10
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+     o1["PDF documents"]
+-    o2["PNG / JPEG / BMP / TIFF raster images"]
++    o2["PNG / JPEG / BMP /<br/>TIFF raster images"]
+     o3["Plain text"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -575,8 +580,8 @@
+ 
+ ## API Reference
+ 
+-Aspose.PDF FOSS for C++ exposes 247 public types across 5 modules — Core API, Annotations,
+-Drawing, Facades, and Forms — listed in the table below; curated member detail for the
++Aspose.PDF FOSS for C++ exposes 253 public types across 5 modules — Core API, Annotations,
++Drawing, Facades, and Forms — 247 of them listed in the table below; curated member detail for the
+ most-used entry points follows below it.
+ 
+ <details>
+@@ -586,67 +591,67 @@
+ 
+ | Class | Description |
+ |---|---|
+-| `Artifact` | Class with 14 methods. |
+-| `ArtifactCollection` | Class with 7 methods and 1 property. |
+-| `BaseParagraph` | Class with 23 methods and 1 property. |
++| `Artifact` | Class that declares methods including IsBackground, Opacity, Position, Rotation, SetImage and SetTextAndState. |
++| `ArtifactCollection` | Class that declares the methods Add, Count, Delete and Update. |
++| `BaseParagraph` | Class that declares methods including HorizontalAlignment, Hyperlink, IsFirstParagraphInColumn, IsInLineParagraph, IsInNewPage and IsKeptWithNext. |
+ | `BitmapInfo` | BitmapInfo enables creation of raw bitmap images with specified pixel format, width, height, and pixel data, supporting image handling without external dependencies. |
+-| `BmpDevice` | Class with 1 method. |
+-| `BorderInfo` | Class with 10 methods. |
+-| `Cell` | Class with 27 methods. |
+-| `Cells` | Class with 9 methods. |
+-| `Color` | Class with 149 methods. |
++| `BmpDevice` | Class that inherits from ImageDevice and declares the method Process. |
++| `BorderInfo` | Class that declares the methods Bottom, Left, Right, RoundedBorderRadius and Top. |
++| `Cell` | Class that declares methods including Alignment, BackgroundColor, BackgroundImage, BackgroundImageFile, Border and ColSpan. |
++| `Cells` | Class that declares the methods Add, Count, Insert, Remove and RemoveRange. |
++| `Color` | Class that declares methods including A, AliceBlue, AntiqueWhite, Aqua, Aquamarine and Azure. |
+ | `Device` | The Device base class provides a virtual destructor, ensuring proper cleanup of derived raster‑device objects such as PngDevice or JpegDevice. |
+ | `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |
+-| `DocumentDevice` | Class with 4 methods. |
+-| `DocumentInfo` | Class with 24 methods and 1 property. |
+-| `DocumentPrivilege` | Class with 34 methods. |
+-| `EmbeddedFileCollection` | Class with 9 methods. |
++| `DocumentDevice` | Class that inherits from PageDevice and declares the method Process. |
++| `DocumentInfo` | Class that declares methods including Add, Author, Clear, ClearCustomData, Creator and IsPredefinedKey. |
++| `DocumentPrivilege` | Class that declares methods including AllowAll, AllowAssembly, AllowCopy, AllowDegradedPrinting, AllowFillIn and AllowModifyAnnotations. |
++| `EmbeddedFileCollection` | Class that declares the methods Add, Count, Delete, DeleteByKey, FindByName and Keys. |
+ | `FileSpecification` | FileSpecification objects allow setting metadata for embedded files, including MIME type, description, Unicode name, and compression via the Encoding property. |
+-| `FloatingBox` | Class with 12 methods. |
++| `FloatingBox` | Class that inherits from BaseParagraph and declares the methods BackgroundColor, Border, Height, IsNeedRepeating, Paragraphs and Width. |
+ | `Font` | The Font class lets developers query whether a font is embedded in the PDF and whether it is subsetted, enabling compliance checks for PDF/A. |
+-| `FontRepository` | Class with 2 methods. |
+-| `GraphInfo` | Class with 25 methods. |
+-| `Hyperlink` | Class with 6 methods and 1 property. |
+-| `ImageDevice` | Class with 10 methods. |
+-| `JpegDevice` | Class with 1 method. |
+-| `LoadOptions` | Class with 3 methods. |
++| `FontRepository` | Class that declares the methods FindFont and OpenFont. |
++| `GraphInfo` | Class that declares methods including Color, DashArray, DashPhase, FillColor, IsDoubled and LineWidth. |
++| `Hyperlink` | Class that declares a public no-argument constructor. |
++| `ImageDevice` | Class that inherits from PageDevice and declares methods including CoordinateType, FormPresentationMode, GetBitmap, Height, RenderingOptions and Resolution. |
++| `JpegDevice` | Class that inherits from ImageDevice and declares the method Process. |
++| `LoadOptions` | Class that declares the method DisableFontLicenseVerifications. |
+ | `MarginInfo` | MarginInfo allows precise control of page margins with double-precision getters and setters for left, right, top, and bottom values. |
+-| `Margins` | Class with 8 methods. |
++| `Margins` | Class that declares the methods Bottom, Left, Right and Top. |
+ | `Metadata` | Metadata class implements a dictionary-like interface with Add(key, value), Remove(key), and TryGetValue(key, value) for managing XMP metadata entries. |
+-| `NamedDestinationCollection` | Class with 6 methods and 1 property. |
+-| `OutlineCollection` | Class in the PDF C++ API. |
+-| `OutlineItemCollection` | Class with 18 methods. |
+-| `Outlines` | Class with 12 methods. |
++| `NamedDestinationCollection` | Class that declares the methods Add, Count, Names and Remove. |
++| `OutlineCollection` | Class that inherits from Outlines. |
++| `OutlineItemCollection` | Class that inherits from Outlines and declares methods including Action, Bold, Destination, HasNext, Insert and Italic. |
++| `Outlines` | Class that declares methods including Add, Clear, Contains, Count, Delete and First. |
+ | `Page` | Page labels (e.g., Roman numerals, custom prefixes) are managed through PageLabel and PageLabelCollection classes. |
+ | `PageCollection` | The PageCollection class provides methods to add a new blank page, insert a page at a specific position, and delete pages by number or range. |
+ | `PageDevice` | PageDevice.Process(page, outputFileName) can render a page directly to a file path. |
+ | `PageLabel` | PageLabel.StartingValue() gets or sets the numeric start for a page label sequence. |
+ | `PageLabelCollection` | PageLabelCollection.GetLabel(pageIndex) retrieves the PageLabel assigned to a specific page. |
+ | `PageSize` | PageSize.Width() and Height() get or set the page dimensions, while IsLandscape() indicates orientation. |
+-| `Paragraphs` | Class with 6 methods. |
+-| `PngDevice` | Class with 3 methods. |
+-| `Point` | Class with 6 methods. |
++| `Paragraphs` | Class that declares the methods Add, Clear, Count, Insert, Remove and RemoveRange. |
++| `PngDevice` | Class that inherits from ImageDevice and declares the methods Process and TransparentBackground. |
++| `Point` | Class that declares the methods Distance, Trivial, X and Y. |
+ | `Position` | The Position class provides XIndent and YIndent getters and setters to fine‑tune the horizontal and vertical offset of annotations. |
+ | `Rectangle-Aspose_Pdf` | Class with 28 methods. |
+-| `RenderingOptions` | Class with 26 methods. |
++| `RenderingOptions` | Class that declares methods including AnalyzeFonts, BarcodeOptimization, ConvertFontsToUnicodeTTF, DefaultFontName, HeightExtraUnits and IgnoreResourceFontErrors. |
+ | `Resolution` | Resolution stores horizontal and vertical DPI via X() and Y() getters and setters. |
+-| `Resources` | Class with 3 methods and 1 property. |
+-| `Row` | Class with 23 methods. |
++| `Resources` | Class that declares the method Images. |
++| `Row` | Class that declares methods including BackgroundColor, Border, Cells, DefaultCellBorder, DefaultCellPadding and DefaultCellTextState. |
+ | `Rows` | Rows and Row classes provide a table model for building PDF tables with per‑cell styling, borders, and padding. |
+ | `SvgLoadOptions` | SvgLoadOptions allows SVG files to be imported with optional page‑size adjustment via the AdjustPageSize property. |
+ | `Table` | The Table class lets developers construct PDF tables with full control over rows, column widths, borders, cell padding, and default text state. |
+-| `TextAbsorber` | Class with 6 methods and 1 property. |
+-| `TextBuilder` | Class with 2 methods. |
+-| `TextDevice` | Class with 3 methods. |
+-| `TextFragment` | Class with 7 methods. |
+-| `TextFragmentAbsorber` | Class with 4 methods. |
+-| `TextFragmentCollection` | Class with 2 methods. |
+-| `TextFragmentState` | Class with 1 method. |
+-| `TextParagraph` | Class with 18 methods. |
++| `TextAbsorber` | Class that declares the methods HasErrors, Text and Visit. |
++| `TextBuilder` | Class that declares the methods AppendParagraph and AppendText. |
++| `TextDevice` | Class that inherits from PageDevice and declares the methods GetEncoding, Process and SetEncoding. |
++| `TextFragment` | Class that declares the methods Position, Rectangle, Text and TextState. |
++| `TextFragmentAbsorber` | Class that declares the methods TextFragments and Visit. |
++| `TextFragmentCollection` | Class that declares the method Count. |
++| `TextFragmentState` | Class that inherits from TextState and declares a public no-argument constructor. |
++| `TextParagraph` | Class that declares methods including AppendLine, FirstLineIndent, HorizontalAlignment, Margin, Position and Rectangle. |
+ | `TextState` | The TextState class provides getters and setters for font, font size, foreground/background/stroking colors, and text decorations such as underline, strike‑out, subscript, and superscript. |
+-| `TiffDevice` | Class with 11 methods. |
+-| `TiffSettings` | Class with 13 methods. |
+-| `WatermarkArtifact` | Class in the PDF C++ API. |
++| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |
++| `TiffSettings` | Class that declares methods including Brightness, Compression, CoordinateType, Depth, Margins and Shape. |
++| `WatermarkArtifact` | Class that inherits from Artifact. |
+ | `XImage` | XImage exposes the pixel dimensions of an image via Width() and Height() methods. |
+ | `XImageCollection` | XImageCollection manages multiple XImage objects, providing Add, Replace, Delete, and Clear operations. |
+ | `XmpValue` | XmpValue provides conversion helpers: ToString(), ToInteger(), ToDouble(), ToArray(), and type‑query methods such as IsString() and IsArray(). |
+@@ -655,82 +660,82 @@
+ 
+ | Enumeration | Description |
+ |---|---|
+-| `AFRelationship` | Enum with 7 members. |
+-| `BorderSide` | Enum with 7 members. |
+-| `ColorDepth` | Enum with 5 members. |
+-| `CompressionType` | Enum with 5 members. |
+-| `CryptoAlgorithm` | Enum with 4 members. |
+-| `FileEncoding` | Enum with 2 members. |
+-| `FormPresentationMode` | Enum with 2 members. |
+-| `HorizontalAlignment` | Enum with 6 members. |
+-| `NumberingStyle` | Enum with 6 members. |
++| `AFRelationship` | Enumerates Alternative, Data, EncryptedPayload, None, Source, Supplement and Unspecified. |
++| `BorderSide` | Enumerates All, Bottom, Box, Left, None, Right and Top. |
++| `ColorDepth` | Enumerates Default, Format1bpp, Format24bpp, Format4bpp and Format8bpp. |
++| `CompressionType` | Enumerates CCITT3, CCITT4, LZW, None and RLE. |
++| `CryptoAlgorithm` | Enumerates AESx128, AESx256, RC4x128 and RC4x40. |
++| `FileEncoding` | Enumerates None and Zip. |
++| `FormPresentationMode` | Enumerates Editor and Production. |
++| `HorizontalAlignment` | Enumerates Center, FullJustify, Justify, Left, None and Right. |
++| `NumberingStyle` | Enumerates LettersLowercase, LettersUppercase, None, NumeralsArabic, NumeralsRomanLowercase and NumeralsRomanUppercase. |
+ | `PageCoordinateType` | PageCoordinateType enum values MediaBox and CropBox let developers choose which page rectangle is used for coordinate calculations. |
+-| `PasswordType` | Enum with 4 members. |
+-| `PdfFormat` | Enum with 27 members. |
+-| `Permissions` | Enum with 8 members. |
++| `PasswordType` | Enumerates Inaccessible, None, Owner and User. |
++| `PdfFormat` | Enumerates values including PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B and PDF_A_3U. |
++| `Permissions` | Enumerates AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument and PrintingQuality. |
+ | `Rotation` | Rotation enum provides four orientation values: None, on90, on180, on270. |
+-| `ShapeType` | Enum with 3 members. |
+-| `VerticalAlignment` | Enum with 4 members. |
++| `ShapeType` | Enumerates Landscape, None and Portrait. |
++| `VerticalAlignment` | Enumerates Bottom, Center, None and Top. |
+ 
+ ### Annotations
+ 
+ | Class | Description |
+ |---|---|
+-| `Annotation` | Class with 36 methods. |
+-| `AnnotationCollection` | Class with 11 methods. |
+-| `AnnotationSelector` | Class with 35 methods and 1 property. |
++| `Annotation` | Class that inherits from BaseParagraph and declares methods including Accept, ActiveState, Alignment, AnnotationType, Border and Characteristics. |
++| `AnnotationCollection` | Class that declares methods including Accept, Add, Clear, Contains, Count and Delete. |
++| `AnnotationSelector` | Class that declares the method Visit. |
+ | `BleedMarkAnnotation` | BleedMarkAnnotation.Accept(visitor) implements the visitor pattern, allowing external visitor objects to process the annotation without exposing its internal structure. |
+ | `Border` | Border appearance can be customized by setting its Width, Style, Effect, EffectIntensity, and corner radii via the Border class methods. |
+-| `CaretAnnotation` | Class with 5 methods. |
+-| `Characteristics` | Class with 3 methods. |
+-| `CircleAnnotation` | Class with 1 method. |
+-| `ColorBarAnnotation` | Class with 3 methods. |
+-| `CommonFigureAnnotation` | Class with 5 methods. |
+-| `CornerPrinterMarkAnnotation` | Class with 2 methods. |
+-| `DefaultAppearance` | Class with 8 methods. |
+-| `ExplicitDestination` | Class with 3 methods. |
++| `CaretAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol. |
++| `Characteristics` | Class that declares the method Rotate. |
++| `CircleAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
++| `ColorBarAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and ColorOfCMYK. |
++| `CommonFigureAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Frame and InteriorColor. |
++| `CornerPrinterMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Position. |
++| `DefaultAppearance` | Class that declares the methods FontName, FontResourceName, FontSize and Text. |
++| `ExplicitDestination` | Class that inherits from IAppointment and declares the methods PageNumber and ToString. |
+ | `FileAttachmentAnnotation` | FileAttachmentAnnotation.File() gets or sets the attached file via a FileSpecification object, allowing embedding of external resources in a PDF. |
+-| `FitBExplicitDestination` | Class with 1 method. |
+-| `FitBHExplicitDestination` | Class with 2 methods. |
+-| `FitBVExplicitDestination` | Class with 2 methods. |
+-| `FitExplicitDestination` | Class with 1 method. |
+-| `FitHExplicitDestination` | Class with 2 methods. |
+-| `FitRExplicitDestination` | Class with 5 methods. |
+-| `FitVExplicitDestination` | Class with 2 methods. |
+-| `FreeTextAnnotation` | Class with 23 methods. |
+-| `GoToAction` | Class with 4 methods. |
+-| `GoToURIAction` | Class with 4 methods. |
+-| `HighlightAnnotation` | Class with 1 method. |
++| `FitBExplicitDestination` | Class that inherits from ExplicitDestination and declares the method ToString. |
++| `FitBHExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Top and ToString. |
++| `FitBVExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Left and ToString. |
++| `FitExplicitDestination` | Class that inherits from ExplicitDestination and declares the method ToString. |
++| `FitHExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Top and ToString. |
++| `FitRExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString. |
++| `FitVExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Left and ToString. |
++| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |
++| `GoToAction` | Class that inherits from PdfAction and declares the methods Destination, GetECMAScriptString and ToString. |
++| `GoToURIAction` | Class that inherits from PdfAction and declares the methods GetECMAScriptString, ToString and URI. |
++| `HighlightAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+ | `InkAnnotation` | InkAnnotation represents free‑hand ink strokes; its InkList property holds a StrokeList that can be read or replaced. |
+ | `JavascriptAction` | JavascriptAction encapsulates a JavaScript snippet attached to PDF objects; the script can be retrieved or updated via Script() getter/setter. |
+-| `LineAnnotation` | Class with 25 methods. |
++| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |
+ | `LinkAnnotation` | LinkAnnotation enables clickable areas in a PDF that can trigger a PdfAction or navigate to a named destination. |
+ | `MarkupAnnotation` | MarkupAnnotation provides methods to set review state, opacity, title, and rich text for comment‑type annotations. |
+ | `MovieAnnotation` | MovieAnnotation lets you embed a video file in a PDF, with properties for title, poster flag, aspect ratio, and rotation. |
+-| `NamedAction` | Class with 3 methods. |
+-| `NamedDestination` | Class with 2 methods. |
+-| `PageInformationAnnotation` | Class with 1 method. |
++| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |
++| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |
++| `PageInformationAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Accept. |
+ | `PdfAction` | PdfAction.GetECMAScriptString() returns the JavaScript code attached to a PDF action, enabling inspection or modification of interactive scripts. |
+-| `PolyAnnotation` | Class with 11 methods. |
+-| `PolygonAnnotation` | Class with 1 method. |
+-| `PolylineAnnotation` | Class with 1 method. |
+-| `PopupAnnotation` | Class with 5 methods. |
++| `PolyAnnotation` | Class that inherits from MarkupAnnotation and declares the methods EndingStyle, Intent, InteriorColor, StartingStyle and Vertices. |
++| `PolygonAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
++| `PolylineAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
++| `PopupAnnotation` | Class that inherits from Annotation and declares the methods Accept, Open and Parent. |
+ | `PrinterMarkAnnotation` | PrinterMarkAnnotation can insert printer marks such as trim, bleed, registration, or colour bars into an entire document or a single page via AddPrinterMarks. |
+ | `RedactionAnnotation` | RedactionAnnotation lets you permanently remove content while optionally overlaying custom text, fill colour, border colour and font size. |
+-| `RegistrationMarkAnnotation` | Class with 3 methods. |
++| `RegistrationMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position. |
+ | `RichMediaAnnotation` | RichMediaAnnotation enables embedding of Flash or other rich media with activation events and custom variables. |
+-| `ScreenAnnotation` | Class with 3 methods. |
+-| `SoundAnnotation` | Class with 3 methods. |
+-| `SquareAnnotation` | Class with 1 method. |
+-| `SquigglyAnnotation` | Class with 1 method. |
+-| `StampAnnotation` | Class with 5 methods. |
+-| `StrikeOutAnnotation` | Class with 1 method. |
+-| `SubmitFormAction` | Class with 5 methods. |
+-| `TextAnnotation` | Class with 5 methods. |
+-| `TextMarkupAnnotation` | Class with 4 methods. |
+-| `TextStyle` | Class with 9 methods. |
++| `ScreenAnnotation` | Class that inherits from Annotation and declares the methods Accept and Title. |
++| `SoundAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept and Icon. |
++| `SquareAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
++| `SquigglyAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
++| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |
++| `StrikeOutAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
++| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |
++| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |
++| `TextMarkupAnnotation` | Class that inherits from MarkupAnnotation and declares the methods GetMarkedText and QuadPoints. |
++| `TextStyle` | Class that declares the methods Alignment, FontName, FontSize and HorizontalAlignment. |
+ | `TrimMarkAnnotation` | TrimMarkAnnotation and UnderlineAnnotation both support the visitor pattern via an Accept method that forwards the annotation to a visitor object. |
+-| `UnderlineAnnotation` | Class with 1 method. |
++| `UnderlineAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+ | `WatermarkAnnotation` | WatermarkAnnotation enables adding a visual watermark to a PDF page and lets developers control its transparency. |
+ | `WidgetAnnotation` | WidgetAnnotation provides access to AcroForm field attributes such as ReadOnly, Required, Exportable, and DefaultAppearance. |
+ | `XYZExplicitDestination` | XYZExplicitDestination supplies explicit page view coordinates via Left(), Top() and Zoom() methods. |
+@@ -740,70 +745,70 @@
+ | Enumeration | Description |
+ |---|---|
+ | `AnnotationFlags` | AnnotationFlags enum includes a Locked flag that, when set, prevents further modifications to the annotation's properties. |
+-| `AnnotationState` | Enum with 7 members. |
+-| `AnnotationStateModel` | Enum with 3 members. |
+-| `AnnotationType` | Enum with 33 members. |
+-| `BorderEffect` | Enum with 2 members. |
+-| `BorderStyle` | Enum with 5 members. |
+-| `CapStyle` | Enum with 2 members. |
+-| `CaptionPosition` | Enum with 2 members. |
+-| `CaretSymbol` | Enum with 2 members. |
+-| `ColorsOfCMYK` | Enum with 4 members. |
+-| `ExplicitDestinationType` | Enum with 8 members. |
+-| `FileIcon` | Enum with 4 members. |
+-| `FreeTextIntent` | Enum with 4 members. |
+-| `HighlightingMode` | Enum with 5 members. |
+-| `Justification` | Enum with 3 members. |
+-| `LineEnding` | Enum with 10 members. |
+-| `LineIntent` | Enum with 3 members. |
+-| `PolyIntent` | Enum with 4 members. |
+-| `PredefinedAction` | Enum with 71 members. |
+-| `PrinterMarkCornerPosition` | Enum with 4 members. |
+-| `PrinterMarkSidePosition` | Enum with 4 members. |
+-| `PrinterMarksKind` | Enum with 7 members. |
++| `AnnotationState` | Enumerates Accepted, Cancelled, Completed, Marked, None, Rejected and Unmarked. |
++| `AnnotationStateModel` | Enumerates Marked, None and Review. |
++| `AnnotationType` | Enumerates values including BleedMark, Caret, Circle, ColorBar, FileAttachment, FreeText, Highlight and Ink. |
++| `BorderEffect` | Enumerates Cloudy and None. |
++| `BorderStyle` | Enumerates Beveled, Dashed, Inset, Solid and Underline. |
++| `CapStyle` | Enumerates Butt and Rounded. |
++| `CaptionPosition` | Enumerates Inline and Top. |
++| `CaretSymbol` | Enumerates None and Paragraph. |
++| `ColorsOfCMYK` | Enumerates Black, Cyan, Magenta and Yellow. |
++| `ExplicitDestinationType` | Enumerates Fit, FitB, FitBH, FitBV, FitH, FitR, FitV and XYZ. |
++| `FileIcon` | Enumerates Graph, Paperclip, PushPin and Tag. |
++| `FreeTextIntent` | Enumerates FreeText, FreeTextCallout, FreeTextTypeWriter and Undefined. |
++| `HighlightingMode` | Enumerates Invert, None, Outline, Push and Toggle. |
++| `Justification` | Enumerates Centered, LeftJustify and RightJustify. |
++| `LineEnding` | Enumerates values including Butt, Circle, ClosedArrow, Diamond, None, OpenArrow, RClosedArrow and ROpenArrow. |
++| `LineIntent` | Enumerates LineArrow, LineDimension and Undefined. |
++| `PolyIntent` | Enumerates PolyLineDimension, PolygonCloud, PolygonDimension and Undefined. |
++| `PredefinedAction` | Enumerates values including Bookmarks_ExpanCurrentBookmark, Bookmarks_HightlightCurrentBookmark, Document_AttachFile, Document_CropPages, Document_DeletePages, Document_ExtractPages, Document_InsertPages and Document_ReplacePages. |
++| `PrinterMarkCornerPosition` | Enumerates BottomLeft, BottomRight, TopLeft and TopRight. |
++| `PrinterMarkSidePosition` | Enumerates Bottom, Left, Right and Top. |
++| `PrinterMarksKind` | Enumerates All, BleedMarks, ColorBars, None, PageInformation, RegistrationMarks and TrimMarks. |
+ | `ReplyType` | ReplyType enum distinguishes between Reply, Group, and Undefined reply categories. |
+-| `RichTextFontStyles` | Enum with 4 members. |
+-| `SoundIcon` | Enum with 2 members. |
+-| `StampIcon` | Enum with 14 members. |
+-| `TextAlignment` | Enum with 3 members. |
+-| `TextIcon` | Enum with 15 members. |
++| `RichTextFontStyles` | Enumerates Bold, BoldItalic, Italic and Plain. |
++| `SoundIcon` | Enumerates Mic and Speaker. |
++| `StampIcon` | Enumerates values including Approved, AsIs, Confidential, Departmental, Draft, Experimental, Expired and Final. |
++| `TextAlignment` | Enumerates Center, Left and Right. |
++| `TextIcon` | Enumerates values including Check, Circle, Comment, Cross, Help, Insert, Key and NewParagraph. |
+ 
+ ### Drawing
+ 
+ | Class | Description |
+ |---|---|
+-| `Circle` | Class with 7 methods. |
+-| `Ellipse` | Class with 9 methods. |
++| `Circle` | Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius. |
++| `Ellipse` | Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width. |
+ | `GradientAxialShading` | A linear gradient between two colours, used as a fill through `Color::PatternColorSpace`. |
+ | `GradientRadialShading` | A radial gradient between two circles, used as a fill through `Color::PatternColorSpace`. |
+-| `Graph` | Class with 16 methods. |
+-| `Line` | Class with 3 methods. |
++| `Graph` | Class that inherits from BaseParagraph and declares methods including Border, GraphInfo, Height, IsChangePosition, Left and Shapes. |
++| `Line` | Class that inherits from Shape and declares the methods CheckBounds and PositionArray. |
+ | `PatternColorSpace` | Base class of the gradient fills a `Color` can carry. |
+ | `Rectangle-Aspose_Pdf_Drawing` | Class with 11 methods. |
+-| `Shape` | Class with 4 methods. |
++| `Shape` | Class that declares the methods CheckBounds and GraphInfo. |
+ 
+ ### Facades
+ 
+ | Class | Description |
+ |---|---|
+-| `AlignmentType` | Class with 4 methods. |
+-| `Bookmark` | Class with 35 methods. |
++| `AlignmentType` | Class that declares the methods Center, Left, Right and ToString. |
++| `Bookmark` | Class that declares methods including Action, BoldFlag, ChildItem, ChildItems, Destination and ItalicFlag. |
+ | `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag. |
+ | `Facade` | Facade.BindPdf overloads accept either a file path string (srcFile) or an existing `Aspose::Pdf::Document` (srcDoc) to load PDF content. |
+-| `FormEditor` | Class with 53 methods. |
+-| `FormFieldFacade` | Class with 30 methods and 26 properties. |
++| `FormEditor` | Class that inherits from SaveableFacade and declares methods including AddField, AddFieldScript, AddListItem, AddSubmitBtn, ConvertTo and CopyInnerField. |
++| `FormFieldFacade` | Class that declares methods including Alignment, BorderStyle, BorderWidth, ButtonStyle, Caption and CustomFont and fields including AlignBottom, AlignCenter, AlignJustified, AlignLeft, AlignMiddle and AlignRight. |
+ | `PdfAnnotationEditor` | PdfAnnotationEditor can import annotations from FDF or XFDF files and flatten them into the page content, removing interactive elements. |
+ | `PdfBookmarkEditor` | PdfBookmarkEditor.CreateBookmarkOfPage(title, pageNumber) adds a new bookmark that points to the specified page. |
+ | `PdfContentEditor` | PdfContentEditor.ReplaceText(srcText, destText) searches the entire document and replaces matching strings, returning true when at least one replacement occurs. |
+-| `PdfConverter` | Class with 37 methods. |
++| `PdfConverter` | Class that inherits from Facade and declares methods including CoordinateType, DoConvert, EndPage, FormPresentationMode, GetNextImage and HasNextImage. |
+ | `PdfExtractor` | PdfExtractor extracts text by calling ExtractText() and then GetText(outputFile) to write the extracted plain‑text to a file. |
+-| `PdfFileEditor` | Class with 72 methods. |
++| `PdfFileEditor` | Class that declares methods including AddMargins, AddMarginsPct, AddPageBreak, AllowConcatenateExceptions, Append and CloseConcatenatedStreams. |
+ | `PdfFileInfo` | PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value). |
+-| `PdfFileSecurity` | Class with 20 methods. |
+-| `PdfFileSignature` | Class with 41 methods. |
+-| `PdfFileStamp` | Class with 26 methods and 8 properties. |
+-| `PdfPageEditor` | Class with 28 methods and 16 properties. |
+-| `PdfXmpMetadata` | Class with 15 methods. |
++| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |
++| `PdfFileSignature` | Class that inherits from SaveableFacade and declares methods including Certify, ContainsSignature, ContainsUsageRights, CoversWholeDocument, GetAccessPermissions and GetBlankSignatureNames. |
++| `PdfFileStamp` | Class that inherits from SaveableFacade and declares methods including AddFooter, AddHeader, AddPageNumber, ConvertTo, InputFile and KeepSecurity and fields including PosBottomLeft, PosBottomMiddle, PosBottomRight, PosSidesLeft, PosSidesRight and PosUpperLeft. |
++| `PdfPageEditor` | Class that inherits from SaveableFacade and declares methods including Alignment, ApplyChanges, DisplayDuration, GetPageRotation, GetPages and GetPageSize and fields including BLINDH, BLINDV, BTWIPE, DGLITTER, DISSOLVE and INBOX. |
++| `PdfXmpMetadata` | Class that inherits from SaveableFacade and declares methods including Add, Clear, Contains, ContainsKey, Count and GetNamespaceURIByPrefix. |
+ | `SaveableFacade` | SaveableFacade offers a simple interface to persist PDF objects to a file path via Save(destFile). |
+ | `SignatureName` | SignatureName.HasSignature() returns true if the PDF contains a detached PKCS#7 signature, and ToString() provides a textual representation of the signature name. |
+ | `VerticalAlignmentType` | VerticalAlignmentType offers static factory methods Top(), Center(), and Bottom() to obtain alignment objects, and ToString() to obtain their textual representation. |
+@@ -812,67 +817,67 @@
+ 
+ | Enumeration | Description |
+ |---|---|
+-| `Algorithm` | Enum with 2 members. |
+-| `AutoRotateMode` | Enum with 3 members. |
+-| `BlendingColorSpace` | Enum with 4 members. |
+-| `DataType` | Enum with 6 members. |
+-| `DefaultMetadataProperties` | Enum with 9 members. |
+-| `EncodingType` | Enum with 7 members. |
+-| `FieldType` | Enum with 13 members. |
+-| `FontStyle` | Enum with 16 members. |
+-| `ImageMergeMode` | Enum with 3 members. |
+-| `KeySize` | Enum with 3 members. |
+-| `PositioningMode` | Enum with 3 members. |
+-| `PropertyFlag` | Enum with 4 members. |
+-| `StampType` | Enum with 2 members. |
+-| `SubmitFormFlag` | Enum with 6 members. |
++| `Algorithm` | Enumerates AES and RC4. |
++| `AutoRotateMode` | Enumerates AntiClockWise, ClockWise and None. |
++| `BlendingColorSpace` | Enumerates Auto, DeviceCMYK, DeviceRGB and DontChange. |
++| `DataType` | Enumerates FDF, ODBC, OLEDB, PDF, XFDF and XML. |
++| `DefaultMetadataProperties` | Enumerates values including Advisory, BaseURL, CreateDate, CreatorTool, Identifier, MetadataDate, ModifyDate and Nickname. |
++| `EncodingType` | Enumerates Cp1250, Cp1252, Cp1257, Identity_h, Identity_v, Macroman and Winansi. |
++| `FieldType` | Enumerates values including Barcode, CheckBox, ComboBox, DateTime, Image, InvalidNameOrType, ListBox and MultiLineText. |
++| `FontStyle` | Enumerates values including CjkFont, Courier, CourierBold, CourierBoldOblique, CourierOblique, Helvetica, HelveticaBold and HelveticaBoldOblique. |
++| `ImageMergeMode` | Enumerates Center, Horizontal and Vertical. |
++| `KeySize` | Enumerates x128, x256 and x40. |
++| `PositioningMode` | Enumerates Current, Legacy and ModernLineSpacing. |
++| `PropertyFlag` | Enumerates InvalidFlag, NoExport, ReadOnly and Required. |
++| `StampType` | Enumerates Form and Image. |
++| `SubmitFormFlag` | Enumerates Fdf, FdfWithComments, Html, Pdf, Xfdf and XfdfWithComments. |
+ | `WordWrapMode` | WordWrapMode enum defines two text wrapping strategies: Default and ByWords. |
+ 
+ ### Forms
+ 
+ | Class | Description |
+ |---|---|
+-| `BarcodeField` | Class with 6 methods. |
+-| `ButtonField` | Class with 11 methods. |
+-| `CheckboxField` | Class with 16 methods. |
+-| `ChoiceField` | Class with 14 methods. |
+-| `ComboBoxField` | Class with 5 methods. |
+-| `DateField` | Class with 4 methods. |
+-| `DocMDPSignature` | Class with 1 method. |
+-| `ExternalSignature` | Class in the PDF C++ API. |
++| `BarcodeField` | Class that inherits from TextBoxField and declares the methods Caption, ECC, Resolution, Symbology, XSymHeight and XSymWidth. |
++| `ButtonField` | Class that inherits from Field and declares the methods AlternateCaption, IconFit, ICPosition, NormalCaption and RolloverCaption. |
++| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |
++| `ChoiceField` | Class that inherits from Field and declares methods including AddOption, CommitImmediately, DeleteOption, MultiSelect, Options and Selected. |
++| `ComboBoxField` | Class that inherits from ChoiceField and declares the methods Editable and SpellCheck. |
++| `DateField` | Class that inherits from TextBoxField and declares the methods DateFormat and Init. |
++| `DocMDPSignature` | Class that declares the method AccessPermissions. |
++| `ExternalSignature` | Class that inherits from Signature. |
+ | `Field` | Field.Recalculate() recomputes the value of a form field and returns true on success. |
+-| `FileSelectBoxField` | Class with 1 method. |
++| `FileSelectBoxField` | Class that inherits from TextBoxField and declares a public no-argument constructor. |
+ | `Form` | Form text box fields can have a barcode added programmatically by calling `AddBarcode(code)` on a `TextBoxField` instance. |
+ | `IconFit` | IconFit allows fine‑grained control of form field scaling; developers can set ScalingReason, ScalingMode, and leftover margins before rendering. |
+-| `ListBoxField` | Class with 3 methods. |
+-| `NumberField` | Class with 3 methods. |
+-| `Option` | Class with 8 methods. |
+-| `OptionCollection` | Class with 9 methods. |
+-| `PKCS1` | Class with 1 method. |
+-| `PKCS7` | Class with 1 method. |
+-| `PKCS7Detached` | Class with 1 method. |
+-| `PasswordBoxField` | Class with 1 method. |
+-| `RadioButtonField` | Class with 7 methods. |
+-| `RadioButtonOptionField` | Class with 5 methods. |
++| `ListBoxField` | Class that inherits from ChoiceField and declares the method TopIndex. |
++| `NumberField` | Class that inherits from TextBoxField and declares the method AllowedChars. |
++| `Option` | Class that declares the methods Index, Name, Selected and Value. |
++| `OptionCollection` | Class that declares methods including Add, Clear, Contains, Count, Get and IsReadOnly. |
++| `PKCS1` | Class that inherits from Signature and declares a public no-argument constructor. |
++| `PKCS7` | Class that inherits from Signature and declares a public no-argument constructor. |
++| `PKCS7Detached` | Class that inherits from Signature and declares a public no-argument constructor. |
++| `PasswordBoxField` | Class that inherits from TextBoxField and declares a public no-argument constructor. |
++| `RadioButtonField` | Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style. |
++| `RadioButtonOptionField` | Class that inherits from Field and declares the methods OptionName and Style. |
+ | `RichTextBoxField` | RichTextBoxField provides a form field that stores rich text with styling, justification, and formatted value. |
+ | `Signature` | Signature objects allow creation and verification of detached PKCS#7 signatures on PDF documents. |
+-| `SignatureCustomAppearance` | Class with 37 methods. |
+-| `SignatureField` | Class with 2 methods. |
+-| `TextBoxField` | Class with 15 methods. |
++| `SignatureCustomAppearance` | Class that declares methods including BackgroundColor, ContactInfoLabel, DateSignedAtLabel, DateTimeFormat, DateTimeLocalFormat and DigitalSignedLabel. |
++| `SignatureField` | Class that inherits from Field and declares the methods Sign and Signature. |
++| `TextBoxField` | Class that inherits from Field and declares methods including AddBarcode, ForceCombs, MaxLen, Multiline, Scrollable and SpellCheck. |
+ | `XFA` | XFA provides access to XML‑based XFA form data; calling FieldNames() yields a list of all field identifiers present in the XFA document. |
+ 
+ #### Enumerations
+ 
+ | Enumeration | Description |
+ |---|---|
+-| `BoxStyle` | Enum with 6 members. |
++| `BoxStyle` | Enumerates Check, Circle, Cross, Diamond, Square and Star. |
+ | `DocMDPAccessPermissions` | The DocMDPAccessPermissions enum defines the allowed modifications on a signed PDF: NoChanges prevents any edits, FillingInForms allows form filling, and AnnotationModification permits annotation changes. |
+-| `FormType` | Enum with 3 members. |
+-| `IconCaptionPosition` | Enum with 7 members. |
++| `FormType` | Enumerates Dynamic, Standard and Static. |
++| `IconCaptionPosition` | Enumerates CaptionAboveIcon, CaptionBelowIcon, CaptionOverlaid, CaptionToTheLeft, CaptionToTheRight, NoCaption and NoIcon. |
+ | `ScalingMode` | ScalingMode enum defines Proportional and Anamorphic scaling options for image transformations. |
+ | `ScalingReason` | ScalingReason enum indicates when scaling should be applied: Always, IconIsBigger, IconIsSmaller, or Never. |
+-| `SubjectNameElements` | Enum with 7 members. |
+-| `Symbology` | Enum with 3 members. |
++| `SubjectNameElements` | Enumerates C, CN, E, L, O, OU and S. |
++| `Symbology` | Enumerates DataMatrix, PDF417 and QRCode. |
+ 
+ #### Detailed Member Reference
+ 
+@@ -953,14 +958,14 @@
+ 
+ - **[Getting started guide](https://docs.aspose.org/pdf/cpp/)** — installation, walkthroughs, and feature guides for this library.
+ - **[How-to guides & FAQ](https://kb.aspose.org/pdf/cpp/)** — task-focused answers for common PDF-processing questions.
+-- **[Full API reference](https://reference.aspose.org/pdf/cpp/)** — the complete, browsable reference for all 247 public types (the [API Reference](#api-reference) section above covers the essentials).
++- **[Full API reference](https://reference.aspose.org/pdf/cpp/)** — the complete, browsable reference for all 253 public types (the [API Reference](#api-reference) section above covers the essentials).
+ - **[Changelog](CHANGELOG.md)** — what changed in each release.
+ - **[Contributing guide](CONTRIBUTING.md)** — how to propose changes and the project's coding conventions.
+ - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp/issues) on GitHub.
+ 
+ ## Scope and Limitations
+ 
+-Aspose.PDF FOSS for C++ is a v1 release and a deliberate subset of the commercial Aspose.PDF for
++Aspose.PDF FOSS for C++ is a v1 release and a deliberate subset of Aspose.PDF for C++ — Enterprise Edition for
+ .NET library. A few boundaries are worth noting:
+ 
+ - `XmpValue` models string, integer, double, and array values; dates and structures read from a

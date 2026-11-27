@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "Aspose_PDF_FOSS is requested at version 1.0 by find_package, but the manifest's version is 26.11, which does not satisfy it",
+      "kind": "claim_contradiction",
+      "line": 166,
+      "quote": "find_package(aspose_pdf_foss 1.0 CONFIG REQUIRED)",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Title` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Title` is a member of `Bookmark`, `DocumentInfo`, `MarkupAnnotation`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Author` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Author` is a member of `DocumentInfo`, `PdfFileInfo`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Creator` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Creator` is a member of `DocumentInfo`, `PdfFileInfo`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Producer` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Producer` is a member of `DocumentInfo`, `PdfFileInfo`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Subject` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Subject` is a member of `DocumentInfo`, `MarkupAnnotation`, `PdfFileInfo`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README names `Keywords` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Keywords` is a member of `DocumentInfo`, `PdfFileInfo`",
+      "kind": "claim_contradiction",
+      "line": 603,
+      "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README calls `Bookmark.Action` a property ('Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag.'), but the facts record it as a method; call it by its kind",
+      "kind": "claim_contradiction",
+      "line": 795,
+      "quote": "| `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such ",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README calls `Bookmark.Destination` a property ('Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag.'), but the facts record it as a method; call it by its kind",
+      "kind": "claim_contradiction",
+      "line": 795,
+      "quote": "| `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such ",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README calls `PdfFileInfo.Author` a field ('PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value).'), but the facts record it as a method; call it by its kind",
+      "kind": "claim_contradiction",
+      "line": 805,
+      "quote": "| `PdfFileInfo` | PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMe",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README calls `PdfFileInfo.Creator` a field ('PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value).'), but the facts record it as a method; call it by its kind",
+      "kind": "claim_contradiction",
+      "line": 805,
+      "quote": "| `PdfFileInfo` | PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMe",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 397-416: example 6: FAILED; example_006.cpp:15:52: error: invalid use of incomplete type ‘class Aspose::Pdf::PageCollection’",
+      "kind": "unrepaired_defect",
+      "line": 397,
+      "quote": "#include <aspose/pdf/document.hpp>",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "4",
+  "schema_version": 1,
+  "source_revision": "1d36fe5e91b796300bf4a1628090b86050bca101",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}
