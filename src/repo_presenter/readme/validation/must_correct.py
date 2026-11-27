@@ -689,8 +689,30 @@ def _withhold_flagged(
     ambiguous = {
         i
         for i, row in enumerate(rows)
-        if guard_inherited and sum(1 for u in new_units["units"] if prints(row, u)) > 1
+        if guard_inherited
+        and not getattr(row, "duplicate", False)
+        and sum(1 for u in new_units["units"] if prints(row, u)) > 1
     }
+    # A paragraph printed twice is not ambiguous about WHICH unit owns it: every authored unit that prints it
+    # is a copy. Two authored units printing the same paragraph left the degrade refusing the flag (BL-896,
+    # hosted Words Java run 45337646762: "degrade: nothing kept (1 flag(s) tried)"). The first printing
+    # authored unit stays when no copy is printed outside the authored units (a kept maintainers' unit, the
+    # renderer), else every authored copy goes; each drop is an R14 record.
+    first_copy: dict[int, int] = {}
+    for i, row in enumerate(rows):
+        if not (guard_inherited and getattr(row, "duplicate", False)):
+            continue
+        owners = [u for u in new_units["units"] if prints(row, u)]
+        if len(owners) < 2:
+            continue
+        wanted = flat_squash(row.quote)
+        outside = (
+            readme is not None
+            and len(wanted) >= _MIN_MATCH
+            and flat_squash(readme).count(wanted) > len(owners)
+        )
+        if not outside:
+            first_copy[i] = id(owners[0])
 
     for unit in new_units["units"]:
         slot, section = str(unit.get("slot", "")), str(unit.get("section", ""))
@@ -704,6 +726,13 @@ def _withhold_flagged(
             # this clause, whatever later edits did to the clause's characters.
             covering = [r for r in rows if _ENTERPRISE_SHELL_LEAD.search(_plain(r.quote))]
         if not inside and not covering:
+            kept.append(unit)
+            continue
+        if any(first_copy.get(i) == id(unit) for i in index_of([*inside, *covering])):
+            # the first copy of a paragraph several authored units print: it stays (BL-896)
+            for i in index_of([*inside, *covering]):
+                if first_copy.get(i) == id(unit):
+                    status.setdefault(i, "handled")
             kept.append(unit)
             continue
         if ambiguous.intersection(index_of([*inside, *covering])):
