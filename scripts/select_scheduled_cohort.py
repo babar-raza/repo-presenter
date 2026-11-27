@@ -632,7 +632,10 @@ def build_plan(
     from repo_presenter.core.registry.loader import load_registry
     from repo_presenter.recertify import portfolio_recertification
 
-    entries = {e.repository: e for e in load_registry(registry).entries}
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+    counted, _excluded = split_portfolio(load_registry(registry).entries)
+    entries = {e.repository: e for e in counted}
     results, _ = portfolio_recertification(
         remote=remote, token=token, registry=registry, prompts_dir=prompts
     )

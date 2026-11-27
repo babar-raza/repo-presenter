@@ -197,9 +197,12 @@ def test_today_the_committed_portfolio_is_blocked() -> None:
     sealed cell is 'not accepted' and only the recorded terminals close cells."""
     from repo_presenter.core.registry.loader import load_registry
 
-    active = [e.repository for e in load_registry(portfolio_gate.REGISTRY).entries if e.active]
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+    counted, _excluded = split_portfolio(load_registry(portfolio_gate.REGISTRY).entries)  # BL-895: 39, not 40
+    active = [e.repository for e in counted if e.active]
     rows = [not_accepted(r, lane) for r in active for lane in ("R", "L")]
-    terminals = portfolio_gate.load_terminal_cells()
+    terminals = [c for c in portfolio_gate.load_terminal_cells() if c["repository"] in set(active)]
     pinned = {c["repository"]: c["revision"] for c in terminals}
     readiness = portfolio_readiness(
         collect=lambda: (rows, None, None),
@@ -207,7 +210,7 @@ def test_today_the_committed_portfolio_is_blocked() -> None:
         now=lambda: datetime(2026, 11, 13, tzinfo=UTC),
     )
     assert not readiness.ready
-    assert readiness.active == len(active) >= 40
+    assert readiness.active == len(active) == 39
     assert len(readiness.missing) == 2 * len(active) - len(terminals)
     assert set(readiness.terminal.values()) <= {BLOCKED_EXTERNAL, NOT_APPLICABLE}
 

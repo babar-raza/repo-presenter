@@ -3867,3 +3867,15 @@ items:
       - "the other PDF TypeScript-named finding (e52560a9883be911, Lane L, line 1) is a seeded D14 row (a sentence written on the title line) and is correctly caught"
     next_action: "supervisor decides whether the two api_reference lines need a further general rule (owner ruled on 2026-11-22 that VERIFIED_* units outside scope_limitations keep the full review); then refresh and a new audit round"
     updated: "2026-11-24"
+
+  - id: BL-895
+    title: "Code the owner's exclusion of GIS .NET (no upstream README, no package) into the official count and every enumeration of the 40-cell portfolio: both denominators become 39, the repository, its records and any seal stay"
+    type: task
+    source: "owner decision 2026-11-23 (docs/DECISION_LOG.md 'GIS .NET excluded from the 40-cell portfolio'); owner rulings R42, R44, R10, R14"
+    priority: P1
+    status: active
+    implementation_path: "data/portfolio_exclusions.json (repository, reason, decision-log reference, owner decision date) read by core/registry/portfolio_exclusions.split_portfolio; applied in ops/checks/portfolio_delivery_count.py (collect, summary 'excluded_repositories', printed line), delivery_funnel.py, propose/portfolio_gate.py, monitor/run.py, scripts/select_scheduled_cohort.py and scripts/review_page/build.py. No hard-coded repository name; data/registry.json is unchanged"
+    acceptance: "(1) tests/ops/test_portfolio_exclusions_bl895.py; (2) the official count prints records=39 per lane and a line naming the exclusion; (3) hosted count job after merge (not yet proven)"
+    evidence: []
+    next_action: "supervisor integrates; verify the hosted count job prints records=39 and the exclusion line"
+    updated: "2026-11-24"

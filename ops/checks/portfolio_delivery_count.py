@@ -369,7 +369,8 @@ def lane_seals(repository: str, lane: str, history: dict, scratch: Path) -> tupl
 
 
 def summarize(
-    outcomes: list[LaneOutcome], calibration: Any, acceptance_certificates: Any = None
+    outcomes: list[LaneOutcome], calibration: Any, acceptance_certificates: Any = None,
+    excluded: Any = None,
 ) -> dict[str, Any]:
     """Headline numbers are the CURRENT version set's only (``o.current``); every older set is
     reported on its own under ``older_version_sets`` and never added to them.
@@ -396,6 +397,12 @@ def summarize(
         "reviewer_calibration": calibration.status
         + (f" ({calibration.problem})" if calibration.problem else ""),
         "acceptance_calibration": acceptance_status,
+        # owner-recorded exclusions (data/portfolio_exclusions.json): reported, never counted
+        "excluded_repositories": [
+            {"repository": e.repository, "reason": e.reason, "decision_log": e.decision_log,
+             "owner_decision_date": e.owner_decision_date}
+            for e in (excluded or [])
+        ],
     }
     for lane in ("R", "L"):
         lane_rows = [o for o in outcomes if o.lane == lane]
@@ -763,7 +770,11 @@ def collect(remote: str = "origin", record_fetcher: RecordFetcher | None = None,
     calibration = load_calibration(CALIBRATION)
     acceptance_certificates = load_certificates()
     allowlist = json.loads(ALLOWLIST.read_text(encoding="utf-8")) if ALLOWLIST.exists() else {}
-    entries = load_registry(REGISTRY).entries
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+    # Owner decision (data/portfolio_exclusions.json): an excluded repository stays in the registry and
+    # keeps its seals and records, but is not a cell of either denominator.
+    entries, _excluded = split_portfolio(load_registry(REGISTRY).entries)
     current = current_fingerprints(PROMPTS)
     # Dry re-certification of every bundle ref's latest seal (zero provider calls, read-only); its
     # seal history is the same one the counter reads, fetched once.
@@ -805,13 +816,20 @@ def main(argv: list[str]) -> int:
     if args.per_lane is None and args.live_verified is None:
         args.per_lane = 25
 
+    from repo_presenter.core.registry.loader import load_registry
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
     outcomes, calibration, acceptance_certificates = collect(args.remote)
-    summary = summarize(outcomes, calibration, acceptance_certificates)
+    _counted, excluded = split_portfolio(load_registry(REGISTRY).entries)
+    summary = summarize(outcomes, calibration, acceptance_certificates, excluded)
     if args.json:
         print(json.dumps({"summary": summary, "lanes": [asdict(o) for o in outcomes]}, indent=2))
     else:
         print(f"reviewer_calibration: {summary['reviewer_calibration']}")
         print(f"acceptance_calibration: {summary['acceptance_calibration']}")
+        for row in summary["excluded_repositories"]:
+            print(f"excluded from the portfolio (not counted, nothing deleted or demoted): {row['repository']} "
+                  f"(owner decision {row['owner_decision_date']}; {row['decision_log']}): {row['reason']}")
         for lane in ("r", "l"):
             row = dict(summary[f"lane_{lane}"])
             names = row.pop("accepted_repositories")

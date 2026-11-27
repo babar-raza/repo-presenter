@@ -332,8 +332,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     state_token = os.environ.get("REPOSITORY_PRESENTER_STATE_TOKEN") or token or None
     lanes = [lane for lane in args.lanes.split(",") if lane in (LANE_R, LANE_L)]
     now = datetime.now(UTC)
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+    portfolio, _excluded = split_portfolio(load_registry(args.registry).entries)
     entries = [
-        entry for entry in load_registry(args.registry).entries
+        entry for entry in portfolio
         if entry.active and (args.repository is None or entry.repository == args.repository)
     ]
     cells = observe_cells(
