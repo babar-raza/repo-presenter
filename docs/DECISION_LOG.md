@@ -8692,3 +8692,23 @@ Owner answer through the interactive form on 2026-11-23: GIS .NET (aspose-gis-fo
 Official count after audit round 11 (run 45125322787, main 959b1790): Lane R records=40, pipeline_good=38, independently_accepted=37, pipeline_good_uncalibrated=1 (PDF TypeScript, sealed at 22:58Z on 2026-11-22 after BL-892 and BL-893; round 12 `audit-r12-0709` seeded for it). Lane L records=40, pipeline_good=38, independently_accepted=33, no_action_justified=5. Audit rounds were repeated until a round passed; that retry-until-pass selection is disclosed.
 
 Backlog: none
+
+## 2026-11-24: audit round 12: the whole-document audit honours the production maintainer-line contract (BL-894; R10, R21, R36, R46)
+
+Round 12 (seed run 45129080547) failed only the false-flag gate (1/1; seeded recall 75/75). The one clean control was the PDF TypeScript Lane R seal (851c1a6a, hosted run 45074125387). Its seven unresolved `unsupported_claim` findings (all `source: llm`) sit on kept-verbatim maintainers' text: lines 4751 and 4753 to 4756 are `inherited_unit:575.002.list`, `VERIFIED_PRESERVE` into `scope_limitations` citing only `public_symbol` facts (the BL-890 class, verified with the seal's own facts and dispositions: `scope.maintainer_lines` marks all five); lines 2573 and 4567 are `VERIFIED_PRESERVE` into `api_reference` (014.005.list with three symbol facts, 579.004.list with none). Classification: a false positive of the class BL-890 already handles in the production review, not a defect in the sealed README; the audit missed it because it reviews with `rendered=False`, which computes no maintainer lines. The Lane L seeded finding on `e52560a9883be911` is a real seed (sentence on the title line), correctly caught.
+
+Decision: the audit's post-review derivation (`apply_derivation`, zero calls, like BL-543/BL-801/BL-802) now clears an llm `unsupported_claim` row whose line is a `scope.maintainer_lines` line of the case's own seal, row by row (a quote that also spans an authored line keeps its row there). Nothing about the reviewer, prompt, packet, thresholds, seeding, scoring or validators changed; a seeded mutation of a kept line is not byte-equal to the unit line, so it is not marked and stays caught; contradictions, quality, omission, absence and name_denial are untouched. Not done, deliberately: marking verbatim `VERIFIED_*` units in other sections (2573, 4567) would reverse the 2026-11-22 BL-890 ruling's alternative that was rejected; those two flags remain and would still fail a control, so a refresh is not guaranteed to pass the next round. Options for the supervisor: a further general rule for verbatim api_reference units, or accepting that a 4900-line README with 170 kept-verbatim units draws flags per audit.
+
+Backlog: BL-894
+
+## 2026-11-24: GIS .NET exclusion coded into the official count (BL-895)
+
+The 2026-11-23 owner decision is now data, not prose: `data/portfolio_exclusions.json` records the repository (`aspose-gis-foss/Aspose.GIS.FOSS-for-.Net`, the registry spelling), the reason, the decision-log entry and the owner decision date, and `repo_presenter.core.registry.portfolio_exclusions.split_portfolio` applies it in the official count (`ops/checks/portfolio_delivery_count.py`), the delivery funnel, the R15 portfolio gate, the monitor, the scheduled cohort selection and the review page. Per-lane `records` is 39 and the count prints a line naming the exclusion and the 40 to 39 reading; the R44 85% bar and the >= 25 gate use the 39 denominator. The registry entry, its records and any seal are untouched and nothing is demoted (R10, R14); removing the exclusion from the file restores the 40 reading. Reports before this change that say "of 40" keep that wording.
+
+Backlog: BL-895
+
+## 2026-11-27: BL-894 audit-derivation change withheld pending an owner decision (R10, R21; owner: audit gate and judging unchanged)
+
+The worker branch `bl894-pdf-ts-audit-flag` changed the M9 audit derivation so that unsupported_claim flags on the seal's maintainer lines are cleared (the production contract applied to the audit). It was merged into the development branch by mistake and is reverted here: the owner decided on 2026-11-20 to keep the audit gate and single-sample judging unchanged, and a change to which audit flags clear is a change to judging that needs the owner's explicit decision, particularly since it would make a cell this session wants accepted easier to pass, and by its own notes would still leave two api_reference flags. Nothing from it reached main. The work stays on the branch; the PDF TypeScript Lane R seal remains sealed and not independently accepted (round 12 false-flagged it 1/1).
+
+Backlog: BL-894

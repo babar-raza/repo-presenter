@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "denominator_note": "A repository listed here stays in data/registry.json (nothing is deleted, no seal or record is demoted: R10, R14) but is outside the counted portfolio: it is not a cell of either lane's denominator. Every counter, cohort selection, monitor and review page reads this file through repo_presenter.core.registry.portfolio_exclusions.",
+  "exclusions": [
+    {
+      "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+      "reason": "GIS .NET has no upstream README and no package, so neither lane can cover it. aspose.org has no published candidate for it either (R42), so there is nothing to adopt or beat.",
+      "decision_log": "docs/DECISION_LOG.md, 2026-11-23: GIS .NET excluded from the 40-cell portfolio (owner decision, R42/R44)",
+      "owner_decision_date": "2026-11-23",
+      "rulings": ["R42", "R44", "R10", "R14"]
+    }
+  ]
+}

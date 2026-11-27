@@ -58,7 +58,10 @@ def main(argv: list[str]) -> int:
     from repo_presenter.core.registry.loader import load_registry
 
     outcomes, _calibration, certificates = pdc.collect("origin")
-    registered = len(load_registry(pdc.REGISTRY).entries)
+    from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+    counted, _excluded = split_portfolio(load_registry(pdc.REGISTRY).entries)
+    registered = len(counted)
     rows = funnel(outcomes, certificates, registered)
     r, l = rows["R"], rows["L"]
     if "--json" in argv:

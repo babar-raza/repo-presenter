@@ -276,7 +276,10 @@ def portfolio_readiness(
         from repo_presenter.core.llm.budget import upstream_revision
         from repo_presenter.core.registry.loader import load_registry
 
-        active = [e.repository for e in load_registry(registry).entries if e.active]
+        from repo_presenter.core.registry.portfolio_exclusions import split_portfolio
+
+        counted, _excluded = split_portfolio(load_registry(registry).entries)
+        active = [e.repository for e in counted if e.active]
         terminals = load_terminal_cells(terminal_cells)
         outcomes, _, _ = (collect or (lambda: _delivery_count().collect(remote=remote)))()
         today = (now or (lambda: datetime.now(UTC)))().date()
