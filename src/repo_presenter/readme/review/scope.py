@@ -167,7 +167,7 @@ def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
     return frozenset(authored_type_rows(readme, facts, reviewable=True))
 
 
-def fact_true_row_forms(fact: Fact, facts: FactsDocument) -> frozenset[str]:
+def fact_true_row_forms(fact: Fact, facts: FactsDocument, nouns: Collection[str] = ()) -> frozenset[str]:
     """Every normalized description the renderer prints for ``fact``'s Core API row when NO author
     wrote a sentence for it and the type has no doc comment: the shared fact-true description of both
     lanes (``type_description.TypeDescriber``: "Declares the fields a and b.", "Class that declares the
@@ -188,9 +188,12 @@ def fact_true_row_forms(fact: Fact, facts: FactsDocument) -> frozenset[str]:
     )
 
     texts: list[str] = []
-    described = describer_for(facts).describe(fact)[0]
-    if described:
-        texts.append(described)
+    # ``nouns`` (BL-897): the README's own kind word Lane L's correction keeps when the facts record no kind
+    # ("Class that inherits from X ..."): ``describe(fact, noun)``, the same call ``type_description`` makes.
+    for noun in ("", *nouns):
+        described = describer_for(facts).describe(fact, noun)[0]
+        if described and described not in texts:
+            texts.append(described)
     if (fact.attributes or {}).get("symbol_kind") == "enum":
         values = type_values(fact, facts, limit=len(facts.facts))
         shown = values[:DESCRIBED_VALUES]
@@ -333,6 +336,42 @@ def changed_type_rows(
         if match is not None and match.group(1) in types:
             found[number] = types[match.group(1)]
     return found
+
+
+def derived_type_rows(
+    readme: str, facts: FactsDocument, changed: Collection[int]
+) -> frozenset[int]:
+    """The CHANGED API reference rows whose description is exactly the shared describer's fact-true
+    text for their type (BL-897; ``fact_true_row_forms``).
+
+    A Lane L correction (``type_description``) writes "Class that inherits from X and declares the
+    methods A and B." with the same ``TypeDescriber`` the renderer prints Core API rows with. BL-560
+    already holds that text is the project's own derivation from SUPPORTED facts, not an author's
+    claim, and does not review it in Lane R. The Lane L review had no such rule: hosted PDF Cpp
+    run 45337643264 (BL-870 member facts already shown) still faulted 8 of the 118 rewritten rows
+    ("no fact supports this inheritance"; the packet carries a type's member names, never its bases,
+    which the describer derives from the declaration), a different 8 of the same class each round.
+    A row that is ANY other text (a maintainer's sentence, an edit's other wording) is not equal to the
+    describer's text and stays reviewed; the deterministic validators judge the row either way."""
+    rows = changed_type_rows(readme, facts, changed)
+    if not rows:
+        return frozenset()
+    from repo_presenter.readme.correction.detectors.type_description import _NOUNS
+
+    nouns = tuple(dict.fromkeys(_NOUNS.values()))
+    lines = readme.splitlines()
+    true_forms: dict[str, frozenset[str]] = {}
+    found: set[int] = set()
+    for number, fact in rows.items():
+        match = _TYPE_ROW.match(lines[number - 1].strip())
+        if match is None:
+            continue
+        if fact.id not in true_forms:
+            true_forms[fact.id] = fact_true_row_forms(fact, facts, nouns)
+        form = _row_form(match.group(2).strip())
+        if form and form != "not implemented." and form in true_forms[fact.id]:
+            found.add(number)
+    return frozenset(found)
 
 
 def line_sections(

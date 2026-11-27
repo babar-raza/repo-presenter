@@ -3879,3 +3879,28 @@ items:
     evidence: []
     next_action: "supervisor integrates; verify the hosted count job prints records=39 and the exclusion line"
     updated: "2026-11-24"
+
+  - id: BL-897
+    title: "PDF C++ Lane L correction rejected on eight api_reference unsupported_claim findings that all fault describer-derived rows (NamedDestination ... UnderlineAnnotation) the correction wrote from SUPPORTED facts: the BL-560 fact-true-row rule applied to Lane R only, never to Lane L edit scope"
+    type: defect
+    source: "hosted run 45337643264 (pc28-1); owner rulings R5, R14, R44, R46; BL-560 and BL-870 precedents"
+    priority: P1
+    status: active
+    implementation_path: "scope.derived_type_rows(readme, facts, changed) returns the changed API rows whose description equals the describer's fact-true text (README's own kind noun allowed); llm_review.edit_scope(..., facts=None) subtracts them from the changed lines; Lane R bytes and the M9 auditor call are unchanged; no validator, threshold or judging change"
+    acceptance: "(1) tests/readme/review/test_lane_l_derived_rows_bl897.py (5 tests); (2) hosted: a PDF C++ Lane L present on main seals (R41, not yet proven)"
+    evidence:
+      - "all eight findings are class llm:factuality|lane_l_correction|api_reference, origin type_description, README lines 645-667"
+    next_action: "supervisor merges, re-runs PDF C++ Lane L on main and reads the result"
+    updated: "2026-11-27"
+
+  - id: BL-896
+    title: "Words Java Lane R rejected on a duplicate_paragraph finding the degrade refused as ambiguous when several authored units print the same paragraph"
+    type: defect
+    source: "hosted run 45337646762 (wj28-1); BL-320, BL-561 precedents; owner rulings R14, R44"
+    priority: P1
+    status: active
+    implementation_path: "must_correct._withhold_flagged: a duplicate flag matching several authored units withholds all but the first (recorded duplicate_unit_dropped); a copy printed outside the authored units drops all authored copies; claim flags keep the ambiguity refusal"
+    acceptance: "(1) tests/readme/validation/test_degrade_duplicate_authored_bl896.py; (2) hosted: a Words Java Lane R present clears the duplicate (R41, not yet proven); BC-05 section_fit is a separate open blocker in the same run"
+    evidence: []
+    next_action: "supervisor merges, re-runs Words Java Lane R, then briefs a worker for BC-05 section_fit if it remains"
+    updated: "2026-11-27"
