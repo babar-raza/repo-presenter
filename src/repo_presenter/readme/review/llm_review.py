@@ -231,8 +231,12 @@ def edit_scope(
     validation: Mapping[str, Any] | None,
     candidate_readme: str,
     original_readme: str,
+    facts: FactsDocument | None = None,
 ) -> frozenset[int] | None:
     """The changed candidate lines when this review is edit-scoped, else ``None``.
+
+    With ``facts``, a changed API row that is exactly the shared describer's fact-true text for its
+    type is not a changed line to judge (``scope.derived_type_rows``, BL-897).
 
     Edit-scoped only for a real Lane L correction run (``rendered=False`` and the holdouts document
     that ``lane_l_review.review_correction`` passes as ``validation`` names ``lane == "L"``) whose
@@ -242,7 +246,12 @@ def edit_scope(
         return None
     if candidate_readme == original_readme:
         return None
-    return lane_l_changed_lines(candidate_readme, original_readme)
+    changed = lane_l_changed_lines(candidate_readme, original_readme)
+    if facts is not None:
+        from repo_presenter.readme.review.scope import derived_type_rows
+
+        changed = changed - derived_type_rows(candidate_readme, facts, changed)
+    return changed
 
 
 def _lane_l_scope(
@@ -548,7 +557,7 @@ def planned_requests(
     model = effective_model(loaded, context)
     changed = edit_scope(
         rendered=rendered, validation=validation,
-        candidate_readme=candidate_readme, original_readme=original_readme,
+        candidate_readme=candidate_readme, original_readme=original_readme, facts=facts,
     )
     residuals = list((validation or {}).get("residuals") or []) if changed is not None else []
     applied = list((validation or {}).get("applied_edits") or []) if changed is not None else []
@@ -629,7 +638,7 @@ def review_with_model(
     )
     changed = edit_scope(
         rendered=rendered, validation=validation,
-        candidate_readme=candidate_readme, original_readme=original_readme,
+        candidate_readme=candidate_readme, original_readme=original_readme, facts=facts,
     )
     if not units:
         raise ReviewUnavailable(
